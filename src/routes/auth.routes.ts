@@ -6,7 +6,7 @@ export const authRoute = new Elysia({ prefix: '/auth' }).get(
   {
     detail: {
       summary: 'Get mock user',
-      tags: ['User'],
+      tags: ['Auth'],
       responses: {
         200: {
           description: 'A mock user object',

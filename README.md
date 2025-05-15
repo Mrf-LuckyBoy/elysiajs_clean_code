@@ -97,15 +97,34 @@ Open http://localhost:3000/ with your browser to see the result.
 ```ts
 import { z } from 'zod';
 
+import { z } from 'zod';
+
 const envSchema = z.object({
+  NODE_ENV: z
+    .enum(['development', 'production', 'test'])
+    .default('development'),
+  PORT: z.string().default('3000'),
   DB_HOST: z.string(),
+  DB_PORT: z.string().default('3306'),
   DB_USER: z.string(),
   DB_PASS: z.string(),
   DB_NAME: z.string(),
-  PORT: z.coerce.number().default(3000),
+  SERVER_PORT: z.string(),
 });
 
-export const ENV = envSchema.parse(process.env);
+// Validate and parse
+const _env = envSchema.safeParse(process.env);
+
+if (!_env.success) {
+  console.error(
+    '❌ Invalid environment variables:',
+    _env.error.flatten().fieldErrors
+  );
+  process.exit(1);
+}
+
+export const ENV = _env.data;
+
 ```
 
 ---

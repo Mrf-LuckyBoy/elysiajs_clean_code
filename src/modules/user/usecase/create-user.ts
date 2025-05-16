@@ -7,7 +7,6 @@ export async function createUser(name: string): Promise<UserDTO> {
     id: randomUUID(),
     name,
   };
-
   await UserRepository.create(newUser);
   return newUser;
 }

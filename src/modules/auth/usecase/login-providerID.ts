@@ -15,7 +15,9 @@ export async function loginProviderID(
   const arrayCheck = [];
   for (const i of userStuff.data.data.organization) {
     arrayCheck.push(
-      ['0001', '0004', '0011', '0015', '0050', '0051'].includes(i.position_id)
+      ['0001', '0004', '0011', '0015', '0050', '0051', '0065'].includes(
+        i.position_id
+      )
     );
   }
   const resultCheck = arrayCheck.some((val) => val);

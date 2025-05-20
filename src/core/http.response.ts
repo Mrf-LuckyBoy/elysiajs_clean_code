@@ -1,46 +1,41 @@
 export class HttpResponse {
-  static success<T>(data: T, message = 'Success') {
+  static success<T>(data: T) {
     return {
       success: true,
-      message,
+      message: 'Success',
       data,
     };
   }
-
-  static badRequest(details: string) {
+  static badRequest(detail: string) {
     return {
       success: false,
       message: 'Bad Request',
-      details,
+      detail,
     };
   }
-
   static unauthorized(message = 'Unauthorized') {
     return {
       success: false,
       message,
     };
   }
-
   static forbidden(message = 'Forbidden') {
     return {
       success: false,
       message,
     };
   }
-
   static notFound(message = 'Not Found') {
     return {
       success: false,
       message,
     };
   }
-
-  static error(message = 'Internal Server Error', details?: string) {
+  static error(detail: string) {
     return {
       success: false,
-      message,
-      details,
+      message: 'Internal Server Error',
+      detail,
     };
   }
 }

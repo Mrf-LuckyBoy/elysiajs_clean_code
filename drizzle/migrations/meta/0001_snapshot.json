@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "4855c8dc-282c-420f-80b1-b221e74c1ef4",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "795bb35d-d5ff-4409-8a23-5b2f3b80c3db",
+  "prevId": "4855c8dc-282c-420f-80b1-b221e74c1ef4",
   "tables": {
     "user_provider": {
       "name": "user_provider",
@@ -80,14 +80,7 @@
       },
       "indexes": {},
       "foreignKeys": {},
-      "compositePrimaryKeys": {
-        "user_provider_user_id": {
-          "name": "user_provider_user_id",
-          "columns": [
-            "user_id"
-          ]
-        }
-      },
+      "compositePrimaryKeys": {},
       "uniqueConstraints": {
         "user_provider_cid_hash_unique": {
           "name": "user_provider_cid_hash_unique",

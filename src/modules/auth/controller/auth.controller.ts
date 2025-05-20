@@ -1,5 +1,6 @@
 import { t, Context } from 'elysia';
 import { loginProviderID } from '../usecase/login-providerID';
+import { loginSetToken } from '../usecase/login-setToken';
 import { HttpResponse } from '@/core/http.response';
 import { UserProviderSchema } from '../model/auth.model';
 
@@ -20,18 +21,94 @@ export const authController = {
           message: t.String(),
           detail: t.String(),
         }),
+        500: t.Object({
+          success: t.Boolean(),
+          message: t.String(),
+          detail: t.String(),
+        }),
       },
       summary: 'Login Provider',
       description: 'get list of useable',
       tags: ['Auth'],
     },
     handler: async ({ body, set }: Context & { body: { code: string } }) => {
-      const useable = await loginProviderID(body.code);
-      if (!useable || useable.length === 0) {
-        set.status = 400;
-        return HttpResponse.badRequest('ไม่มีหน่วยบริการที่สามารใช้งานได้');
+      try {
+        const useable = await loginProviderID(body.code);
+        if (!useable || useable.length === 0) {
+          set.status = 400;
+          return HttpResponse.badRequest('ไม่มีหน่วยบริการที่สามารถใช้งานได้');
+        }
+        set.status = 200;
+        return HttpResponse.success(useable);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          set.status = 500;
+          return HttpResponse.error(err.message);
+        } else {
+          set.status = 500;
+          return HttpResponse.error('Unexpected error');
+        }
       }
-      return HttpResponse.success(useable);
+    },
+  },
+
+  loginSetCookie: {
+    Schema: {
+      body: t.Object({
+        cid_hash: t.String(),
+        hos_code: t.String(),
+        position: t.String(),
+      }),
+      response: {
+        200: t.Object({
+          success: t.Boolean(),
+          message: t.String(),
+          data: t.String(),
+        }),
+        400: t.Object({
+          success: t.Boolean(),
+          message: t.String(),
+          detail: t.String(),
+        }),
+        500: t.Object({
+          success: t.Boolean(),
+          message: t.String(),
+          detail: t.String(),
+        }),
+      },
+      summary: 'Login Provider',
+      description: 'Set cookie after login',
+      tags: ['Auth'],
+    },
+    handler: async ({
+      body,
+      set,
+      cookie: { auth_token },
+    }: Context & {
+      body: { cid_hash: string; hos_code: string; position: string };
+    }) => {
+      try {
+        const token = await loginSetToken(body);
+        if (token === '') {
+          set.status = 400;
+          return HttpResponse.badRequest('not found user');
+        }
+        auth_token.set({
+          domain: 'localhost',
+          httpOnly: true,
+        });
+        auth_token.value = token;
+        set.status = 200;
+        return HttpResponse.success(token);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          set.status = 500;
+          return HttpResponse.error(err.message);
+        } else {
+          set.status = 500;
+          return HttpResponse.error('Unexpected error');
+        }
+      }
     },
   },
 };

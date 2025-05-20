@@ -1,8 +1,8 @@
 {
   "version": "5",
   "dialect": "mysql",
-  "id": "4855c8dc-282c-420f-80b1-b221e74c1ef4",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "3f1c43f9-f303-44eb-ae98-4aed4ca33b49",
+  "prevId": "67f4a148-080a-437b-903f-e547cb75e9c9",
   "tables": {
     "user_provider": {
       "name": "user_provider",
@@ -89,15 +89,17 @@
         }
       },
       "uniqueConstraints": {
-        "user_provider_cid_hash_unique": {
-          "name": "user_provider_cid_hash_unique",
+        "user_provider_cid_hash_hos_code_unique": {
+          "name": "user_provider_cid_hash_hos_code_unique",
           "columns": [
-            "cid_hash"
+            "cid_hash",
+            "hos_code"
           ]
         },
-        "user_provider_hos_code_unique": {
-          "name": "user_provider_hos_code_unique",
+        "custom_unique": {
+          "name": "custom_unique",
           "columns": [
+            "cid_hash",
             "hos_code"
           ]
         }
@@ -189,22 +191,18 @@
         }
       },
       "uniqueConstraints": {
-        "user_provider_vhv_cid_hash_unique": {
-          "name": "user_provider_vhv_cid_hash_unique",
+        "user_provider_vhv_cid_hash_hos_code_unique": {
+          "name": "user_provider_vhv_cid_hash_hos_code_unique",
           "columns": [
-            "cid_hash"
-          ]
-        },
-        "user_provider_vhv_hos_code_unique": {
-          "name": "user_provider_vhv_hos_code_unique",
-          "columns": [
+            "cid_hash",
             "hos_code"
           ]
         },
-        "user_provider_vhv_position_unique": {
-          "name": "user_provider_vhv_position_unique",
+        "custom_unique": {
+          "name": "custom_unique",
           "columns": [
-            "position"
+            "cid_hash",
+            "hos_code"
           ]
         }
       },

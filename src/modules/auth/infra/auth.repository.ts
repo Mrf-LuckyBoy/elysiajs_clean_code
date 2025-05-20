@@ -1,9 +1,10 @@
 import { db } from '@/db';
+import { eq, and } from 'drizzle-orm';
 import { user_provider, user_provider_vhv } from '@/db/schema';
-import type { UserProviderDTO } from '../model/auth.model';
+import type { UserProviderDTO, LoginUser } from '../model/auth.model';
 import type { ProviderData } from '@/core/http/model/response.model';
 import { randomUUID } from 'crypto';
-import { Crypto } from '@/core/crypto/crypto';
+import { Crypto } from '@/core/crypto';
 
 export const AuthRepository = {
   async upsertUserProvider(
@@ -25,8 +26,8 @@ export const AuthRepository = {
         updateAt: new Date(),
       };
       result.push({ ...user });
-      user.fname = Crypto.encrypt(user.fname);
-      user.lname = Crypto.encrypt(user.lname);
+      user.fname = Crypto.encrypt(user.fname ?? '');
+      user.lname = Crypto.encrypt(user.lname ?? '');
       if (organiz.position_id === '0051')
         promise_upsert.push(
           db
@@ -38,12 +39,15 @@ export const AuthRepository = {
                 title: user.title,
                 fname: user.fname,
                 lname: user.lname,
+                position: user.position,
                 updateAt: user.updateAt,
               },
             })
         );
       else if (
-        ['0001', '0004', '0011', '0015', '0050'].includes(organiz.position_id)
+        ['0001', '0004', '0011', '0015', '0050', '0065'].includes(
+          organiz.position_id
+        )
       )
         promise_upsert.push(
           db
@@ -55,6 +59,7 @@ export const AuthRepository = {
                 title: user.title,
                 fname: user.fname,
                 lname: user.lname,
+                position: user.position,
                 updateAt: user.updateAt,
               },
             })
@@ -62,5 +67,30 @@ export const AuthRepository = {
     }
     await Promise.all(promise_upsert);
     return result;
+  },
+  async checkLoginUser(loginUser: LoginUser): Promise<UserProviderDTO> {
+    let result: UserProviderDTO[];
+    if (loginUser.position === 'อาสาสมัครสาธารณสุขประจำหมู่บ้าน (อสม.)') {
+      result = await db
+        .select()
+        .from(user_provider_vhv)
+        .where(
+          and(
+            eq(user_provider_vhv.cid_hash, loginUser.cid_hash),
+            eq(user_provider_vhv.hos_code, loginUser.hos_code)
+          )
+        );
+    } else {
+      result = await db
+        .select()
+        .from(user_provider)
+        .where(
+          and(
+            eq(user_provider.cid_hash, loginUser.cid_hash),
+            eq(user_provider.hos_code, loginUser.hos_code)
+          )
+        );
+    }
+    return result[0];
   },
 };

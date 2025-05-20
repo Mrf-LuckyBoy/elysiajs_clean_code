@@ -3,6 +3,7 @@ import logger from 'logixlysia';
 import swagger from '@elysiajs/swagger';
 import { ENV } from '@/config/env';
 import { AppRoutes } from './routes/index.routes';
+import { HttpResponse } from '@/core/http.response';
 
 const app = new Elysia()
   .use(logger())
@@ -19,7 +20,13 @@ const app = new Elysia()
       },
     })
   )
-  .use(AppRoutes);
+  .use(AppRoutes)
+  .onError(({ code }) => {
+    if (code === 'NOT_FOUND') {
+      return HttpResponse.notFound();
+    }
+    return HttpResponse.error('Something went wrong.');
+  });
 
 app.listen({ port: ENV.SERVER_PORT });
 

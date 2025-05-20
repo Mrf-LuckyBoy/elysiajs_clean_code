@@ -11,8 +11,7 @@ CREATE TABLE `user_provider` (
 	`updateAt` timestamp,
 	CONSTRAINT `user_provider_user_id` PRIMARY KEY(`user_id`),
 	CONSTRAINT `user_provider_cid_hash_unique` UNIQUE(`cid_hash`),
-	CONSTRAINT `user_provider_hos_code_unique` UNIQUE(`hos_code`),
-	CONSTRAINT `user_provider_position_unique` UNIQUE(`position`)
+	CONSTRAINT `user_provider_hos_code_unique` UNIQUE(`hos_code`)
 );
 --> statement-breakpoint
 CREATE TABLE `user_provider_vhv` (

@@ -1,1 +1,0 @@
-ALTER TABLE `user_provider` ADD PRIMARY KEY(`user_id`);

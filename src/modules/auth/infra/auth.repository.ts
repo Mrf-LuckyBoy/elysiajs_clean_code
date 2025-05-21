@@ -22,6 +22,13 @@ export const AuthRepository = {
         fname: providerUser.firstname_th,
         lname: providerUser.lastname_th,
         position: organiz.position,
+        hno: organiz.address.address,
+        soi_road: !organiz.address.soi
+          ? organiz.address.street || '-'
+          : organiz.address.soi || '-',
+        province: organiz.address.province,
+        district: organiz.address.district,
+        sub_district: organiz.address.sub_district,
         createAt: new Date(),
         updateAt: new Date(),
       };
@@ -40,6 +47,11 @@ export const AuthRepository = {
                 fname: user.fname,
                 lname: user.lname,
                 position: user.position,
+                hno: user.hno,
+                soi_road: user.soi_road,
+                province: user.province,
+                district: user.district,
+                sub_district: user.sub_district,
                 updateAt: user.updateAt,
               },
             })
@@ -60,6 +72,11 @@ export const AuthRepository = {
                 fname: user.fname,
                 lname: user.lname,
                 position: user.position,
+                hno: user.hno,
+                soi_road: user.soi_road,
+                province: user.province,
+                district: user.district,
+                sub_district: user.sub_district,
                 updateAt: user.updateAt,
               },
             })

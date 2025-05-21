@@ -2,7 +2,7 @@ import { t, Context } from 'elysia';
 import { loginProviderID } from '../usecase/login-providerID';
 import { loginSetToken } from '../usecase/login-setToken';
 import { HttpResponse, HttpResponseSchema } from '@/core/http.response';
-// import { UserProviderSchema } from '../model/auth.model';
+import { UserProviderSchema } from '../model/auth.model';
 
 export const authController = {
   loginProviderID: {
@@ -11,11 +11,11 @@ export const authController = {
         code: t.String(),
       }),
       response: {
-        // 200: t.Object({
-        //   success: t.Boolean(),
-        //   message: t.String(),
-        //   data: t.Array(UserProviderSchema),
-        // }),
+        201: t.Object({
+          success: t.Boolean(),
+          message: t.String(),
+          data: t.Array(UserProviderSchema),
+        }),
         400: HttpResponseSchema.badRequest(),
         500: HttpResponseSchema.error(),
       },
@@ -52,11 +52,11 @@ export const authController = {
         position: t.String(),
       }),
       response: {
-        // 200: t.Object({
-        //   success: t.Boolean(),
-        //   message: t.String(),
-        //   data: t.String(),
-        // }),
+        201: t.Object({
+          success: t.Boolean(),
+          message: t.String(),
+          data: t.String(),
+        }),
         400: HttpResponseSchema.badRequest(),
         500: HttpResponseSchema.error(),
       },
@@ -82,7 +82,7 @@ export const authController = {
           httpOnly: true,
         });
         auth_token.value = token;
-        set.status = 200;
+        set.status = 201;
         return {
           success: true,
           message: 'Success',

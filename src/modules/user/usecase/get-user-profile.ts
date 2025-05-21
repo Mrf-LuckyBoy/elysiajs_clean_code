@@ -12,7 +12,7 @@ export async function getUserProfile(decoded: any): Promise<ProfileResult> {
     
     const vhvProfile: VhvProfileDTO = {
         cid: decoded.cid_hash,
-        name :  `${decoded.title || ''} ${decoded.fname || ''} ${decoded.lname || '-'}`.trim(),
+        name :  `${decoded.title} ${decoded.fname} ${decoded.lname}`.trim(),
         position: decoded.position,
         phone_number:  decoded.phone_number || '-',
         usage_rights: right,

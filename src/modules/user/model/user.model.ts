@@ -13,7 +13,7 @@ export interface UserProfileDTO {
   dob: string;
   email : string;
   usage_rights: string;
-  signature_pad: string;
+  signature_pad: string | null
 }
 
 export interface VhvProfileDTO {

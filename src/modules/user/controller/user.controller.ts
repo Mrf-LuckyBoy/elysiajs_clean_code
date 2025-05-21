@@ -1,4 +1,4 @@
-import { Context, t } from 'elysia';
+import { Cookie, t } from 'elysia';
 import { getUserById } from '../usecase/get-user';
 import { createUser } from '../usecase/create-user';
 import { getUsers } from '../usecase/gets-user';
@@ -54,17 +54,10 @@ export const userController = {
   getUserProfile: {
     schema: {
 response: {
-   200: t.Union([
-        t.Object({
-          success: t.Boolean(),
-          data: UserProfile,
-        }),
-        // VHV user response
-        t.Object({
-          success: t.Boolean(),
-          data: VhvProfile,
-        })
-      ]),
+      200: t.Object({
+        success: t.Boolean(),
+        data: t.Union([UserProfile, VhvProfile])
+      }),
         401: t.Object({
           success: t.Boolean(),
           message: t.String()
@@ -73,14 +66,15 @@ response: {
           success: t.Boolean(),
           message: t.String()
         }),
+        
       },
       summary: 'Get user profile',
       description: 'Fetch user profile from auth token',
       tags: ['User'],
     },
-    handler: async ({ set, cookie: { auth_token } }: Context) => {
+   handler: async ({ set, cookie }: { set: any; cookie: Record<string, Cookie<string | undefined>>; }) => {
       try {
-        const token = auth_token.value
+        const token = cookie.auth_token.value
         if (!token) {
           set.status = 401;
           return HttpResponse.unauthorized('Missing auth token');

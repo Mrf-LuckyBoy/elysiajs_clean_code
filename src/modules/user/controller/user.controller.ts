@@ -7,6 +7,7 @@ import { deleteUser } from '../usecase/delete-user';
 import { HttpResponse } from '@/core/http.response';
 import { Jwt } from '@/core/jwt';
 import { getUserProfile } from '../usecase/get-user-profile';
+import { UserProfile, VhvProfile } from '../model/user.model';
 
 export const userController = {
   gets: {
@@ -53,22 +54,19 @@ export const userController = {
   getUserProfile: {
     schema: {
 response: {
-      200: t.Object({
-        success: t.Boolean(),
-        data: t.Object({
-          cid: t.String(),
-          hos_code: t.String(),
-          name: t.String(),
-          position: t.String(),
-          phone_number: t.String(),
-          usage_rights: t.String(),
-          dob: t.String(),
-          email: t.Nullable(t.String()),
-          signature_pad: t.Nullable(t.String()),
-          moo: t.Nullable(t.String()),
-          address: t.Nullable(t.String()),
-        })
+   200: t.Union([
+        t.Object({
+          success: t.Boolean(),
+          data: UserProfile,
+          user_type: t.Literal("provider")
         }),
+        // VHV user response
+        t.Object({
+          success: t.Boolean(),
+          data: VhvProfile,
+          user_type: t.Literal("vhv")
+        })
+      ]),
         401: t.Object({
           success: t.Boolean(),
           message: t.String()
@@ -85,15 +83,23 @@ response: {
     handler: async ({ set, cookie: { auth_token } }: Context) => {
       try {
         const token = auth_token.value
+        if (!token) {
+          set.status = 401;
+          return HttpResponse.unauthorized('Missing auth token');
+        }
+
         const decoded = await Jwt.verify(token || '')
         if (!decoded) {
           set.status = 401
           return HttpResponse.unauthorized('Invalid or expired token')
         }
 
-        const userProfileDTO = await getUserProfile(decoded)
+        const profile = await getUserProfile(decoded)
+        
+        const isVhv = 'work_area' in profile;
+
         set.status = 200                
-        return { success: true, data: userProfileDTO }
+        return { success: true, data: profile, user_type: isVhv ? 'vhv' : 'provider' }
 
       } catch (err: unknown) {        
         set.status = 500

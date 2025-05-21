@@ -22,4 +22,5 @@ export const userRoute = new Elysia({ prefix: '/users' })
   .get('/', userController.gets.handler, userController.gets.Schema)
   .post('/', userController.create.handler, userController.create.schema)
   .put('/', userController.update.handler, userController.update.schema)
-  .delete('/:id', userController.delete.handler, userController.delete.schema);
+  .delete('/:id', userController.delete.handler, userController.delete.schema)
+  .get('/profile', userController.getUserProfile.handler, userController.getUserProfile.schema)

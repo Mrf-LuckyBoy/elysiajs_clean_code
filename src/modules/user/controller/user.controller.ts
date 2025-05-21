@@ -1,9 +1,12 @@
-import { t } from 'elysia';
+import { Context, t } from 'elysia';
 import { getUserById } from '../usecase/get-user';
 import { createUser } from '../usecase/create-user';
 import { getUsers } from '../usecase/gets-user';
 import { updateUser } from '../usecase/update-user';
 import { deleteUser } from '../usecase/delete-user';
+import { HttpResponse } from '@/core/http.response';
+import { Jwt } from '@/core/jwt';
+import { getUserProfile } from '../usecase/get-user-profile';
 
 export const userController = {
   gets: {
@@ -47,6 +50,60 @@ export const userController = {
       return { success: true, data: user };
     },
   },
+  getUserProfile: {
+    schema: {
+response: {
+      200: t.Object({
+        success: t.Boolean(),
+        data: t.Object({
+          cid: t.String(),
+          hos_code: t.String(),
+          name: t.String(),
+          position: t.String(),
+          phone_number: t.String(),
+          usage_rights: t.String(),
+          dob: t.String(),
+          email: t.Nullable(t.String()),
+          signature_pad: t.Nullable(t.String()),
+          moo: t.Nullable(t.String()),
+          address: t.Nullable(t.String()),
+        })
+        }),
+        401: t.Object({
+          success: t.Boolean(),
+          message: t.String()
+        }),
+        500: t.Object({
+          success: t.Boolean(),
+          message: t.String()
+        }),
+      },
+      summary: 'Get user profile',
+      description: 'Fetch user profile from auth token',
+      tags: ['User'],
+    },
+    handler: async ({ set, cookie: { auth_token } }: Context) => {
+      try {
+        const token = auth_token.value
+        const decoded = await Jwt.verify(token || '')
+        if (!decoded) {
+          set.status = 401
+          return HttpResponse.unauthorized('Invalid or expired token')
+        }
+
+        const userProfileDTO = await getUserProfile(decoded)
+        set.status = 200                
+        return { success: true, data: userProfileDTO }
+
+      } catch (err: unknown) {        
+        set.status = 500
+        if (err instanceof Error) {
+          return HttpResponse.error(err.message)
+        }
+        return HttpResponse.error('Unexpected error')
+      }
+    }
+},
   create: {
     schema: {
       body: t.Object({

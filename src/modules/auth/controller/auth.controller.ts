@@ -83,7 +83,7 @@ export const authController = {
     handler: async ({
       body,
       set,
-      cookie: { auth_token },
+cookie: { auth_token },
     }: Context & {
       body: { cid_hash: string; hos_code: string; position: string };
     }) => {

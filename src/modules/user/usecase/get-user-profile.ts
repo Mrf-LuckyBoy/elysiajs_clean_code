@@ -7,7 +7,6 @@ export async function getUserProfile(decoded: any): Promise<ProfileResult> {
     const isVhv = decoded.position === "อสม." ||
                 decoded.position === "อสม" ||
                 decoded.position === "อาสาสมัครสาธารณสุขประจำหมู่บ้าน (อสม.)";
-
     if (isVhv) {
         right = "อสม.";
     

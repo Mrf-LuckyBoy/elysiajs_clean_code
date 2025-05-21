@@ -58,13 +58,11 @@ response: {
         t.Object({
           success: t.Boolean(),
           data: UserProfile,
-          user_type: t.Literal("provider")
         }),
         // VHV user response
         t.Object({
           success: t.Boolean(),
           data: VhvProfile,
-          user_type: t.Literal("vhv")
         })
       ]),
         401: t.Object({
@@ -96,10 +94,8 @@ response: {
 
         const profile = await getUserProfile(decoded)
         
-        const isVhv = 'work_area' in profile;
-
         set.status = 200                
-        return { success: true, data: profile, user_type: isVhv ? 'vhv' : 'provider' }
+        return { success: true, data: profile  }
 
       } catch (err: unknown) {        
         set.status = 500

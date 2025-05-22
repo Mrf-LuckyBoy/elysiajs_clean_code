@@ -10,6 +10,11 @@ export interface UserProfileDTO {
   email : string;
   usage_rights: string;
   signature_pad: string | null
+  hno: string;
+  soi_road: string;
+  province: string;
+  district: string;
+  sub_district: string;
 }
 
 export interface VhvProfileDTO {
@@ -20,7 +25,11 @@ export interface VhvProfileDTO {
   dob: string;
   usage_rights: string;
   work_area : string;
-  address : string
+  hno: string;
+  soi_road: string;
+  province: string;
+  district: string;
+  sub_district: string;
 }
 
 export type ProfileResult = UserProfileDTO | VhvProfileDTO;
@@ -35,6 +44,11 @@ export const UserProfile = t.Object({
   email: t.String(),
   usage_rights: t.String(),
   signature_pad: t.Nullable(t.String()),
+  hno: t.String(),
+  soi_road: t.String(),
+  province: t.String(),
+  district: t.String(),
+  sub_district: t.String(),
 });
 
 export const VhvProfile = t.Object({
@@ -45,5 +59,9 @@ export const VhvProfile = t.Object({
   dob: t.String(),
   usage_rights: t.String(),
   work_area: t.String(),
-  address: t.String()
+  hno: t.String(),
+  soi_road: t.String(),
+  province: t.String(),
+  district: t.String(),
+  sub_district: t.String(),
 });

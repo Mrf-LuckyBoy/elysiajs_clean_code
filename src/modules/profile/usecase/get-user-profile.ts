@@ -18,7 +18,11 @@ export async function getUserProfile(decoded: any): Promise<ProfileResult> {
         usage_rights: right,
         dob: decoded.dob || '-',
         work_area: decoded.work_area || '-',
-        address: decoded.address || '-',
+        hno: decoded.hno || '-',
+        soi_road: decoded.soi_road || '-',
+        province: decoded.province || '-',
+        district: decoded.district || '-',
+        sub_district: decoded.sub_district || '-',
     };
     return vhvProfile;
 
@@ -33,6 +37,11 @@ export async function getUserProfile(decoded: any): Promise<ProfileResult> {
             dob: decoded.dob || '-',
             email: decoded.email || '-',
             signature_pad: decoded.signature_pad || null,
+            hno: decoded.hno || '-',
+            soi_road: decoded.soi_road || '-',
+            province: decoded.province || '-',
+            district: decoded.district || '-',
+            sub_district: decoded.sub_district || '-',
         };
         return useProfile;
     }

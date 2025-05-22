@@ -1,4 +1,4 @@
-import { ProfileResult, UserProfileDTO, VhvProfileDTO } from "../model/user.model";
+import { ProfileResult, UserProfileDTO, VhvProfileDTO } from "../model/profile.model";
 
 export async function getUserProfile(decoded: any): Promise<ProfileResult> {
  

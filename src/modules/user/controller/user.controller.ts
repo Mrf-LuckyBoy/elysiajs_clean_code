@@ -4,10 +4,6 @@ import { createUser } from '../usecase/create-user';
 import { getUsers } from '../usecase/gets-user';
 import { updateUser } from '../usecase/update-user';
 import { deleteUser } from '../usecase/delete-user';
-import { HttpResponse } from '@/core/http.response';
-import { Jwt } from '@/core/jwt';
-import { getUserProfile } from '../usecase/get-user-profile';
-import { UserProfile, VhvProfile } from '../model/user.model';
 
 export const userController = {
   gets: {
@@ -51,55 +47,6 @@ export const userController = {
       return { success: true, data: user };
     },
   },
-  getUserProfile: {
-    schema: {
-response: {
-      200: t.Object({
-        success: t.Boolean(),
-        data: t.Union([UserProfile, VhvProfile])
-      }),
-        401: t.Object({
-          success: t.Boolean(),
-          message: t.String()
-        }),
-        500: t.Object({
-          success: t.Boolean(),
-          message: t.String()
-        }),
-        
-      },
-      summary: 'Get user profile',
-      description: 'Fetch user profile from auth token',
-      tags: ['User'],
-    },
-   handler: async ({ set, cookie }: { set: any; cookie: Record<string, Cookie<string | undefined>>; }) => {
-      try {
-        const token = cookie.auth_token.value
-        if (!token) {
-          set.status = 401;
-          return HttpResponse.unauthorized('Missing auth token');
-        }
-
-        const decoded = await Jwt.verify(token || '')
-        if (!decoded) {
-          set.status = 401
-          return HttpResponse.unauthorized('Invalid or expired token')
-        }
-
-        const profile = await getUserProfile(decoded)
-        
-        set.status = 200                
-        return { success: true, data: profile  }
-
-      } catch (err: unknown) {        
-        set.status = 500
-        if (err instanceof Error) {
-          return HttpResponse.error(err.message)
-        }
-        return HttpResponse.error('Unexpected error')
-      }
-    }
-},
   create: {
     schema: {
       body: t.Object({

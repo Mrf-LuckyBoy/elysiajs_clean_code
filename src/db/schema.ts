@@ -48,3 +48,23 @@ export const user_provider_vhv = mysqlTable(
   },
   (t) => [unique('custom_unique').on(t.cid_hash, t.hos_code)]
 );
+
+export const address_code = mysqlTable('address_code', {
+  addresscode: varchar('addresscode', { length: 100 }).primaryKey(),
+  provcode: varchar('provcode', { length: 100 }).notNull(),
+  provname: varchar('provname', { length: 255 }).notNull(),
+  distcode: varchar('distcode', { length: 100 }).notNull(),
+  distname: varchar('distname', { length: 255 }).notNull(),
+  subdistcode: varchar('subdistcode', { length: 100 }).notNull(),
+  subdistname: varchar('subdistname', { length: 255 }).notNull(),
+  area: varchar('area', { length: 100 }).notNull(),
+  areacode: varchar('areacode', { length: 100 }).notNull(),
+  zipcode: varchar('zipcode', { length: 100 }).notNull(),
+});
+
+// title
+export const title_normalize = mysqlTable('title_normalize', {
+  title_id: varchar('title_id', { length: 45 }).notNull(),
+  title_th: varchar('title_th', { length: 45 }).notNull(),
+  title_en: varchar('title_en', { length: 45 }).notNull(),
+});

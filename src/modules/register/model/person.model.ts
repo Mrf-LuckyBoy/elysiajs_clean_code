@@ -2,26 +2,26 @@ import { t } from 'elysia';
 
 export interface PersonDTO {
   pid: string;
-  med_id: string;
   pid_hdc: string;
+  med_id: string;
   hcode_cid: string;
-  sex: string;
+  sex: string; // likely 'M' or 'F', but just string as per varchar(1)
   idcard: string;
   title: string;
   first_name: string;
   last_name: string;
   birth: Date;
   phone: string;
-  boot_type: string;
-  consent: boolean;
-  status: string;
+  blood_type: string;
+  status: 'approve' | 'cancel' | 'delete';
   reason_cancel: string;
+  consent: boolean;
   hcode: string;
   guardian: string;
-  is_delete: boolean;
+  is_delete: boolean | null; // nullable because not `.notNull()`
   village: string;
-  created_at: Date;
-  updated_at: Date;
+  created_at: Date | null;
+  updated_at: Date | null;
 }
 
 export interface TitleNormalizeDTO {
@@ -110,6 +110,9 @@ export interface RegisterFormDTO {
   address_current: AddressDTO;
   type_card: boolean;
   type_guardian: boolean;
+  address_current_string: string;
+  address_cid_string: string;
+  address_guardian_string: string;
 }
 
 // ข้อมูลผู้ดูแล + ที่อยู่
@@ -119,7 +122,7 @@ export interface RegisterGuardianDTO {
   title: string;
   first_name: string;
   last_name: string;
-  birth: string;
+  birth: Date;
   phone: string;
   // Address
   hcode: string;

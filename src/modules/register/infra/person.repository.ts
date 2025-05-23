@@ -14,17 +14,17 @@ import type {
   RegisterFormDTO,
   AddressDTO,
 } from '../model/person.model';
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { randomUUID } from 'crypto';
 
 export const PersonRepository = {
   async createPerson(person: PersonDTO): Promise<void> {
     await db.insert(persons).values(person);
   },
-  async finds(): Promise<PersonDTO[] | null> {
-    const result = await db.select().from(persons);
-    return result || null;
-  },
+  // async finds(): Promise<PersonDTO[] | null> {
+  //   const result: PersonDTO[] = await db.select().from(persons);
+  //   return result || null;
+  // },
   async createMedical(medical: MedicalHistoryDTO): Promise<void> {
     await db.insert(medical_history).values(medical);
   },
@@ -35,6 +35,7 @@ export const PersonRepository = {
     await db.insert(guardians).values(guardian);
   },
   async registerFrom(form: RegisterFormDTO): Promise<RegisterFormDTO> {
+    // main form 1
     if (form.pid === '') {
       const med_id = randomUUID();
       const person_id = randomUUID();
@@ -59,7 +60,7 @@ export const PersonRepository = {
         first_name: form.first_name,
         last_name: form.last_name,
         birth: form.birth,
-        boot_type: form.boot_type,
+        blood_type: form.boot_type,
         phone: form.phone,
         consent: false,
         status: 'approve',
@@ -75,12 +76,12 @@ export const PersonRepository = {
 
       form.pid = person_id;
     }
-
+    // main form 2
     if (form.address_cid.villcode === '' && form.address_cid.villcode === '') {
       if (form.type_card === true) {
-        const address = randomUUID();
+        const address_id = randomUUID();
         const address_person: AddressDTO = {
-          hcode: address,
+          hcode: address_id,
           hno: form.address_cid.hno,
           hcode_hdc: '',
           village: '',
@@ -93,12 +94,14 @@ export const PersonRepository = {
         await db.insert(address).values(address_person);
         await db
           .update(persons)
-          .set({ hcode: address, hcode_cid: address })
-          .where(eq((persons.pid = form.pid)));
+          .set({ hcode: address_id, hcode_cid: address_id })
+          .where(eq(persons.pid, form.pid));
+        form.address_current.hcode = address_id;
+        form.address_cid.hcode = address_id;
       } else {
-        const address = randomUUID();
+        const address_id = randomUUID();
         const address_person: AddressDTO = {
-          hcode: address,
+          hcode: address_id,
           hno: form.address_cid.hno,
           hcode_hdc: '',
           village: '',
@@ -124,19 +127,162 @@ export const PersonRepository = {
         await db.insert(address).values(address_person2);
         await db
           .update(persons)
-          .set({ hcode: address2, hcode_cid: address })
-          .where(eq((persons.pid = form.pid)));
+          .set({ hcode: address_id, hcode_cid: address2 })
+          .where(eq(persons.pid, form.pid));
+        form.address_current.hcode = address2;
+        form.address_cid.hcode = address_id;
       }
     }
-
+    // main form 3
     if (form.guardian.idcard === '') {
       const guardian_id = randomUUID();
       if (form.type_guardian === true) {
-        db.select({hcode: users.hcode}).from(persons).where()
+        const hcodeA = await db
+          .select({ hcode: persons.hcode })
+          .from(persons)
+          .where(eq(persons.pid, form.pid));
+        const guardians_data: GuardianDTO = {
+          guardian_id,
+          idcard: form.guardian.idcard,
+          relationships: form.guardian.relationships,
+          title: form.guardian.title,
+          first_name: form.guardian.first_name,
+          last_name: form.guardian.last_name,
+          birth: form.guardian.birth,
+          phone: form.guardian.phone,
+          hcode: hcodeA[0].hcode,
+          created_at: new Date(),
+          updated_at: new Date(),
+        };
+        await db.insert(guardians).values(guardians_data);
+        form.guardian.hcode = hcodeA[0].hcode;
+        const fullAddressCurrent: {
+          fullAddress: string;
+        }[] = await db
+          .select({
+            fullAddress:
+              sql<string>`CONCAT(${address.hno}, ' ', ${address.street}, ' ', ${address_code.subdistname}, ' ', ${address_code.distname}, ' ', ${address_code.provname})`.as(
+                'fullAddress'
+              ),
+          })
+          .from(address)
+          .leftJoin(
+            address_code,
+            eq(address.villcode, address_code.addresscode)
+          )
+          .where(eq(address.hcode, form.address_current.hcode));
+        const fullAddressCid: {
+          fullAddress: string;
+        }[] = await db
+          .select({
+            fullAddress:
+              sql<string>`CONCAT(${address.hno}, ' ', ${address.street}, ' ', ${address_code.subdistname}, ' ', ${address_code.distname}, ' ', ${address_code.provname})`.as(
+                'fullAddress'
+              ),
+          })
+          .from(address)
+          .leftJoin(
+            address_code,
+            eq(address.villcode, address_code.addresscode)
+          )
+          .where(eq(address.hcode, form.address_cid.hcode));
+        const fullGuardian: {
+          fullAddress: string;
+        }[] = await db
+          .select({
+            fullAddress:
+              sql<string>`CONCAT(${address.hno}, ' ', ${address.street}, ' ', ${address_code.subdistname}, ' ', ${address_code.distname}, ' ', ${address_code.provname})`.as(
+                'fullAddress'
+              ),
+          })
+          .from(address)
+          .leftJoin(
+            address_code,
+            eq(address.villcode, address_code.addresscode)
+          )
+          .where(eq(address.hcode, form.guardian.hcode));
+        form.address_current_string = fullAddressCurrent[0].fullAddress;
+        form.address_cid_string = fullAddressCid[0].fullAddress;
+        form.address_guardian_string = fullGuardian[0].fullAddress;
+      } else {
+        const address_id = randomUUID();
+        const address_guardians: AddressDTO = {
+          hcode: address_id,
+          hno: form.guardian.hno,
+          hcode_hdc: '',
+          village: '',
+          street: form.guardian.street,
+          moo: form.guardian.moo,
+          villcode: form.guardian.villcode,
+          created_at: new Date(),
+          updated_at: new Date(),
+        };
+        await db.insert(address).values(address_guardians);
+        const guardians_data: GuardianDTO = {
+          guardian_id,
+          idcard: form.guardian.idcard,
+          relationships: form.guardian.relationships,
+          title: form.guardian.title,
+          first_name: form.guardian.first_name,
+          last_name: form.guardian.last_name,
+          birth: form.guardian.birth,
+          phone: form.guardian.phone,
+          hcode: address_id,
+          created_at: new Date(),
+          updated_at: new Date(),
+        };
+        await db.insert(guardians).values(guardians_data);
+        form.guardian.hcode = address_id;
+        const fullAddressCurrent: {
+          fullAddress: string;
+        }[] = await db
+          .select({
+            fullAddress:
+              sql<string>`CONCAT(${address.hno}, ' ', ${address.street}, ' ', ${address_code.subdistname}, ' ', ${address_code.distname}, ' ', ${address_code.provname})`.as(
+                'fullAddress'
+              ),
+          })
+          .from(address)
+          .leftJoin(
+            address_code,
+            eq(address.villcode, address_code.addresscode)
+          )
+          .where(eq(address.hcode, form.address_current.hcode));
+        const fullAddressCid: {
+          fullAddress: string;
+        }[] = await db
+          .select({
+            fullAddress:
+              sql<string>`CONCAT(${address.hno}, ' ', ${address.street}, ' ', ${address_code.subdistname}, ' ', ${address_code.distname}, ' ', ${address_code.provname})`.as(
+                'fullAddress'
+              ),
+          })
+          .from(address)
+          .leftJoin(
+            address_code,
+            eq(address.villcode, address_code.addresscode)
+          )
+          .where(eq(address.hcode, form.address_cid.hcode));
+        const fullGuardian: {
+          fullAddress: string;
+        }[] = await db
+          .select({
+            fullAddress:
+              sql<string>`CONCAT(${address.hno}, ' ', ${address.street}, ' ', ${address_code.subdistname}, ' ', ${address_code.distname}, ' ', ${address_code.provname})`.as(
+                'fullAddress'
+              ),
+          })
+          .from(address)
+          .leftJoin(
+            address_code,
+            eq(address.villcode, address_code.addresscode)
+          )
+          .where(eq(address.hcode, form.guardian.hcode));
+        form.address_current_string = fullAddressCurrent[0].fullAddress;
+        form.address_cid_string = fullAddressCid[0].fullAddress;
+        form.address_guardian_string = fullGuardian[0].fullAddress;
       }
     }
-
-    // await db.select().from(persons).where(eq(persons.pid, form.pid));
     return form;
   },
 };

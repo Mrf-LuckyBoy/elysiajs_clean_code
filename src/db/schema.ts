@@ -59,14 +59,14 @@ export const persons = mysqlTable('person', {
   last_name: varchar('last_name', { length: 255 }).notNull(),
   birth: date('birth').notNull(),
   phone: varchar('phone', { length: 10 }).notNull(),
-  boot_type: varchar('boot_type', { length: 255 }).notNull(),
+  blood_type: varchar('boot_type', { length: 255 }).notNull(),
   // consent: varchar('consent', { length: 255 }).notNull(),
   status: mysqlEnum('status', ['approve', 'cancel', 'delete']).notNull(), // approve cancel delete
   reason_cancel: varchar('reason_cancel', { length: 255 }).notNull(),
   consent: boolean('consent').default(false).notNull(), // TRUE / FALSE
   hcode: varchar('hcode', { length: 100 }).notNull(),
   guardian: varchar('guardian', { length: 100 }).notNull(),
-  is_delect: boolean('is_delect').default(false),
+  is_delete: boolean('is_delect').default(false),
   village: varchar('village', { length: 100 }).notNull(),
   created_at: timestamp('created_at').defaultNow(),
   updated_at: timestamp('updated_at').defaultNow().onUpdateNow(),

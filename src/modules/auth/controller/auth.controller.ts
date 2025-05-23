@@ -30,7 +30,7 @@ export const authController = {
           set.status = 400;
           return HttpResponse.badRequest('ไม่มีหน่วยบริการที่สามารถใช้งานได้');
         }
-        set.status = 200;
+        set.status = 201;
         return HttpResponse.success(useable);
       } catch (err: unknown) {
         if (err instanceof Error) {

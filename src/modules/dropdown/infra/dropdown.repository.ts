@@ -8,7 +8,7 @@ export const DropdownRepository = {
     const result: TitleName[] = await db.select().from(title_normalize);
     return result;
   },
-    async dropdownVillcode(): Promise<void>{
+  // async dropdownVillcode(): Promise<void>{
 
-    },
+  // },
 };

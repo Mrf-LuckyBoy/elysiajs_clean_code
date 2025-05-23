@@ -68,3 +68,10 @@ export const title_normalize = mysqlTable('title_normalize', {
   title_th: varchar('title_th', { length: 45 }).notNull(),
   title_en: varchar('title_en', { length: 45 }).notNull(),
 });
+
+// relationship
+export const relationship = mysqlTable('relationship', {
+  relationship_id: varchar('relationship_id', { length: 45 }).notNull(),
+  relationship_th: varchar('relationship_th', { length: 45 }).notNull(),
+  relationship_en: varchar('relationship_en', { length: 45 }).notNull(),
+});

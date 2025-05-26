@@ -43,4 +43,4 @@ docker-build:
   except:
     - branches
   tags:
-    - dhi-ci
+    - deploy-runner

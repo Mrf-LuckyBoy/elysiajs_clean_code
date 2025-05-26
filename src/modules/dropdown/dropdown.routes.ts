@@ -16,4 +16,14 @@ export const dropdownRoute = new Elysia({ prefix: '/dropdown' })
     '/relationship',
     dropdownController.dropdownRelationship.handler,
     dropdownController.dropdownRelationship.Schema
+  )
+  .get(
+    '/users',
+    dropdownController.dropdownUser.handler,
+    dropdownController.dropdownUser.Schema
+  )
+  .get(
+    '/users_vhv',
+    dropdownController.dropdownUserVhv.handler,
+    dropdownController.dropdownUserVhv.Schema
   );

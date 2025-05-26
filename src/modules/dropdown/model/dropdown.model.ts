@@ -49,3 +49,21 @@ export const RelationshipSchema = t.Object({
   relationship_th: t.String({ maxLength: 45 }),
   relationship_en: t.String({ maxLength: 45 }),
 });
+export interface users {
+  user_id: string;
+  hos_code: string;
+  hos_name: string;
+  title: string;
+  fname: string;
+  lname: string;
+}
+
+export interface usersVhv {
+  user_id: string;
+  hos_code: string;
+  hos_name: string;
+  title: string;
+  fname: string;
+  lname: string;
+}
+

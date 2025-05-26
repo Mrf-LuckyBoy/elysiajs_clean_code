@@ -1,7 +1,19 @@
 import { db } from '@/db';
 // import { eq, and } from 'drizzle-orm';
-import { address_code, title_normalize, relationship } from '@/db/schema';
-import { TitleName, AddressCode, Relationship } from '../model/dropdown.model';
+import {
+  address_code,
+  title_normalize,
+  relationship,
+  user_provider,
+  user_provider_vhv,
+} from '@/db/schema';
+import {
+  TitleName,
+  AddressCode,
+  Relationship,
+  users,
+  usersVhv
+} from '../model/dropdown.model';
 
 export const DropdownRepository = {
   async dropdownTitle(): Promise<TitleName[]> {
@@ -20,6 +32,17 @@ export const DropdownRepository = {
       .from(relationship);
     return relationshipResult;
   },
+
+  async dropdownUser(): Promise<users[]> {
+    const userResult: users[] = await db.select().from(user_provider);
+    return userResult;
+  },
+
+  async dropdownUserVhv(): Promise<usersVhv[]> {
+    const userVhvResult: usersVhv[] = await db.select().from(user_provider_vhv);
+    return userVhvResult;
+  },
+  // async dropdownฏoctor(): Promise<>
   // async dropdownVillcode(): Promise<void>{
 
   // },

@@ -5,6 +5,7 @@ export const users = mysqlTable('users', {
   name: varchar('name', { length: 255 }).notNull(),
 });
 
+//แพทย์
 export const user_provider = mysqlTable(
   'user_provider',
   {
@@ -27,6 +28,7 @@ export const user_provider = mysqlTable(
   (t) => [unique('custom_unique').on(t.cid_hash, t.hos_code)]
 );
 
+// อสม.
 export const user_provider_vhv = mysqlTable(
   'user_provider_vhv',
   {
@@ -71,7 +73,8 @@ export const title_normalize = mysqlTable('title_normalize', {
 
 // relationship
 export const relationship = mysqlTable('relationship', {
-  relationship_id: varchar('relationship_id', { length: 45 }).notNull(),
+  relationship_id: varchar('relationship_id', { length: 45 }).primaryKey(),
   relationship_th: varchar('relationship_th', { length: 45 }).notNull(),
   relationship_en: varchar('relationship_en', { length: 45 }).notNull(),
 });
+

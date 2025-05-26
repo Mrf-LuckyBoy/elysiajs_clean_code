@@ -1,4 +1,4 @@
-import { t } from "elysia";
+import { t } from 'elysia';
 
 export interface ScreeningRequestDTO {
     visit_id?: string;

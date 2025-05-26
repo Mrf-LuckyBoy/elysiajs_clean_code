@@ -14,6 +14,7 @@ export const users = mysqlTable('users', {
   name: varchar('name', { length: 255 }).notNull(),
 });
 
+//แพทย์
 export const user_provider = mysqlTable(
   'user_provider',
   {
@@ -25,12 +26,18 @@ export const user_provider = mysqlTable(
     fname: varchar('fname', { length: 255 }),
     lname: varchar('lname', { length: 255 }),
     position: varchar('position', { length: 255 }).notNull(),
+    hno: varchar('hno', { length: 20 }),
+    soi_road: varchar('soi_road', { length: 20 }),
+    province: varchar('province', { length: 20 }),
+    district: varchar('district', { length: 20 }),
+    sub_district: varchar('sub_district', { length: 20 }),
     createAt: timestamp('createAt', { mode: 'date' }),
     updateAt: timestamp('updateAt', { mode: 'date' }),
   },
   (t) => [unique('custom_unique').on(t.cid_hash, t.hos_code)]
 );
 
+// อสม.
 export const user_provider_vhv = mysqlTable(
   'user_provider_vhv',
   {
@@ -42,6 +49,11 @@ export const user_provider_vhv = mysqlTable(
     fname: varchar('fname', { length: 255 }),
     lname: varchar('lname', { length: 255 }),
     position: varchar('position', { length: 255 }).notNull(),
+    hno: varchar('hno', { length: 20 }),
+    soi_road: varchar('soi_road', { length: 20 }),
+    province: varchar('province', { length: 20 }),
+    district: varchar('district', { length: 20 }),
+    sub_district: varchar('sub_district', { length: 20 }),
     createAt: timestamp('createAt', { mode: 'date' }),
     updateAt: timestamp('updateAt', { mode: 'date' }),
   },
@@ -181,6 +193,7 @@ export const address_code = mysqlTable('address_code', {
   zipcode: varchar('zipcode', { length: 100 }).notNull(),
 });
 
+// relationship
 export const relationship = mysqlTable('relationship', {
   relationship_id: varchar('relationship_id', { length: 45 }).primaryKey(),
   relationship_th: varchar('relationship_th', { length: 45 }).notNull(),

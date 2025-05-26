@@ -13,7 +13,7 @@ export async function loginProviderID(
     provider.data.access_token
   );
   const arrayCheck = [];
-  for (const i of userStuff.data.data.organization) {
+  for (const i of userStuff.data.organization) {
     arrayCheck.push(
       ['0001', '0004', '0011', '0015', '0050', '0051', '0065'].includes(
         i.position_id
@@ -24,8 +24,6 @@ export async function loginProviderID(
   if (!resultCheck) {
     return [];
   }
-  const useableLits = await AuthRepository.upsertUserProvider(
-    userStuff.data.data
-  );
+  const useableLits = await AuthRepository.upsertUserProvider(userStuff.data);
   return useableLits;
 }

@@ -8,33 +8,17 @@ import {
 } from '@/db/schema';
 import type {
   PersonDTO,
-  Address_codeDTO,
   MedicalHistoryDTO,
   GuardianDTO,
-  RegisterFormDTO,
+  // RegisterFormDTO,
   AddressDTO,
+  NewRegisterFormDTO,
 } from '../model/person.model';
 import { eq, sql } from 'drizzle-orm';
 import { randomUUID } from 'crypto';
 
 export const PersonRepository = {
-  async createPerson(person: PersonDTO): Promise<void> {
-    await db.insert(persons).values(person);
-  },
-  // async finds(): Promise<PersonDTO[] | null> {
-  //   const result: PersonDTO[] = await db.select().from(persons);
-  //   return result || null;
-  // },
-  async createMedical(medical: MedicalHistoryDTO): Promise<void> {
-    await db.insert(medical_history).values(medical);
-  },
-  async insertManyAddressCodes(data: Address_codeDTO[]) {
-    await db.insert(address_code).values(data);
-  },
-  async createGuardian(guardian: GuardianDTO): Promise<void> {
-    await db.insert(guardians).values(guardian);
-  },
-  async registerFrom(form: RegisterFormDTO): Promise<RegisterFormDTO> {
+  async registerFrom(form: NewRegisterFormDTO): Promise<NewRegisterFormDTO> {
     // main form 1
     if (form.pid === '') {
       const med_id = randomUUID();
@@ -47,7 +31,7 @@ export const PersonRepository = {
         created_at: new Date(),
         updated_at: new Date(),
       };
-      await PersonRepository.createMedical(med);
+      await db.insert(medical_history).values(med);
 
       const person: PersonDTO = {
         pid: person_id,
@@ -60,7 +44,7 @@ export const PersonRepository = {
         first_name: form.first_name,
         last_name: form.last_name,
         birth: form.birth,
-        blood_type: form.boot_type,
+        blood_type: form.blood_type,
         phone: form.phone,
         consent: false,
         status: 'approve',
@@ -72,12 +56,12 @@ export const PersonRepository = {
         created_at: new Date(),
         updated_at: new Date(),
       };
-      await PersonRepository.createPerson(person);
+      await db.insert(persons).values(person);
 
       form.pid = person_id;
     }
     // main form 2
-    if (form.address_cid.villcode === '' && form.address_cid.villcode === '') {
+    if (form.address_cid.villcode !== '' && form.address_cid.villcode !== '') {
       if (form.type_card === true) {
         const address_id = randomUUID();
         const address_person: AddressDTO = {
@@ -98,6 +82,10 @@ export const PersonRepository = {
           .where(eq(persons.pid, form.pid));
         form.address_current.hcode = address_id;
         form.address_cid.hcode = address_id;
+        form.address_current.hno = form.address_cid.hno;
+        form.address_current.street = form.address_cid.street;
+        form.address_current.moo = form.address_cid.moo;
+        form.address_current.villcode = form.address_cid.villcode;
       } else {
         const address_id = randomUUID();
         const address_person: AddressDTO = {
@@ -134,7 +122,7 @@ export const PersonRepository = {
       }
     }
     // main form 3
-    if (form.guardian.idcard === '') {
+    if (form.guardian.idcard !== '') {
       const guardian_id = randomUUID();
       if (form.type_guardian === true) {
         const hcodeA = await db

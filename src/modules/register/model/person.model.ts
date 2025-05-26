@@ -94,9 +94,9 @@ export interface RegisterFormDTO {
   last_name: string;
   birth: Date;
   phone: string;
-  boot_type: string;
+  blood_type: string;
   // consent: string;
-  status: string;
+  // status: string;
   hcode: string;
   // guardian: string;
   village: string;
@@ -134,63 +134,163 @@ export interface RegisterGuardianDTO {
   villcode: string;
 }
 
+// AddressDTO Schema
+export const AddressSchema = t.Object({
+  hcode: t.String(),
+  hno: t.String(),
+  hcode_hdc: t.String(),
+  village: t.String(),
+  street: t.String(),
+  moo: t.String(),
+  villcode: t.String(),
+  created_at: t.String(), // Use string with date-time format
+  updated_at: t.String(),
+});
+
+// RegisterGuardianDTO Schema
+export const RegisterGuardianSchema = t.Object({
+  relationships: t.String(),
+  idcard: t.String(),
+  title: t.String(),
+  first_name: t.String(),
+  last_name: t.String(),
+  birth: t.String(),
+  phone: t.String(),
+  hcode: t.String(),
+  type_card: t.String(),
+  hno: t.String(),
+  village: t.String(),
+  street: t.String(),
+  moo: t.String(),
+  villcode: t.String(),
+});
+
+// RegisterFormDTO Schema
 export const RegisterFormSchema = t.Object({
-  pid: t.String({ description: 'pid of the person' }),
-  sex: t.String({ description: 'Sex (ชาย/หญิง)' }),
-  idcard: t.String({ description: 'ID card number' }),
-  title: t.String({ description: 'Title (e.g. นาย, นาง)' }),
-  first_name: t.String({ description: 'First name' }),
-  last_name: t.String({ description: 'Last name' }),
-  birth: t.String({
-    format: 'date',
-    description: 'Date of birth (YYYY-MM-DD)',
-  }),
-  phone: t.String({ description: 'Phone number' }),
-  boot_type: t.String({ description: 'Boot type' }),
-  consent: t.String({ description: 'Consent (true/false)' }),
-  status: t.String({ description: 'Status (approve/Cancel)' }),
-  hcode: t.String({ description: 'House code' }),
-  village: t.String({ description: 'Village' }),
-  chronic_disease: t.String({ description: 'Chronic disease' }),
-  allergy_history: t.String({ description: 'Allergy history' }),
-  allergy_symptoms: t.String({ description: 'Allergy symptoms' }),
+  pid: t.String(),
+  sex: t.String(),
+  idcard: t.String(),
+  title: t.String(),
+  first_name: t.String(),
+  last_name: t.String(),
+  birth: t.String(),
+  phone: t.String(),
+  blood_type: t.String(),
+  // status: t.String(),
+  hcode: t.String(),
+  village: t.String(),
+  chronic_disease: t.String(),
+  allergy_history: t.String(),
+  allergy_symptoms: t.String(),
+  guardian: RegisterGuardianSchema,
+  address_cid: AddressSchema,
+  address_current: AddressSchema,
+  // type_card: t.Boolean(),
+  type_card: t.Optional(t.Nullable(t.Boolean())),
+  type_guardian: t.Optional(t.Nullable(t.Boolean())),
+  address_current_string: t.String(),
+  address_cid_string: t.String(),
+  address_guardian_string: t.String(),
+});
 
-  guardian: t.Object({
-    relationships: t.String({ description: 'Relationship to patient' }),
-    idcard: t.String({ description: 'Guardian ID card' }),
-    title: t.String({ description: 'Guardian title' }),
-    first_name: t.String({ description: 'Guardian first name' }),
-    last_name: t.String({ description: 'Guardian last name' }),
-    birth: t.String({ format: 'date', description: 'Guardian birth date' }),
-    phone: t.String({ description: 'Guardian phone' }),
-    hcode: t.String({ description: 'Guardian house code' }),
-    type_card: t.String({ description: 'Card type' }),
-    hno: t.String({ description: 'House number' }),
-    village: t.String({ description: 'Village' }),
-    street: t.String({ description: 'Street' }),
-    moo: t.String({ description: 'Moo' }),
-    villcode: t.String({ description: 'Village code' }),
-  }),
+export interface NewRegisterFormDTO {
+  pid: string;
+  sex: string;
+  idcard: string;
+  title: string;
+  first_name: string;
+  last_name: string;
+  birth: Date;
+  phone: string;
+  blood_type: string;
+  hcode: string;
+  village: string;
+  chronic_disease: string;
+  allergy_history: string;
+  allergy_symptoms: string;
+  guardian: NewRegisterGuardianDTO;
+  address_cid: NewAddressDTO;
+  address_current: NewAddressDTO;
+  type_card: boolean;
+  type_guardian: boolean;
+  address_current_string: string;
+  address_cid_string: string;
+  address_guardian_string: string;
+}
 
-  address_cid: t.Object({
-    hcode: t.String(),
-    hno: t.String(),
-    village: t.String(),
-    street: t.String(),
-    moo: t.String(),
-    villcode: t.String(),
-    created_at: t.Date(),
-    updated_at: t.Date(),
-  }),
+export interface NewRegisterGuardianDTO {
+  relationships: string;
+  idcard: string;
+  title: string;
+  first_name: string;
+  last_name: string;
+  birth: Date;
+  phone: string;
+  hcode: string;
+  hno: string;
+  village: string;
+  street: string;
+  moo: string;
+  villcode: string;
+}
 
-  address_current: t.Object({
-    hcode: t.String(),
-    hno: t.String(),
-    village: t.String(),
-    street: t.String(),
-    moo: t.String(),
-    villcode: t.String(),
-    created_at: t.Date(),
-    updated_at: t.Date(),
-  }),
+export interface NewAddressDTO {
+  hcode: string;
+  hno: string;
+  hcode_hdc: string;
+  village: string;
+  street: string;
+  moo: string;
+  villcode: string;
+}
+
+export const NewAddressSchema = t.Object({
+  hcode: t.String(),
+  hno: t.String(),
+  hcode_hdc: t.String(),
+  village: t.String(),
+  street: t.String(),
+  moo: t.String(),
+  villcode: t.String(),
+});
+
+export const NewRegisterGuardianSchema = t.Object({
+  relationships: t.String(),
+  idcard: t.String(),
+  title: t.String(),
+  first_name: t.String(),
+  last_name: t.String(),
+  birth: t.String({ format: 'date-time', default: '0001-01-01' }), // or 'date' depending on your format
+  phone: t.String(),
+  hcode: t.String(),
+  hno: t.String(),
+  village: t.String(),
+  street: t.String(),
+  moo: t.String(),
+  villcode: t.String(),
+});
+
+export const NewRegisterFormSchema = t.Object({
+  pid: t.String(),
+  sex: t.String(),
+  idcard: t.String(),
+  title: t.String(),
+  first_name: t.String(),
+  last_name: t.String(),
+  birth: t.String({ format: 'date-time', default: '0001-01-01' }), // or 'date'
+  phone: t.String(),
+  blood_type: t.String(),
+  hcode: t.String(),
+  village: t.String(),
+  chronic_disease: t.String(),
+  allergy_history: t.String(),
+  allergy_symptoms: t.String(),
+  guardian: NewRegisterGuardianSchema,
+  address_cid: NewAddressSchema,
+  address_current: NewAddressSchema,
+  type_card: t.Boolean(),
+  type_guardian: t.Boolean(),
+  address_current_string: t.String(),
+  address_cid_string: t.String(),
+  address_guardian_string: t.String(),
 });

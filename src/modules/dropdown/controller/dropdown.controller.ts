@@ -63,7 +63,8 @@ export const dropdownController = {
     },
     handler: async ({ set }: Context) => {
       try {
-        const addresscode: AddressCode[] = await getAddressCode();
+        let addresscode: AddressCode[] = await getAddressCode();
+        addresscode = addresscode.filter((item) => item.addresscode !== '');
         set.status = 200;
         return HttpResponse.success(addresscode);
       } catch (err: unknown) {

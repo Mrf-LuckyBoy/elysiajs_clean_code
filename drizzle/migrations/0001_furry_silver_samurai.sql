@@ -1,0 +1,12 @@
+ALTER TABLE `person` ADD `HN` varchar(20);--> statement-breakpoint
+ALTER TABLE `user_provider` ADD `hno` varchar(20);--> statement-breakpoint
+ALTER TABLE `user_provider` ADD `soi_road` varchar(20);--> statement-breakpoint
+ALTER TABLE `user_provider` ADD `province` varchar(20);--> statement-breakpoint
+ALTER TABLE `user_provider` ADD `district` varchar(20);--> statement-breakpoint
+ALTER TABLE `user_provider` ADD `sub_district` varchar(20);--> statement-breakpoint
+ALTER TABLE `user_provider_vhv` ADD `hno` varchar(20);--> statement-breakpoint
+ALTER TABLE `user_provider_vhv` ADD `soi_road` varchar(20);--> statement-breakpoint
+ALTER TABLE `user_provider_vhv` ADD `province` varchar(20);--> statement-breakpoint
+ALTER TABLE `user_provider_vhv` ADD `district` varchar(20);--> statement-breakpoint
+ALTER TABLE `user_provider_vhv` ADD `sub_district` varchar(20);--> statement-breakpoint
+ALTER TABLE `person` ADD CONSTRAINT `person_HN_unique` UNIQUE(`HN`);

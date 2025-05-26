@@ -1,7 +1,7 @@
 import { Context, t } from 'elysia';
 // import { getPerson } from '../usecase/gets-person';
 import { RegisterPerson } from '../usecase/register-person';
-import { HttpResponse } from '@/core/http.response';
+import { HttpResponse, HttpResponseSchema } from '@/core/http.response';
 import {
   // RegisterFormDTO,
   // RegisterFormSchema,
@@ -19,16 +19,8 @@ export const personController = {
           message: t.String(),
           data: NewRegisterFormSchema,
         }),
-        400: t.Object({
-          success: t.Boolean(),
-          message: t.String(),
-          datail: t.String(),
-        }),
-        500: t.Object({
-          success: t.Boolean(),
-          message: t.String(),
-          datail: t.String(),
-        }),
+        400: HttpResponseSchema.badRequest(),
+        500: HttpResponseSchema.error(),
       },
       summary: 'registerPerson',
       description: 'add person',

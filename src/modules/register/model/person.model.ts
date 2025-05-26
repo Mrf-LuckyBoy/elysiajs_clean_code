@@ -20,6 +20,7 @@ export interface PersonDTO {
   guardian: string;
   is_delete: boolean | null; // nullable because not `.notNull()`
   village: string;
+  hn: string;
   created_at: Date | null;
   updated_at: Date | null;
 }
@@ -203,7 +204,6 @@ export interface NewRegisterFormDTO {
   birth: Date;
   phone: string;
   blood_type: string;
-  hcode: string;
   village: string;
   chronic_disease: string;
   allergy_history: string;
@@ -260,7 +260,7 @@ export const NewRegisterGuardianSchema = t.Object({
   title: t.String(),
   first_name: t.String(),
   last_name: t.String(),
-  birth: t.String({ format: 'date-time', default: '0001-01-01' }), // or 'date' depending on your format
+  birth: t.String({ format: 'date-time', default: '2001-11-11' }), // or 'date' depending on your format
   phone: t.String(),
   hcode: t.String(),
   hno: t.String(),
@@ -277,10 +277,9 @@ export const NewRegisterFormSchema = t.Object({
   title: t.String(),
   first_name: t.String(),
   last_name: t.String(),
-  birth: t.String({ format: 'date-time', default: '0001-01-01' }), // or 'date'
+  birth: t.String({ format: 'date-time', default: '2001-11-11' }), // or 'date'
   phone: t.String(),
   blood_type: t.String(),
-  hcode: t.String(),
   village: t.String(),
   chronic_disease: t.String(),
   allergy_history: t.String(),

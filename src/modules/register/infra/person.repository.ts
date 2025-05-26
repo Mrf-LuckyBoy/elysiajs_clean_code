@@ -14,7 +14,7 @@ import type {
   AddressDTO,
   NewRegisterFormDTO,
 } from '../model/person.model';
-import { eq, sql } from 'drizzle-orm';
+import { eq, sql, desc, like } from 'drizzle-orm';
 import { randomUUID } from 'crypto';
 
 export const PersonRepository = {
@@ -32,6 +32,23 @@ export const PersonRepository = {
         updated_at: new Date(),
       };
       await db.insert(medical_history).values(med);
+      let hn = '';
+      let calHn = 0;
+      const lastHNRow = await db
+        .select({ hn: persons.hn })
+        .from(persons)
+        .where(like(persons.hn, 'HN%'))
+        .orderBy(desc(persons.hn))
+        .limit(1);
+
+      if (lastHNRow.length === 0 || !lastHNRow[0].hn) {
+        hn = 'HN000001';
+      } else {
+        hn = lastHNRow[0].hn;
+        calHn = parseInt(hn.replace('HN', ''), 10) || 0;
+        calHn += 1;
+        hn = `HN${calHn.toString().padStart(6, '0')}`;
+      }
 
       const person: PersonDTO = {
         pid: person_id,
@@ -49,19 +66,22 @@ export const PersonRepository = {
         consent: false,
         status: 'approve',
         reason_cancel: '',
-        hcode: form.hcode,
+        hcode: '',
         guardian: '',
         village: '',
         is_delete: false,
+        hn: hn,
         created_at: new Date(),
         updated_at: new Date(),
       };
       await db.insert(persons).values(person);
 
       form.pid = person_id;
-    }
-    // main form 2
-    if (form.address_cid.villcode !== '' && form.address_cid.villcode !== '') {
+    } else if (
+      form.address_cid.villcode !== '' &&
+      form.address_cid.villcode !== '' &&
+      form.guardian.idcard === ''
+    ) {
       if (form.type_card === true) {
         const address_id = randomUUID();
         const address_person: AddressDTO = {
@@ -120,9 +140,7 @@ export const PersonRepository = {
         form.address_current.hcode = address2;
         form.address_cid.hcode = address_id;
       }
-    }
-    // main form 3
-    if (form.guardian.idcard !== '') {
+    } else if (form.guardian.idcard !== '') {
       const guardian_id = randomUUID();
       if (form.type_guardian === true) {
         const hcodeA = await db
@@ -143,6 +161,10 @@ export const PersonRepository = {
           updated_at: new Date(),
         };
         await db.insert(guardians).values(guardians_data);
+        await db
+          .update(persons)
+          .set({ guardian: guardian_id })
+          .where(eq(persons.pid, form.pid));
         form.guardian.hcode = hcodeA[0].hcode;
         const fullAddressCurrent: {
           fullAddress: string;

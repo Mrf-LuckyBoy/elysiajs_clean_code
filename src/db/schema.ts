@@ -63,6 +63,7 @@ export const user_provider_vhv = mysqlTable(
 export const persons = mysqlTable(
   'person',
   {
+    hn: varchar('HN', { length: 20 }).unique(),
     pid: varchar('pid', { length: 36 }).primaryKey(),
     pid_hdc: varchar('pid_hdc', { length: 36 }).notNull(),
     med_id: varchar('med_id', { length: 255 }).notNull(),

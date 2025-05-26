@@ -21,7 +21,8 @@ const app = new Elysia()
     })
   )
   .use(AppRoutes)
-  .onError(({ code }) => {
+  .onError(({ code, error }) => {
+    console.log(error);
     if (code === 'NOT_FOUND') {
       return HttpResponse.notFound();
     }

@@ -5,12 +5,14 @@ import { authRoute } from '@/modules/auth/auth.routes';
 import { personRoute } from '@/modules/register/register.router';
 import { dropdownRoute } from '@/modules/dropdown/dropdown.routes';
 import { profileRoute } from '@/modules/profile/profile.routes';
+import { screeningRoute } from '@/modules/screening/screening.routes';
 
 const routes = new Elysia({ prefix: 'api/v1' })
   .use(authRoute)
   .use(userRoute)
   .use(personRoute)
   .use(dropdownRoute)
-  .use(profileRoute);
+  .use(profileRoute)
+  .use(screeningRoute);
 
 export { routes as AppRoutes };

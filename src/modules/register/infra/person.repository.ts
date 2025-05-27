@@ -16,6 +16,7 @@ import type {
 } from '../model/person.model';
 import { eq, sql, desc, like } from 'drizzle-orm';
 import { randomUUID } from 'crypto';
+import { Crypto } from '@/core/crypto';
 
 export const PersonRepository = {
   async registerFrom(form: NewRegisterFormDTO): Promise<NewRegisterFormDTO> {
@@ -56,13 +57,13 @@ export const PersonRepository = {
         hcode_cid: '',
         pid_hdc: '',
         sex: form.sex,
-        idcard: form.idcard,
+        idcard: Crypto.encrypt(form.idcard),
         title: form.title,
-        first_name: form.first_name,
-        last_name: form.last_name,
+        first_name: Crypto.encrypt(form.first_name),
+        last_name: Crypto.encrypt(form.last_name),
         birth: form.birth,
         blood_type: form.blood_type,
-        phone: form.phone,
+        phone: Crypto.encrypt(form.phone),
         consent: false,
         status: 'approve',
         reason_cancel: '',
@@ -149,11 +150,11 @@ export const PersonRepository = {
           .where(eq(persons.pid, form.pid));
         const guardians_data: GuardianDTO = {
           guardian_id,
-          idcard: form.guardian.idcard,
+          idcard: Crypto.encrypt(form.guardian.idcard),
           relationships: form.guardian.relationships,
           title: form.guardian.title,
-          first_name: form.guardian.first_name,
-          last_name: form.guardian.last_name,
+          first_name: Crypto.encrypt(form.guardian.first_name),
+          last_name: Crypto.encrypt(form.guardian.last_name),
           birth: form.guardian.birth,
           phone: form.guardian.phone,
           hcode: hcodeA[0].hcode,
@@ -230,13 +231,13 @@ export const PersonRepository = {
         await db.insert(address).values(address_guardians);
         const guardians_data: GuardianDTO = {
           guardian_id,
-          idcard: form.guardian.idcard,
+          idcard: Crypto.encrypt(form.guardian.idcard),
           relationships: form.guardian.relationships,
           title: form.guardian.title,
-          first_name: form.guardian.first_name,
-          last_name: form.guardian.last_name,
+          first_name: Crypto.encrypt(form.guardian.first_name),
+          last_name: Crypto.encrypt(form.guardian.last_name),
           birth: form.guardian.birth,
-          phone: form.guardian.phone,
+          phone: Crypto.encrypt(form.guardian.phone),
           hcode: address_id,
           created_at: new Date(),
           updated_at: new Date(),

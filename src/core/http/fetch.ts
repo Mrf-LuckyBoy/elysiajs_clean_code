@@ -8,7 +8,7 @@ const defaultHeaders = {
 const createFetcher = (
   baseURL?: string,
   defaultOptions?: RequestInit,
-  timeout = 5000
+  timeout = 10000
 ) => {
   return async <T>(path: string, options: RequestInit = {}): Promise<T> => {
     const controller = new AbortController();

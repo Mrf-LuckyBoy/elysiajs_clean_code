@@ -112,7 +112,7 @@ export const persons = mysqlTable(
       foreignColumns: [guardians.guardian_id],
     }),
     foreignKey({
-      columns: [t.email],
+      columns: [t.inscl_code],
       foreignColumns: [inscl_normalize.insclCode],
     }),
   ]

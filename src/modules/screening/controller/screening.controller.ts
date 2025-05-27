@@ -1,7 +1,8 @@
 import { t } from "elysia";
-import { ScreeningRequestDTO, ScreeningResponseSchema, ScreeningSchema } from "../model/screening.model";
+import { ScreeningRequestDTO, ScreeningSchema, UpdateScreeningFormDTO, UpdateScreeningFormSchema } from "../model/screening.model";
 import { createScreening } from "../usecase/create-screening";
 import { HttpResponse, HttpResponseSchema } from "@/core/http.response";
+import { updateScreeningFormData } from "../usecase/update-screening-form";
 
 export const screeningController = {
     create: {
@@ -33,6 +34,51 @@ export const screeningController = {
                         set.status = 400;
                         return HttpResponse.badRequest(err.message);
                     }
+                    set.status = 500;
+                    return HttpResponse.error(err.message);
+                } else {
+                    set.status = 500;
+                   return HttpResponse.error('Unexpected error');
+                }
+            }
+           
+        }
+    },
+    updateFormData: {
+        schema: {
+            Params: t.Object({
+                form_id: t.String({ format: 'uuid', description: 'Screening Form ID' }),
+            }),
+            body: UpdateScreeningFormSchema,
+             response: {
+                200: t.Object({
+                    success: t.Boolean(),
+                    message: t.String(),
+                }),
+                400: HttpResponseSchema.badRequest(),
+                500: HttpResponseSchema.error(),
+            },
+            summary: 'Create new screening data',
+            description: 'Creates a new screening record with the specified data.',
+            tags: ['Screening'],
+        },
+        handler: async ({ 
+            params, 
+            body, 
+            set }: { 
+                params: {form_id: string}; 
+                body: UpdateScreeningFormDTO; 
+                set: any }) => {
+            try {
+                const formID = params.form_id
+                await updateScreeningFormData(formID, body);
+                set.status = 200
+            return { 
+                success: true, 
+                message: 'Success'
+            };
+            } catch (err: unknown) {
+                if (err instanceof Error) {
                     set.status = 500;
                     return HttpResponse.error(err.message);
                 } else {

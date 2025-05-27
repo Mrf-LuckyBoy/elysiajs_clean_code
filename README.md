@@ -179,3 +179,16 @@ export const db = drizzle(pool, { schema, mode: 'default' });
     - make code up to date
 
 ---
+
+## flow drizzle migration
+1. pull branch `dev-migration` to make it at lasted
+2. Merge dev-migration to current branch(working branch with edit schema):
+3. run script to migration
+    - npm run drizzle:generate
+    - npm run drizzle:migrate
+4. after migration 
+    - merge current branch(working branch with edit schema) to `dev-migration`
+    - commit and push `dev-migration` to make it sync to with database
+---
+
+

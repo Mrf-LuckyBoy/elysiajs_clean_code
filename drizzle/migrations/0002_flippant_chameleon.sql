@@ -1,8 +1,8 @@
-ALTER TABLE `screening_form` RENAME COLUMN `createAt` TO `created_at`;--> statement-breakpoint
-ALTER TABLE `screening_form` RENAME COLUMN `updateAt` TO `updated_at`;--> statement-breakpoint
-ALTER TABLE `screenings` RENAME COLUMN `createAt` TO `created_at`;--> statement-breakpoint
-ALTER TABLE `screenings` RENAME COLUMN `updateAt` TO `updated_at`;--> statement-breakpoint
-ALTER TABLE `screenings` DROP INDEX `custom_unique`;--> statement-breakpoint
-ALTER TABLE `screenings` ADD `is_assgin_official_service_unit` boolean NOT NULL;--> statement-breakpoint
-ALTER TABLE `screenings` ADD CONSTRAINT `screenings_patient_id_person_pid_fk` FOREIGN KEY (`patient_id`) REFERENCES `person`(`pid`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
-ALTER TABLE `screenings` ADD CONSTRAINT `screenings_screening_form_id_screening_form_screening_form_id_fk` FOREIGN KEY (`screening_form_id`) REFERENCES `screening_form`(`screening_form_id`) ON DELETE no action ON UPDATE no action;
+-- ALTER TABLE `screening_form` RENAME COLUMN `created_at` TO `created_at`;--> statement-breakpoint
+-- ALTER TABLE `screening_form` RENAME COLUMN `updated_at` TO `updated_at`;--> statement-breakpoint
+-- ALTER TABLE `screenings` RENAME COLUMN `created_at` TO `created_at`;--> statement-breakpoint
+-- ALTER TABLE `screenings` RENAME COLUMN `updated_at` TO `updated_at`;--> statement-breakpoint
+-- ALTER TABLE `screenings` DROP INDEX `custom_unique`;--> statement-breakpoint
+-- ALTER TABLE `screenings` ADD `is_assgin_official_service_unit` boolean NOT NULL;--> statement-breakpoint
+-- ALTER TABLE `screenings` ADD CONSTRAINT `screenings_patient_id_person_pid_fk` FOREIGN KEY (`patient_id`) REFERENCES `person`(`pid`) ON DELETE no action ON UPDATE no action;--> statement-breakpoint
+-- ALTER TABLE `screenings` ADD CONSTRAINT `screenings_screening_form_id_screening_form_screening_form_id_fk` FOREIGN KEY (`screening_form_id`) REFERENCES `screening_form`(`screening_form_id`) ON DELETE no action ON UPDATE no action;

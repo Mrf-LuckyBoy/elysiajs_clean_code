@@ -31,6 +31,4 @@ const app = new Elysia()
 
 app.listen({ port: ENV.SERVER_PORT });
 
-console.log(
-  `🦊 Elysia server is running at http://localhost:${ENV.SERVER_PORT || 3000}`
-);
+console.log(`🦊 Elysia server is running at port ${ENV.SERVER_PORT || 3000}`);

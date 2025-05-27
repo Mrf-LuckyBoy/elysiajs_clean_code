@@ -1,7 +1,7 @@
 import { t, Context } from 'elysia';
 import { loginProviderID } from '../usecase/login-providerID';
 import { loginSetToken } from '../usecase/login-setToken';
-import { HttpResponse } from '@/core/http.response';
+import { HttpResponse, HttpResponseSchema } from '@/core/http.response';
 import { UserProviderSchema } from '../model/auth.model';
 
 export const authController = {
@@ -11,21 +11,13 @@ export const authController = {
         code: t.String(),
       }),
       response: {
-        200: t.Object({
+        201: t.Object({
           success: t.Boolean(),
           message: t.String(),
           data: t.Array(UserProviderSchema),
         }),
-        400: t.Object({
-          success: t.Boolean(),
-          message: t.String(),
-          detail: t.String(),
-        }),
-        500: t.Object({
-          success: t.Boolean(),
-          message: t.String(),
-          detail: t.String(),
-        }),
+        400: HttpResponseSchema.badRequest(),
+        500: HttpResponseSchema.error(),
       },
       summary: 'Login Provider',
       description: 'get list of useable',
@@ -38,7 +30,7 @@ export const authController = {
           set.status = 400;
           return HttpResponse.badRequest('ไม่มีหน่วยบริการที่สามารถใช้งานได้');
         }
-        set.status = 200;
+        set.status = 201;
         return HttpResponse.success(useable);
       } catch (err: unknown) {
         if (err instanceof Error) {
@@ -60,21 +52,13 @@ export const authController = {
         position: t.String(),
       }),
       response: {
-        200: t.Object({
+        201: t.Object({
           success: t.Boolean(),
           message: t.String(),
           data: t.String(),
         }),
-        400: t.Object({
-          success: t.Boolean(),
-          message: t.String(),
-          detail: t.String(),
-        }),
-        500: t.Object({
-          success: t.Boolean(),
-          message: t.String(),
-          detail: t.String(),
-        }),
+        400: HttpResponseSchema.badRequest(),
+        500: HttpResponseSchema.error(),
       },
       summary: 'Login Provider',
       description: 'Set cookie after login',
@@ -83,7 +67,7 @@ export const authController = {
     handler: async ({
       body,
       set,
-      cookie: { auth_token },
+cookie: { auth_token },
     }: Context & {
       body: { cid_hash: string; hos_code: string; position: string };
     }) => {
@@ -98,7 +82,12 @@ export const authController = {
           httpOnly: true,
         });
         auth_token.value = token;
-        set.status = 200;
+        set.status = 201;
+        return {
+          success: true,
+          message: 'Success',
+          data: token,
+        };
         return HttpResponse.success(token);
       } catch (err: unknown) {
         if (err instanceof Error) {

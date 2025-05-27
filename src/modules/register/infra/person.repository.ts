@@ -15,7 +15,7 @@ import type {
   AddressDTO,
   NewRegisterFormDTO,
 } from '../model/person.model';
-import { eq, sql } from 'drizzle-orm';
+import { eq, sql, desc, like } from 'drizzle-orm';
 import { randomUUID } from 'crypto';
 import dayjs from 'dayjs';
 
@@ -29,6 +29,7 @@ function formatAge(birth: Date): string {
 
   return `${years} ปี ${months} เดือน ${days} วัน`;
 }
+import { Crypto } from '@/core/crypto';
 
 export const PersonRepository = {
   async registerFrom(form: NewRegisterFormDTO): Promise<NewRegisterFormDTO> {
@@ -45,6 +46,23 @@ export const PersonRepository = {
         updated_at: new Date(),
       };
       await db.insert(medical_history).values(med);
+      let hn = '';
+      let calHn = 0;
+      const lastHNRow = await db
+        .select({ hn: persons.hn })
+        .from(persons)
+        .where(like(persons.hn, 'HN%'))
+        .orderBy(desc(persons.hn))
+        .limit(1);
+
+      if (lastHNRow.length === 0 || !lastHNRow[0].hn) {
+        hn = 'HN000001';
+      } else {
+        hn = lastHNRow[0].hn;
+        calHn = parseInt(hn.replace('HN', ''), 10) || 0;
+        calHn += 1;
+        hn = `HN${calHn.toString().padStart(6, '0')}`;
+      }
 
       const person: PersonDTO = {
         pid: person_id,
@@ -52,29 +70,32 @@ export const PersonRepository = {
         hcode_cid: '',
         pid_hdc: '',
         sex: form.sex,
-        idcard: form.idcard,
+        idcard: Crypto.encrypt(form.idcard),
         title: form.title,
-        first_name: form.first_name,
-        last_name: form.last_name,
+        first_name: Crypto.encrypt(form.first_name),
+        last_name: Crypto.encrypt(form.last_name),
         birth: form.birth,
         blood_type: form.blood_type,
-        phone: form.phone,
+        phone: Crypto.encrypt(form.phone),
         consent: false,
         status: 'approve',
         reason_cancel: '',
-        hcode: form.hcode,
+        hcode: '',
         guardian: '',
         village: '',
         is_delete: false,
+        hn: hn,
         created_at: new Date(),
         updated_at: new Date(),
       };
       await db.insert(persons).values(person);
 
       form.pid = person_id;
-    }
-    // main form 2
-    if (form.address_cid.villcode !== '' && form.address_cid.villcode !== '') {
+    } else if (
+      form.address_cid.villcode !== '' &&
+      form.address_cid.villcode !== '' &&
+      form.guardian.idcard === ''
+    ) {
       if (form.type_card === true) {
         const address_id = randomUUID();
         const address_person: AddressDTO = {
@@ -133,9 +154,7 @@ export const PersonRepository = {
         form.address_current.hcode = address2;
         form.address_cid.hcode = address_id;
       }
-    }
-    // main form 3
-    if (form.guardian.idcard !== '') {
+    } else if (form.guardian.idcard !== '') {
       const guardian_id = randomUUID();
       if (form.type_guardian === true) {
         const hcodeA = await db
@@ -144,11 +163,11 @@ export const PersonRepository = {
           .where(eq(persons.pid, form.pid));
         const guardians_data: GuardianDTO = {
           guardian_id,
-          idcard: form.guardian.idcard,
+          idcard: Crypto.encrypt(form.guardian.idcard),
           relationships: form.guardian.relationships,
           title: form.guardian.title,
-          first_name: form.guardian.first_name,
-          last_name: form.guardian.last_name,
+          first_name: Crypto.encrypt(form.guardian.first_name),
+          last_name: Crypto.encrypt(form.guardian.last_name),
           birth: form.guardian.birth,
           phone: form.guardian.phone,
           hcode: hcodeA[0].hcode,
@@ -156,6 +175,10 @@ export const PersonRepository = {
           updated_at: new Date(),
         };
         await db.insert(guardians).values(guardians_data);
+        await db
+          .update(persons)
+          .set({ guardian: guardian_id })
+          .where(eq(persons.pid, form.pid));
         form.guardian.hcode = hcodeA[0].hcode;
         const fullAddressCurrent: {
           fullAddress: string;
@@ -221,13 +244,13 @@ export const PersonRepository = {
         await db.insert(address).values(address_guardians);
         const guardians_data: GuardianDTO = {
           guardian_id,
-          idcard: form.guardian.idcard,
+          idcard: Crypto.encrypt(form.guardian.idcard),
           relationships: form.guardian.relationships,
           title: form.guardian.title,
-          first_name: form.guardian.first_name,
-          last_name: form.guardian.last_name,
+          first_name: Crypto.encrypt(form.guardian.first_name),
+          last_name: Crypto.encrypt(form.guardian.last_name),
           birth: form.guardian.birth,
-          phone: form.guardian.phone,
+          phone: Crypto.encrypt(form.guardian.phone),
           hcode: address_id,
           created_at: new Date(),
           updated_at: new Date(),

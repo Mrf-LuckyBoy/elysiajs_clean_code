@@ -9,6 +9,11 @@ export interface UserProviderDTO {
   fname?: string | null;
   lname?: string | null;
   position: string;
+  hno: string | null;
+  soi_road: string | null;
+  province: string | null;
+  district: string | null;
+  sub_district: string | null;
   createAt: Date | null;
   updateAt: Date | null;
 }
@@ -22,6 +27,11 @@ export const UserProviderSchema = t.Object({
   fname: t.Optional(t.Nullable(t.String())),
   lname: t.Optional(t.Nullable(t.String())),
   position: t.String(),
+  hno: t.Optional(t.Nullable(t.String())),
+  soi_road: t.Optional(t.Nullable(t.String())),
+  province: t.Optional(t.Nullable(t.String())),
+  district: t.Optional(t.Nullable(t.String())),
+  sub_district: t.Optional(t.Nullable(t.String())),
   createAt: t.Nullable(t.Date()),
   updateAt: t.Nullable(t.Date()),
 });

@@ -1,4 +1,4 @@
-import { t } from 'elysia';
+import { Cookie, t } from 'elysia';
 import { getUserById } from '../usecase/get-user';
 import { createUser } from '../usecase/create-user';
 import { getUsers } from '../usecase/gets-user';

@@ -7,6 +7,8 @@ import {
   mysqlEnum,
   unique,
   foreignKey,
+  datetime,
+  int,
 } from 'drizzle-orm/mysql-core';
 
 export const users = mysqlTable('users', {
@@ -207,21 +209,21 @@ export const screenings = mysqlTable(
     visit_id : varchar('visit_id', { length: 36 }).primaryKey().notNull(),
     patient_id : varchar('patient_id', { length: 36 }).notNull(),
     visit_date : timestamp('visit_date', { mode: 'date' }).notNull(),
-    reason_appointment : varchar('reason_appointment', { length: 255 }).notNull(),
+    reason_appointment : varchar('reason_appointment').notNull(),
     doctor_id : varchar('doctor_id', { length: 36 }).notNull(),
     assign_id : varchar('assign_id', { length: 36 }),
     assign_vhv_village_id : varchar('assign_vhv_village_id', { length: 36 }),
     assign_vhv_service_unit : varchar('assign_vhv_service_unit', { length: 36 }),
     screening_form_id : varchar('screening_form_id', { length: 36 }).notNull(),
-    status_screening : varchar('status_screening', { length: 255 }).notNull(),
+    status_screening : varchar('status_screening').notNull(),
     is_self : boolean('is_self').notNull(),
     is_assign_official : boolean('is_assign_official').notNull(),
     is_assign_vhv : boolean('is_assign_vhv').notNull(),
     is_assign_vhv_village : boolean('is_assign_vhv_village').notNull(),
     is_assign_vhv_service_unit : boolean('is_assign_vhv_service_unit').notNull(),
     is_diagnosis : boolean('is_diagnosis').notNull(),
-    createAt: timestamp('createAt', { mode: 'date' }),
-    updateAt: timestamp('updateAt', { mode: 'date' }),
+    createAt: timestamp('createAt', { mode: 'date' }).notNull(),
+    updateAt: timestamp('updateAt', { mode: 'date' }).notNull(),
   },
   (t) => [unique('custom_unique').on(t.visit_id)]
 );
@@ -254,7 +256,7 @@ export const screening_form = mysqlTable(
     word_recall : int('word_recall').notNull(),
     clock_draw : int('clock_draw').notNull(),
     sum_mini_cog : int('sum_mini_cog').notNull(),
-    createAt: timestamp('createAt', { mode: 'date' }),
-    updateAt: timestamp('updateAt', { mode: 'date' }),
+    createAt: timestamp('createAt', { mode: 'date' }).notNull(),
+    updateAt: timestamp('updateAt', { mode: 'date' }).notNull(),
   }
 );

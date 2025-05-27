@@ -5,6 +5,7 @@ import {
   medical_history,
   guardians,
   address,
+  title_normalize,
 } from '@/db/schema';
 import type {
   PersonDTO,
@@ -16,6 +17,18 @@ import type {
 } from '../model/person.model';
 import { eq, sql } from 'drizzle-orm';
 import { randomUUID } from 'crypto';
+import dayjs from 'dayjs';
+
+function formatAge(birth: Date): string {
+  const start = dayjs(birth);
+  const end = dayjs();
+
+  const years = end.diff(start, 'year');
+  const months = end.diff(start.add(years, 'year'), 'month');
+  const days = end.diff(start.add(years, 'year').add(months, 'month'), 'day');
+
+  return `${years} ปี ${months} เดือน ${days} วัน`;
+}
 
 export const PersonRepository = {
   async registerFrom(form: NewRegisterFormDTO): Promise<NewRegisterFormDTO> {
@@ -272,5 +285,27 @@ export const PersonRepository = {
       }
     }
     return form;
+  },
+  async finds(): Promise<PersonDTO[] | null> {
+    const result = await db
+      .select()
+      .from(persons)
+      .leftJoin(title_normalize, eq(persons.title, title_normalize.title_id))
+      .limit(5);
+    // .offset(1);
+
+    if (!result || result.length === 0) return null;
+    const date: PersonDTO[] = result.map((row) => ({
+      pid: row.person.pid,
+      first_name: row.person.first_name,
+      last_name: row.person.last_name,
+      title: row.title_normalize?.title_th ?? row.person.title,
+      birth: row.person.birth,
+      age: formatAge(row.person.birth),
+      phone: row.person.phone,
+      consent: row.person.consent,
+    }));
+
+    return date;
   },
 };

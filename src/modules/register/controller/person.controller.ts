@@ -7,7 +7,9 @@ import {
   // RegisterFormSchema,
   NewRegisterFormDTO,
   NewRegisterFormSchema,
+  PersonDTO,
 } from '../model/person.model';
+import { getFormPerson } from '../usecase/get-formRegister';
 
 export const personController = {
   createPerson: {
@@ -60,6 +62,64 @@ export const personController = {
         if (err instanceof Error) {
           set.status = 500;
           return HttpResponse.error('some error detail');
+        } else {
+          set.status = 500;
+          return HttpResponse.error('Unexpected error');
+        }
+      }
+    },
+  },
+  getFormRegister: {
+    Schema: {
+      query: t.Object({
+        search: t.String({ description: 'search name' }),
+      }),
+      response: {
+        201: t.Object({
+          success: t.Boolean(),
+          message: t.String(),
+          data: t.Array(
+            t.Object({
+              pid: t.String(),
+              title: t.String(),
+              fullname: t.String(),
+              // birth: t.Date(),
+              phone: t.String(),
+              consent: t.String(),
+              age: t.String(),
+            })
+          ),
+        }),
+        // 500: HttpResponseSchema.error(),
+      },
+      summary: 'user vhv dropdown',
+      description: 'get list of user vhv',
+      tags: ['Register'],
+    },
+    handler: async ({ set, query }: Context) => {
+      try {
+        const searchName = query.search?.toLowerCase() ?? '';
+        // const person: PersonDTO[] = await getFormPerson();
+        const person: PersonDTO[] = (await getFormPerson()) ?? [];
+        const personList = person
+          .map((person) => ({
+            pid: person.pid,
+            title: person.title,
+            fullname: `${person.title} ${person.first_name} ${person.last_name}`,
+            // birth: person.birth,
+            age: person.age,
+            phone: person.phone,
+            consent: person.consent,
+          }))
+          .filter((person) =>
+            person.fullname.toLowerCase().includes(searchName)
+          );
+        set.status = 200;
+        return HttpResponse.success(personList);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          set.status = 500;
+          return HttpResponse.error(err.message);
         } else {
           set.status = 500;
           return HttpResponse.error('Unexpected error');

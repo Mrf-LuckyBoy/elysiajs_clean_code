@@ -218,14 +218,24 @@ export const screenings = mysqlTable(
     status_screening : varchar('status_screening', { length: 255 }).notNull(),
     is_self : boolean('is_self').notNull(),
     is_assign_official : boolean('is_assign_official').notNull(),
+    is_assgin_official_service_unit : boolean('is_assgin_official_service_unit').notNull(),
     is_assign_vhv : boolean('is_assign_vhv').notNull(),
     is_assign_vhv_village : boolean('is_assign_vhv_village').notNull(),
     is_assign_vhv_service_unit : boolean('is_assign_vhv_service_unit').notNull(),
     is_diagnosis : boolean('is_diagnosis').notNull(),
-    createAt: timestamp('createAt', { mode: 'date' }).notNull(),
-    updateAt: timestamp('updateAt', { mode: 'date' }).notNull(),
+    created_at: timestamp('created_at', { mode: 'date' }).notNull(),
+    updated_at: timestamp('updated_at', { mode: 'date' }).notNull(),
   },
-  (t) => [unique('custom_unique').on(t.visit_id)]
+  (t) => [
+    foreignKey({
+      columns: [t.patient_id],
+      foreignColumns: [persons.pid],
+    }),
+    foreignKey({
+      columns: [t.screening_form_id],
+      foreignColumns: [screening_form.screening_form_id],
+    })
+  ]
 );
 
 export const screening_form = mysqlTable(
@@ -256,7 +266,7 @@ export const screening_form = mysqlTable(
     word_recall : int('word_recall').notNull(),
     clock_draw : int('clock_draw').notNull(),
     sum_mini_cog : int('sum_mini_cog').notNull(),
-    createAt: timestamp('createAt', { mode: 'date' }).notNull(),
-    updateAt: timestamp('updateAt', { mode: 'date' }).notNull(),
+    created_at: timestamp('created_at', { mode: 'date' }).notNull(),
+    updated_at: timestamp('updated_at', { mode: 'date' }).notNull(),
   }
 );

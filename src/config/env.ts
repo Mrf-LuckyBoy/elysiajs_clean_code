@@ -20,6 +20,9 @@ const envSchema = z.object({
   PROVIDER_DOMAIN: z.string(),
   ENCRYPT_SECRET: z.string(),
   REDIRECT_URI: z.string(),
+  FDH_DOMAIN: z.string(),
+  X_API_KEY_FDH_NSHO: z.string(),
+  MOPH_BUDDY_DOMAIN: z.string(),
 });
 
 // Validate and parse

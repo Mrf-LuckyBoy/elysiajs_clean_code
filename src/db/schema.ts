@@ -85,6 +85,8 @@ export const persons = mysqlTable(
     guardian: varchar('guardian', { length: 100 }).notNull(),
     is_delete: boolean('is_delect').default(false),
     village: varchar('village', { length: 100 }).notNull(),
+    inscl_code: varchar('inscl_code', { length: 50 }).notNull(),
+    email: varchar('email', { length: 100 }),
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp('updated_at').defaultNow().onUpdateNow(),
   },
@@ -108,6 +110,10 @@ export const persons = mysqlTable(
     foreignKey({
       columns: [t.guardian],
       foreignColumns: [guardians.guardian_id],
+    }),
+    foreignKey({
+      columns: [t.inscl_code],
+      foreignColumns: [inscl_normalize.insclCode],
     }),
   ]
 );
@@ -272,4 +278,9 @@ export const screening_form = mysqlTable('screening_form', {
   sum_mini_cog: int('sum_mini_cog').notNull(),
   created_at: timestamp('created_at', { mode: 'date' }).notNull(),
   updated_at: timestamp('updated_at', { mode: 'date' }).notNull(),
+});
+
+export const inscl_normalize = mysqlTable('inscl_normalize', {
+  insclCode: varchar('inscl_code', { length: 15 }).primaryKey(),
+  insclNameTh: varchar('inscl_name_th', { length: 255 }),
 });

@@ -2,7 +2,7 @@ import { db } from '@/db';
 import {
   persons,
   address_code,
-  // medical_history,
+  medical_history,
   guardians,
   address,
 } from '@/db/schema';
@@ -33,7 +33,7 @@ export const PersonRepository = {
         created_at: new Date(),
         updated_at: new Date(),
       };
-      // await db.insert(medical_history).values(med);
+      await db.insert(medical_history).values(med);
       console.log(med);
       let hn = '';
       let calHn = 0;
@@ -79,8 +79,7 @@ export const PersonRepository = {
         created_at: new Date(),
         updated_at: new Date(),
       };
-      console.log(person);
-      // await db.insert(persons).values(person);
+      await db.insert(persons).values(person);
 
       form.pid = person_id;
     } else if (

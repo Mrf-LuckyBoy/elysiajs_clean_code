@@ -13,8 +13,8 @@ export interface ScreeningRequestDTO {
     status_screening?: string;
     is_self?: boolean;
     is_assign_official?: boolean;
+    is_assgin_vhv_village?: boolean;
     is_assign_vhv?: boolean;
-    is_assign_vhv_village?: boolean;
     is_assign_vhv_service_unit?: boolean;
     is_assgin_official_service_unit?: boolean;
     is_diagnosis?: boolean;
@@ -34,9 +34,9 @@ export interface ScreeningResponseDTO {
     is_self: boolean;
     is_assign_official: boolean;
     is_assign_vhv: boolean;
-    is_assign_vhv_village: boolean;
     is_assign_vhv_service_unit: boolean;
     is_assgin_official_service_unit: boolean;
+    is_assign_vhv_village: boolean;
     is_diagnosis: boolean;
     created_at: Date;
     updated_at: Date;
@@ -147,8 +147,8 @@ export interface SqlScreeningResponse {
     person_title: string | null;
     person_fname: string | null;
     person_lname: string | null;
-    // coverage_id: string | null;
-    // coverage_name: string | null;
+    inscl_code: string | null;
+    inscl_name: string | null;
     provider_title: string | null; 
     provider_fname: string | null;
     provider_lname: string | null;
@@ -161,9 +161,9 @@ export interface ScreeningListResponseDTO {
     visit_id: string,
     visit_date: string,
     visit_time: string,
-    person_name: string,
-    coverage_name: string,
-    provider_name: string,
+    person_fullname: string,
+    provider_fullname: string,
+    inscl_name: string,
     id_card: string,
     status_screening: string,
     role: string,
@@ -174,11 +174,40 @@ export const ScreeningListResponseSchema = t.Object({
     visit_id: t.String(),
     visit_date: t.String(),
     visit_time: t.String(),
-    person_name: t.String(),
-    coverage_name: t.String(),
-    provider_name: t.String(),
+    person_fullname: t.String(),
+    inscl_name: t.String(),
+    provider_fullname: t.String(),
     id_card: t.String(),
     status_screening: t.String(),
     role: t.String(),
     screening_form_id: t.String()
+});
+
+export interface PaginationQuery {
+    page?: number;
+    limit?: number;
+    search?: string;
+    filter?: string;
+    status?: string;
+    date?: string;
+}
+
+export interface PaginationResponse<T> {
+    success: boolean;
+    data: T[];
+    pagination: {
+        total: number;
+        page: number;
+        limit: number;
+    };
+    message: string;
+}
+
+export const PaginationSchema = t.Object({
+    page: t.Optional(t.Number({ minimum: 1, default: 1 })),
+    limit: t.Optional(t.Number()),
+    search: t.Optional(t.String()),
+    filter: t.Optional(t.String()),
+    status: t.Optional(t.String()),
+    date: t.Optional(t.String({ format: 'date' }))
 });

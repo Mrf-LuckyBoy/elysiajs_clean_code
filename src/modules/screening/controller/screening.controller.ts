@@ -1,5 +1,5 @@
 import { t } from "elysia";
-import { ScreeningListResponseSchema, ScreeningRequestDTO, ScreeningSchema, UpdateScreeningFormDTO, UpdateScreeningFormSchema } from "../model/screening.model";
+import { PaginationQuery, PaginationSchema, ScreeningListResponseSchema, ScreeningRequestDTO, ScreeningSchema, UpdateScreeningFormDTO, UpdateScreeningFormSchema } from "../model/screening.model";
 import { createScreening } from "../usecase/create-screening";
 import { HttpResponse, HttpResponseSchema } from "@/core/http.response";
 import { updateScreeningFormData } from "../usecase/update-screening-form";
@@ -92,10 +92,16 @@ export const screeningController = {
     },
     getScreeningList: {
         schema: {
+            query: PaginationSchema,
             response: {
                 200: t.Object({
                     success: t.Boolean(),
                     data: t.Array(ScreeningListResponseSchema),
+                    pagination: t.Object({
+                        total: t.Number(),
+                        page: t.Number(),
+                        limit: t.Number(),
+                    }),
                     message: t.String(),
                 }),
                 400: t.Object({
@@ -113,15 +119,11 @@ export const screeningController = {
             description: 'Fetch all screening records.',
             tags: ['Screening'],
                  },
-        handler: async ({ set }: { set: any }) => {
+        handler: async ({ query, set }: { query: PaginationQuery; set: any }) => {
             try {
-                const screeningList = await getScreeningList();
+                const screeningList = await getScreeningList(query);
                  set.status = 200
-            return { 
-                success: true, 
-                data: screeningList ?? [],
-                message: 'Success'
-            };
+            return screeningList;
             } catch (err: unknown) {
                 if (err instanceof Error) {
                     set.status = 500;

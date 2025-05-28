@@ -1,6 +1,6 @@
 import { db } from "@/db";
 import { ScreeningListResponseDTO, SqlScreeningResponse, UpdateScreeningFormDTO } from "../model/screening.model";
-import { persons, screening_form, screenings, title_normalize, user_provider } from "@/db/schema";
+import { inscl_normalize, persons, screening_form, screenings, title_normalize, user_provider } from "@/db/schema";
 import { eq } from 'drizzle-orm';
 import { time } from "drizzle-orm/mysql-core";
 
@@ -68,8 +68,8 @@ export const ScreeningRepository = {
       provider_title: user_provider.title,
       provider_fname: user_provider.fname,
       provider_lname: user_provider.lname,
-      // coverage_id: null,
-      // coverage_name: null,
+      inscl_code: inscl_normalize.insclCode,
+      inscl_name: inscl_normalize.insclNameTh,
       id_card: persons.idcard,
       status_screening: screenings.status_screening,
       role: user_provider.position,
@@ -79,6 +79,7 @@ export const ScreeningRepository = {
     .leftJoin(persons, eq(persons.pid, screenings.patient_id))
     .leftJoin(user_provider, eq(user_provider.user_id, screenings.doctor_id))
     .leftJoin(title_normalize, eq(title_normalize.title_id, persons.title))
+    .leftJoin(inscl_normalize, eq(inscl_normalize.insclCode, persons.inscl_code))
 
     return result;
   },

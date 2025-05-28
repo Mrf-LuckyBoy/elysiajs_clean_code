@@ -4,9 +4,11 @@ import swagger from '@elysiajs/swagger';
 import { ENV } from '@/config/env';
 import { AppRoutes } from './routes/index.routes';
 import { HttpResponse } from '@/core/http.response';
+import { corsMiddleware } from '@/core/cors';
 
 const app = new Elysia()
   .use(logger())
+  .use(corsMiddleware)
   .use(
     swagger({
       path: '/api/swagger',

@@ -22,6 +22,34 @@
       "when": 1748321121020,
       "tag": "0002_flippant_chameleon",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "5",
+      "when": 1748331975216,
+      "tag": "0003_shallow_mimic",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "5",
+      "when": 1748336472022,
+      "tag": "0004_demonic_sue_storm",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "5",
+      "when": 1748339437100,
+      "tag": "0005_huge_robbie_robertson",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "5",
+      "when": 1748339973711,
+      "tag": "0006_empty_gorgon",
+      "breakpoints": true
     }
   ]
 }

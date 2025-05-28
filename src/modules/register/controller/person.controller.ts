@@ -48,7 +48,6 @@ export const personController = {
         set.status = 201;
         return HttpResponse.success(result);
       } catch (err: unknown) {
-        console.log('error in handler ');
         if (err instanceof Error) {
           set.status = 500;
           return HttpResponse.error('some error detail');

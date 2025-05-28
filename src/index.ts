@@ -9,7 +9,8 @@ const app = new Elysia()
   .use(logger())
   .use(
     swagger({
-      exclude: ['/swagger'],
+      path: '/api/swagger',
+      exclude: ['/api/swagger'],
       autoDarkMode: true,
       documentation: {
         info: {

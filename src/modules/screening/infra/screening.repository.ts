@@ -1,7 +1,8 @@
 import { db } from "@/db";
-import { UpdateScreeningFormDTO } from "../model/screening.model";
-import { screening_form, screenings } from "@/db/schema";
+import { ScreeningListResponseDTO, SqlScreeningResponse, UpdateScreeningFormDTO } from "../model/screening.model";
+import { persons, screening_form, screenings, title_normalize, user_provider } from "@/db/schema";
 import { eq } from 'drizzle-orm';
+import { time } from "drizzle-orm/mysql-core";
 
 export type InsertScreening = typeof screenings.$inferInsert;
 export type SelectScreening = typeof screenings.$inferSelect;
@@ -54,6 +55,31 @@ export const ScreeningRepository = {
         screening_form.screening_form_id, 
         formID
       ));
-  }
-  };
+  },
+  async findScreeningList(): Promise<SqlScreeningResponse[]> {
 
+    const result = await db.select({
+      visit_id: screenings.visit_id,
+      visit_date: screenings.visit_date,
+      person_id: persons.pid,
+      person_title: title_normalize.title_th,
+      person_fname: persons.first_name,
+      person_lname: persons.last_name,
+      provider_title: user_provider.title,
+      provider_fname: user_provider.fname,
+      provider_lname: user_provider.lname,
+      // coverage_id: null,
+      // coverage_name: null,
+      id_card: persons.idcard,
+      status_screening: screenings.status_screening,
+      role: user_provider.position,
+      screening_form_id: screenings.screening_form_id
+    })
+    .from(screenings)
+    .leftJoin(persons, eq(persons.pid, screenings.patient_id))
+    .leftJoin(user_provider, eq(user_provider.user_id, screenings.doctor_id))
+    .leftJoin(title_normalize, eq(title_normalize.title_id, persons.title))
+
+    return result;
+  },
+  };

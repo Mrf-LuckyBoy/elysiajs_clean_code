@@ -139,3 +139,46 @@ export const UpdateScreeningFormSchema = t.Object({
     sum_mini_cog: t.Number(),
     updated_at: t.Optional(t.Date())
 });
+
+export interface SqlScreeningResponse {
+    visit_id: string;
+    visit_date: Date;
+    person_id: string | null;
+    person_title: string | null;
+    person_fname: string | null;
+    person_lname: string | null;
+    // coverage_id: string | null;
+    // coverage_name: string | null;
+    provider_title: string | null; 
+    provider_fname: string | null;
+    provider_lname: string | null;
+    id_card: string | null;
+    status_screening: string;
+    role: string | null;
+    screening_form_id: string;
+}
+export interface ScreeningListResponseDTO {
+    visit_id: string,
+    visit_date: string,
+    visit_time: string,
+    person_name: string,
+    coverage_name: string,
+    provider_name: string,
+    id_card: string,
+    status_screening: string,
+    role: string,
+    screening_form_id: string
+}
+
+export const ScreeningListResponseSchema = t.Object({
+    visit_id: t.String(),
+    visit_date: t.String(),
+    visit_time: t.String(),
+    person_name: t.String(),
+    coverage_name: t.String(),
+    provider_name: t.String(),
+    id_card: t.String(),
+    status_screening: t.String(),
+    role: t.String(),
+    screening_form_id: t.String()
+});

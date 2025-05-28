@@ -2,7 +2,7 @@ import { db } from '@/db';
 import {
   persons,
   address_code,
-  medical_history,
+  // medical_history,
   guardians,
   address,
 } from '@/db/schema';
@@ -17,13 +17,14 @@ import type {
 import { eq, sql, desc, like } from 'drizzle-orm';
 import { randomUUID } from 'crypto';
 import { Crypto } from '@/core/crypto';
+import { getRightInscl } from '../usecase/get-right';
 
 export const PersonRepository = {
   async registerFrom(form: NewRegisterFormDTO): Promise<NewRegisterFormDTO> {
-    // main form 1
     if (form.pid === '') {
       const med_id = randomUUID();
       const person_id = randomUUID();
+      const inscal = await getRightInscl(form.idcard);
       const med: MedicalHistoryDTO = {
         med_id: med_id,
         chronic_disease: form.chronic_disease,
@@ -32,7 +33,8 @@ export const PersonRepository = {
         created_at: new Date(),
         updated_at: new Date(),
       };
-      await db.insert(medical_history).values(med);
+      // await db.insert(medical_history).values(med);
+      console.log(med);
       let hn = '';
       let calHn = 0;
       const lastHNRow = await db
@@ -72,10 +74,13 @@ export const PersonRepository = {
         village: '',
         is_delete: false,
         hn: hn,
+        email: '-',
+        inscl_code: inscal,
         created_at: new Date(),
         updated_at: new Date(),
       };
-      await db.insert(persons).values(person);
+      console.log(person);
+      // await db.insert(persons).values(person);
 
       form.pid = person_id;
     } else if (

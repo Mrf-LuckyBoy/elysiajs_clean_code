@@ -36,7 +36,7 @@ export const addressSchema = t.Object({
   area: t.String({ length: 100 }),
   areacode: t.String({ length: 100 }),
   zipcode: t.String({ length: 100 }),
-})
+});
 
 export interface Relationship {
   relationship_id: string;
@@ -66,4 +66,3 @@ export interface usersVhv {
   fname: string;
   lname: string;
 }
-

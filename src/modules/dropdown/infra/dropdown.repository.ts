@@ -12,7 +12,7 @@ import {
   AddressCode,
   Relationship,
   users,
-  usersVhv
+  usersVhv,
 } from '../model/dropdown.model';
 
 export const DropdownRepository = {

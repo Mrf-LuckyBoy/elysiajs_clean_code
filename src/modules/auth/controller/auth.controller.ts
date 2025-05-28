@@ -67,7 +67,7 @@ export const authController = {
     handler: async ({
       body,
       set,
-cookie: { auth_token },
+      cookie: { auth_token },
     }: Context & {
       body: { cid_hash: string; hos_code: string; position: string };
     }) => {
@@ -78,7 +78,7 @@ cookie: { auth_token },
           return HttpResponse.badRequest('not found user');
         }
         auth_token.set({
-          domain: 'localhost',
+          domain: 'uat-parentcare.one.th',
           httpOnly: true,
         });
         auth_token.value = token;

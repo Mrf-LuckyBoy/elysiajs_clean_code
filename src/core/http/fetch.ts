@@ -36,4 +36,8 @@ const createFetcher = (
 
 export const httpHealthID = createFetcher(`${ENV.HEALTHID_DOMAIN}/api/v1`);
 export const httpProvider = createFetcher(`${ENV.PROVIDER_DOMAIN}/api/v1`);
+export const httpFDH = createFetcher(`${ENV.FDH_DOMAIN}/api/v1`);
+export const httpMophBuddy = createFetcher(
+  `${ENV.MOPH_BUDDY_DOMAIN}/open-api/api/v1`
+);
 export const http = createFetcher(); // default/global

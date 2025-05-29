@@ -21,6 +21,8 @@ export interface PersonDTO {
   is_delete: boolean | null; // nullable because not `.notNull()`
   village: string;
   hn: string;
+  inscl_code: string;
+  email: string;
   created_at: Date | null;
   updated_at: Date | null;
   age: string;

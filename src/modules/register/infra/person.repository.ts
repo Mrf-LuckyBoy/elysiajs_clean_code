@@ -31,13 +31,14 @@ function formatAge(birth: Date): string {
   return `${years} ปี ${months} เดือน ${days} วัน`;
 }
 import { Crypto } from '@/core/crypto';
+import { getRightInscl } from '../usecase/get-right';
 
 export const PersonRepository = {
   async registerFrom(form: NewRegisterFormDTO): Promise<NewRegisterFormDTO> {
-    // main form 1
     if (form.pid === '') {
       const med_id = randomUUID();
       const person_id = randomUUID();
+      const inscal = await getRightInscl(form.idcard);
       const med: MedicalHistoryDTO = {
         med_id: med_id,
         chronic_disease: form.chronic_disease,
@@ -86,6 +87,8 @@ export const PersonRepository = {
         village: '',
         is_delete: false,
         hn: hn,
+        email: '-',
+        inscl_code: inscal,
         created_at: new Date(),
         updated_at: new Date(),
       };

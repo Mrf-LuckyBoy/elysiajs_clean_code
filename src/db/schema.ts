@@ -71,12 +71,12 @@ export const persons = mysqlTable(
     med_id: varchar('med_id', { length: 255 }).notNull(),
     hcode_cid: varchar('hcode_cid', { length: 100 }).notNull(),
     sex: varchar('sex', { length: 1 }).notNull(),
-    idcard: varchar('idcard', { length: 13 }).notNull().unique(),
+    idcard: varchar('idcard', { length: 255 }).notNull().unique(),
     title: varchar('title', { length: 100 }).notNull(),
     first_name: varchar('first_name', { length: 255 }).notNull(),
     last_name: varchar('last_name', { length: 255 }).notNull(),
     birth: date('birth').notNull(),
-    phone: varchar('phone', { length: 10 }).notNull(),
+    phone: varchar('phone', { length: 255 }).notNull(),
     blood_type: varchar('boot_type', { length: 255 }).notNull(),
     status: mysqlEnum('status', ['approve', 'cancel', 'delete']).notNull(), // approve cancel delete
     reason_cancel: varchar('reason_cancel', { length: 255 }).notNull(),
@@ -85,6 +85,8 @@ export const persons = mysqlTable(
     guardian: varchar('guardian', { length: 100 }).notNull(),
     is_delete: boolean('is_delect').default(false),
     village: varchar('village', { length: 100 }).notNull(),
+    inscl_code: varchar('inscl_code', { length: 50 }).notNull(),
+    email: varchar('email', { length: 100 }),
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp('updated_at').defaultNow().onUpdateNow(),
   },
@@ -109,6 +111,10 @@ export const persons = mysqlTable(
       columns: [t.guardian],
       foreignColumns: [guardians.guardian_id],
     }),
+    foreignKey({
+      columns: [t.inscl_code],
+      foreignColumns: [inscl_normalize.insclCode],
+    }),
   ]
 );
 
@@ -125,12 +131,12 @@ export const guardians = mysqlTable(
   {
     guardian_id: varchar('guardian_id', { length: 36 }).primaryKey(),
     relationships: varchar('relationships', { length: 100 }).notNull(),
-    idcard: varchar('idcard', { length: 13 }).notNull().unique(),
+    idcard: varchar('idcard', { length: 255 }).notNull().unique(),
     title: varchar('title', { length: 100 }).notNull(),
     first_name: varchar('first_name', { length: 255 }).notNull(),
     last_name: varchar('last_name', { length: 255 }).notNull(),
     birth: date('birth').notNull(),
-    phone: varchar('phone', { length: 10 }).notNull(),
+    phone: varchar('phone', { length: 255 }).notNull(),
     hcode: varchar('hcode', { length: 100 }).notNull(),
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp('updated_at').defaultNow().onUpdateNow(),
@@ -220,14 +226,26 @@ export const screenings = mysqlTable(
     status_screening: varchar('status_screening', { length: 255 }).notNull(),
     is_self: boolean('is_self').notNull(),
     is_assign_official: boolean('is_assign_official').notNull(),
+    is_assgin_official_service_unit: boolean(
+      'is_assgin_official_service_unit'
+    ).notNull(),
     is_assign_vhv: boolean('is_assign_vhv').notNull(),
     is_assign_vhv_village: boolean('is_assign_vhv_village').notNull(),
     is_assign_vhv_service_unit: boolean('is_assign_vhv_service_unit').notNull(),
     is_diagnosis: boolean('is_diagnosis').notNull(),
-    createAt: timestamp('createAt', { mode: 'date' }).notNull(),
-    updateAt: timestamp('updateAt', { mode: 'date' }).notNull(),
+    created_at: timestamp('created_at', { mode: 'date' }).notNull(),
+    updated_at: timestamp('updated_at', { mode: 'date' }).notNull(),
   },
-  (t) => [unique('custom_unique').on(t.visit_id)]
+  (t) => [
+    foreignKey({
+      columns: [t.patient_id],
+      foreignColumns: [persons.pid],
+    }),
+    foreignKey({
+      columns: [t.screening_form_id],
+      foreignColumns: [screening_form.screening_form_id],
+    }),
+  ]
 );
 
 export const screening_form = mysqlTable('screening_form', {
@@ -258,6 +276,11 @@ export const screening_form = mysqlTable('screening_form', {
   word_recall: int('word_recall').notNull(),
   clock_draw: int('clock_draw').notNull(),
   sum_mini_cog: int('sum_mini_cog').notNull(),
-  createAt: timestamp('createAt', { mode: 'date' }).notNull(),
-  updateAt: timestamp('updateAt', { mode: 'date' }).notNull(),
+  created_at: timestamp('created_at', { mode: 'date' }).notNull(),
+  updated_at: timestamp('updated_at', { mode: 'date' }).notNull(),
+});
+
+export const inscl_normalize = mysqlTable('inscl_normalize', {
+  insclCode: varchar('inscl_code', { length: 15 }).primaryKey(),
+  insclNameTh: varchar('inscl_name_th', { length: 255 }),
 });

@@ -262,7 +262,7 @@ export interface SqlScreeningByVisitIDResponse {
     hn: string | null;
     sex: string | null;
     age: Date | null;
-    address: string | null;
+    address: string;
     reason_edit: string | null;
     appointment_reason: string;
     provider_title: string  | null;
@@ -274,14 +274,6 @@ export interface SqlScreeningByVisitIDResponse {
     is_assign_vhv_service_unit: boolean;
     is_assgin_official_service_unit: boolean;
     screening_form_id: string;
-    // address
-    hno: string | null;
-    moo: string | null;
-    street: string | null;
-    village: string | null;
-    provname: string | null;
-    distname: string | null;
-    subdistname: string | null;
 }
 
 export interface UpdateVisitDateRequestDTO {

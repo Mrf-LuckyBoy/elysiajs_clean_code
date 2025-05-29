@@ -47,8 +47,6 @@ export async function getScreeningByVisitID(visitID: string): Promise<GetScreeni
         return `${years} ปี ${months} เดือน ${days} วัน`;
     };
 
-    const addressData = `${screening.hno} หมู่ ${screening.moo} ถนน ${screening.street} หมู่ ${screening.village} ตำบล ${screening.subdistname} อำเภอ ${screening.distname} จังหวัด ${screening.provname}`;
-
     const result: GetScreeningByVisitIDDTO = {
         visit_id: screening.visit_id,
         person_cid: maskedIDCard || '',
@@ -59,7 +57,7 @@ export async function getScreeningByVisitID(visitID: string): Promise<GetScreeni
         hn: screening.hn || '',
         sex: screening.sex || '',
         age: calulateAge(screening.age),
-        address: addressData || '',
+        address: screening.address || '',
         reason_edit: screening.reason_edit || '',
         appointment_reason: screening.appointment_reason,
         provider_name: `${screening.provider_title} ${decryptedProviderFname} ${decryptedProviderLname}`,

@@ -1,7 +1,7 @@
 import { db } from "@/db";
 import { SqlScreeningByVisitIDResponse, SqlScreeningResponse, UpdateScreeningFormDTO, UpdateVisitDateRequestDTO } from "../model/screening.model";
 import { address, address_code, inscl_normalize, persons, screening_form, screenings, title_normalize, user_provider } from "@/db/schema";
-import { eq } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 
 export type InsertScreening = typeof screenings.$inferInsert;
 export type SelectScreening = typeof screenings.$inferSelect;
@@ -95,7 +95,6 @@ export const ScreeningRepository = {
       person_title: title_normalize.title_th,
       person_fname: persons.first_name,
       person_lname: persons.last_name,
-      address: persons.hcode,
       reason_edit: screenings.reason_edit,
       appointment_reason: screenings.reason_appointment,
       provider_title: user_provider.title,
@@ -107,14 +106,16 @@ export const ScreeningRepository = {
       is_assign_vhv: screenings.is_assign_vhv,
       is_assign_vhv_service_unit: screenings.is_assign_vhv_service_unit,
       is_assgin_official_service_unit: screenings.is_assgin_official_service_unit,
-      //ที่อยู่
-      hno: address.hno,
-      moo: address.moo,
-      street: address.street,
-      village: address.village,
-      provname: address_code.provname,
-      distname: address_code.distname,
-      subdistname: address_code.subdistname,
+
+      address: sql<string>`CONCAT(
+        COALESCE(${address.hno}, ''), ' ',
+        COALESCE(${address.village}, ''), ' ',
+        'หมู่ที่ ', COALESCE(${address.moo}, '-'), ' ',
+        'ถนน ', COALESCE(${address.street}, ''), ' ',
+        COALESCE(${address_code.subdistname}, ''), ' ',
+        COALESCE(${address_code.distname}, ''), ' ',
+        COALESCE(${address_code.provname}, '')
+      )`
     })
     .from(screenings)
     .leftJoin(persons, eq(persons.pid, screenings.patient_id))

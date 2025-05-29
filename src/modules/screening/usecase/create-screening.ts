@@ -1,5 +1,8 @@
-import { ScreeningRepository } from "../infra/screening.repository";
-import { ScreeningRequestDTO, ScreeningResponseDTO } from "../model/screening.model";
+import { ScreeningRepository } from '../infra/screening.repository';
+import {
+  ScreeningRequestDTO,
+  ScreeningResponseDTO,
+} from '../model/screening.model';
 import { randomUUID } from 'crypto';
 export async function createScreening(body: ScreeningRequestDTO): Promise<void> {
 const currentTime = new Date();

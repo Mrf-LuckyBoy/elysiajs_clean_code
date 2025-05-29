@@ -1,15 +1,15 @@
-import { t } from "elysia";
+import { t } from 'elysia';
 
 export interface UserProfileDTO {
-  cid : string;
+  cid: string;
   hos_code: string;
   name: string;
   position: string;
   phone_number: string;
   dob: string;
-  email : string;
+  email: string;
   usage_rights: string;
-  signature_pad: string | null
+  signature_pad: string | null;
   hno: string;
   soi_road: string;
   province: string;
@@ -18,13 +18,13 @@ export interface UserProfileDTO {
 }
 
 export interface VhvProfileDTO {
-  cid : string;
+  cid: string;
   name: string;
   position: string;
   phone_number: string;
   dob: string;
   usage_rights: string;
-  work_area : string;
+  work_area: string;
   hno: string;
   soi_road: string;
   province: string;

@@ -3,6 +3,7 @@ import { loginProviderID } from '../usecase/login-providerID';
 import { loginSetToken } from '../usecase/login-setToken';
 import { HttpResponse, HttpResponseSchema } from '@/core/http.response';
 import { UserProviderSchema } from '../model/auth.model';
+import { ENV } from '@/config/env';
 
 export const authController = {
   loginProviderID: {
@@ -67,7 +68,7 @@ export const authController = {
     handler: async ({
       body,
       set,
-cookie: { auth_token },
+      cookie: { auth_token },
     }: Context & {
       body: { cid_hash: string; hos_code: string; position: string };
     }) => {
@@ -78,16 +79,14 @@ cookie: { auth_token },
           return HttpResponse.badRequest('not found user');
         }
         auth_token.set({
-          domain: 'localhost',
+          domain:
+            ENV.BUN_ENV === 'development'
+              ? 'localhost'
+              : 'uat-parentcare.one.th',
           httpOnly: true,
         });
         auth_token.value = token;
         set.status = 201;
-        return {
-          success: true,
-          message: 'Success',
-          data: token,
-        };
         return HttpResponse.success(token);
       } catch (err: unknown) {
         if (err instanceof Error) {

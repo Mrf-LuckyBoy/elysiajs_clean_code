@@ -1,9 +1,10 @@
 import { t } from "elysia";
-import { PaginationQuery, PaginationSchema, ScreeningListResponseSchema, ScreeningRequestDTO, ScreeningSchema, UpdateScreeningFormDTO, UpdateScreeningFormSchema } from "../model/screening.model";
+import { GetScreeningByVisitIDSchema, PaginationQuery, PaginationSchema, ScreeningListResponseSchema, ScreeningRequestDTO, ScreeningResponseSchema, ScreeningSchema, UpdateScreeningFormDTO, UpdateScreeningFormSchema } from "../model/screening.model";
 import { createScreening } from "../usecase/create-screening";
 import { HttpResponse, HttpResponseSchema } from "@/core/http.response";
 import { updateScreeningFormData } from "../usecase/update-screening-form";
 import { getScreeningList } from "../usecase/get-screening-list";
+import { getScreeningByVisitID } from "../usecase/get-screening-by-id";
 
 export const screeningController = {
     create: {
@@ -135,5 +136,58 @@ export const screeningController = {
             }
            
         }
-    }
-};
+    },
+    getScreeningByID: {
+        schema: {
+            Params: t.Object({
+                visit_id: t.String({ format: 'uuid', description: 'Visit ID' }),
+            }),
+            response: {
+                200: t.Object({
+                    success: t.Boolean(),
+                    data: GetScreeningByVisitIDSchema,
+                    message: t.String(),
+                }),
+                400: t.Object({
+                    success: t.Boolean(),
+                    message: t.String(),
+                    detail: t.String(),
+                }),
+                500: t.Object({
+                    success: t.Boolean(),
+                    message: t.String(),
+                    detail: t.String(),
+                }),
+            },
+            summary: 'Get screening by visit id',
+            description: 'Fetch screening records by visit id.',
+            tags: ['Screening'],
+        },
+        handler: async ({ params, set }: { params: {visit_id: string}; set: any }) => {
+                try {
+                    const visitID = params.visit_id
+                    if (!visitID) {
+                        set.status = 400;
+                        return HttpResponse.badRequest('Visit ID is required');
+                    }
+                    
+                    const screeningData = await getScreeningByVisitID(visitID);
+                     set.status = 200
+                return {
+                    success: true,
+                    data: screeningData,
+                    message: 'Screening retrieved successfully'
+                    };
+
+                } catch (err: unknown) {
+                    if (err instanceof Error) {
+                        set.status = 500;
+                        return HttpResponse.error(err.message);
+                    } else {
+                        set.status = 500;
+                       return HttpResponse.error('Unexpected error');
+                    }
+                }
+            },
+        }
+    };

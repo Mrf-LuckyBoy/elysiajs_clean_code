@@ -3,6 +3,7 @@ import logger from 'logixlysia';
 import swagger from '@elysiajs/swagger';
 import { ENV } from '@/config/env';
 import { AppRoutes } from './routes/index.routes';
+import { AppAuthRoutes } from './routes/auth.routes';
 import { HttpResponse } from '@/core/http.response';
 import { corsMiddleware } from '@/core/cors';
 
@@ -24,6 +25,7 @@ const app = new Elysia()
     })
   )
   .use(AppRoutes)
+  .use(AppAuthRoutes)
   .onError(({ code, error }) => {
     console.log(error);
     if (code === 'NOT_FOUND') {

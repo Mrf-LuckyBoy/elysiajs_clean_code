@@ -23,6 +23,7 @@ const envSchema = z.object({
   FDH_DOMAIN: z.string(),
   X_API_KEY_FDH_NSHO: z.string(),
   MOPH_BUDDY_DOMAIN: z.string(),
+  BUN_ENV: z.string(),
 });
 
 // Validate and parse

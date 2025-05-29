@@ -34,7 +34,6 @@ export const PersonRepository = {
         updated_at: new Date(),
       };
       await db.insert(medical_history).values(med);
-      console.log(med);
       let hn = '';
       let calHn = 0;
       const lastHNRow = await db

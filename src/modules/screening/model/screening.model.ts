@@ -7,13 +7,11 @@ export interface ScreeningRequestDTO {
     reason_appointment: string;
     doctor_id: string;
     assign_id?: string | null;
-    assign_vhv_village_id?: string | null;
     assign_vhv_service_unit?: string | null;
     screening_form_id?: string;
     status_screening?: string;
     is_self?: boolean;
     is_assign_official?: boolean;
-    is_assign_vhv_village?: boolean;
     is_assign_vhv?: boolean;
     is_assign_vhv_service_unit?: boolean;
     is_assgin_official_service_unit?: boolean;
@@ -27,7 +25,6 @@ export interface ScreeningResponseDTO {
     reason_appointment: string;
     doctor_id: string;
     assign_id: string | null;
-    assign_vhv_village_id: string | null;
     assign_vhv_service_unit: string | null;
     screening_form_id: string;
     status_screening: string;
@@ -36,7 +33,6 @@ export interface ScreeningResponseDTO {
     is_assign_vhv: boolean;
     is_assign_vhv_service_unit: boolean;
     is_assgin_official_service_unit: boolean;
-    is_assign_vhv_village: boolean;
     is_diagnosis: boolean;
     created_at: Date;
     updated_at: Date;
@@ -49,14 +45,12 @@ export const ScreeningSchema = t.Object({
     reason_appointment: t.String(),
     doctor_id: t.String(),
     assign_id: t.Optional(t.Nullable(t.String())),
-    assign_vhv_village_id: t.Optional(t.Nullable(t.String())),
     assign_vhv_service_unit: t.Optional(t.Nullable(t.String())),
     screening_form_id: t.Optional(t.String()),
     status_screening: t.Optional(t.String()),
     is_self: t.Optional(t.Boolean()),
     is_assign_official: t.Optional(t.Boolean()),
     is_assign_vhv: t.Optional(t.Boolean()),
-    is_assign_vhv_village: t.Optional(t.Boolean()),
     is_assign_vhv_service_unit: t.Optional(t.Boolean()),
     is_assgin_official_service_unit: t.Optional(t.Boolean()),
     is_diagnosis: t.Optional(t.Boolean()),
@@ -69,14 +63,12 @@ export const ScreeningResponseSchema = t.Object({
     reason_appointment: t.String(),
     doctor_id: t.String(),
     assign_id: t.Nullable(t.String()),
-    assign_vhv_village_id: t.Nullable(t.String()),
     assign_vhv_service_unit: t.Nullable(t.String()),
     screening_form_id: t.String(),
     status_screening: t.String(),
     is_self: t.Boolean(),
     is_assign_official: t.Boolean(),
     is_assign_vhv: t.Boolean(),
-    is_assign_vhv_village: t.Boolean(),
     is_assign_vhv_service_unit: t.Boolean(),
     is_assgin_official_service_unit: t.Boolean(),
     is_diagnosis: t.Boolean(),
@@ -232,8 +224,8 @@ export interface GetScreeningByVisitIDDTO {
     is_assign_vhv: boolean;
     is_assign_vhv_service_unit: boolean;
     is_assgin_official_service_unit: boolean;
-    is_assign_vhv_village: boolean;
     screening_form_id: string
+    hcode_cid: string
 }
 
 export const GetScreeningByVisitIDSchema = t.Object({
@@ -254,8 +246,8 @@ export const GetScreeningByVisitIDSchema = t.Object({
     is_assign_vhv: t.Boolean(),
     is_assign_vhv_service_unit: t.Boolean(),
     is_assgin_official_service_unit: t.Boolean(),
-    is_assign_vhv_village: t.Boolean(),
-    screening_form_id: t.String()
+    screening_form_id: t.String(),
+    hcode_cid: t.String()
 });
 
 export interface SqlScreeningByVisitIDResponse {
@@ -279,7 +271,6 @@ export interface SqlScreeningByVisitIDResponse {
     is_assign_vhv: boolean;
     is_assign_vhv_service_unit: boolean;
     is_assgin_official_service_unit: boolean;
-    is_assign_vhv_village: boolean;
     screening_form_id: string;
     // address
     hno: string | null;
@@ -289,4 +280,17 @@ export interface SqlScreeningByVisitIDResponse {
     provname: string | null;
     distname: string | null;
     subdistname: string | null;
+    hcode_cid: string | null;
 }
+
+export interface UpdateVisitDateRequestDTO {
+    visit_date: Date;
+    change_visit_date_reason: string;
+    updated_at?: Date
+}
+
+export const UpdateVisitDateRequestSchema = t.Object({
+    visit_date: t.Date({ format: 'date' }),
+    change_visit_date_reason: t.String(),
+    updated_at: t.Optional(t.Date({ format: 'date-time' }))
+});

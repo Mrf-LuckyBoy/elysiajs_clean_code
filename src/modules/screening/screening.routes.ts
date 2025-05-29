@@ -8,7 +8,7 @@ export const screeningRoute = new Elysia({ prefix: '/screening' })
     screeningController.create.schema
   )
   .put(
-    '/:form_id', 
+    'forms/:form_id', 
     screeningController.updateFormData.handler, 
     screeningController.updateFormData.schema)
   .get(
@@ -18,4 +18,8 @@ export const screeningRoute = new Elysia({ prefix: '/screening' })
   .get(
     '/:visit_id', 
     screeningController.getScreeningByID.handler, 
-    screeningController.getScreeningByID.schema);
+    screeningController.getScreeningByID.schema)
+  .put(
+    '/visit/:visit_id', 
+    screeningController.updateVisitDate.handler, 
+    screeningController.updateVisitDate.schema);

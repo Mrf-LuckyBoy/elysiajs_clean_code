@@ -47,7 +47,7 @@ export async function getScreeningByVisitID(visitID: string): Promise<GetScreeni
         return `${years} ปี ${months} เดือน ${days} วัน`;
     };
 
-    const addressData = `${screening.hno} ${screening.moo} ${screening.street} ${screening.village} ${screening.subdistname} ${screening.distname} ${screening.provname}`;
+    const addressData = `${screening.hno} หมู่ ${screening.moo} ถนน ${screening.street} หมู่ ${screening.village} ตำบล ${screening.subdistname} อำเภอ ${screening.distname} จังหวัด ${screening.provname}`;
 
     const result: GetScreeningByVisitIDDTO = {
         visit_id: screening.visit_id,
@@ -67,8 +67,8 @@ export async function getScreeningByVisitID(visitID: string): Promise<GetScreeni
         is_assign_vhv: screening.is_assign_vhv,
         is_assign_vhv_service_unit: screening.is_assign_vhv_service_unit,
         is_assgin_official_service_unit: screening.is_assgin_official_service_unit,
-        is_assign_vhv_village: screening.is_assign_vhv_village,
-        screening_form_id: screening.screening_form_id
+        screening_form_id: screening.screening_form_id,
+        hcode_cid: screening.hcode_cid || ''
     }
 
     return result;

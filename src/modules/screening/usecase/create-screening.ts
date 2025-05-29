@@ -15,14 +15,12 @@ const newScreeningFormID = randomUUID();
         reason_appointment: body.reason_appointment,
         doctor_id: body.doctor_id,
         assign_id: null,
-        assign_vhv_village_id: null,
         assign_vhv_service_unit: null,
         screening_form_id: newScreeningFormID,
         status_screening: "รอบันทึก",
         is_self: false,
         is_assign_official: false,
         is_assign_vhv: false,
-        is_assign_vhv_village: false,
         is_assign_vhv_service_unit: false,
         is_assgin_official_service_unit: false,
         is_diagnosis: false,
@@ -46,11 +44,6 @@ const newScreeningFormID = randomUUID();
         //is_assgin_official_service_unit
         newScreening.is_assgin_official_service_unit = true;
         newScreening.assign_id = body.assign_id || null;
-       } else if (body.is_assign_vhv_village === true) {
-        //is_assign_vhv_village
-        newScreening.is_assign_vhv_village = true;
-        newScreening.assign_id = null;
-        newScreening.assign_vhv_village_id = body.assign_vhv_village_id || null;
        } else if (body.is_assign_vhv_service_unit === true) {
         //is_assign_vhv_service_unit
         newScreening.is_assign_vhv_service_unit = true;

@@ -1,10 +1,11 @@
 import { t } from "elysia";
-import { GetScreeningByVisitIDSchema, PaginationQuery, PaginationSchema, ScreeningListResponseSchema, ScreeningRequestDTO, ScreeningResponseSchema, ScreeningSchema, UpdateScreeningFormDTO, UpdateScreeningFormSchema } from "../model/screening.model";
+import { GetScreeningByVisitIDSchema, PaginationQuery, PaginationSchema, ScreeningListResponseSchema, ScreeningRequestDTO, ScreeningResponseSchema, ScreeningSchema, UpdateScreeningFormDTO, UpdateScreeningFormSchema, UpdateVisitDateRequestDTO, UpdateVisitDateRequestSchema } from "../model/screening.model";
 import { createScreening } from "../usecase/create-screening";
 import { HttpResponse, HttpResponseSchema } from "@/core/http.response";
 import { updateScreeningFormData } from "../usecase/update-screening-form";
 import { getScreeningList } from "../usecase/get-screening-list";
 import { getScreeningByVisitID } from "../usecase/get-screening-by-id";
+import { updateVisitDate } from "../usecase/update-visit-date";
 
 export const screeningController = {
     create: {
@@ -189,5 +190,58 @@ export const screeningController = {
                     }
                 }
             },
+    },
+    updateVisitDate: {
+        schema: {
+            Params: t.Object({
+                visit_id: t.String({ format: 'uuid', description: 'Visit ID' }),
+            }),
+            body: UpdateVisitDateRequestSchema,
+            response: {
+                200: t.Object({
+                    success: t.Boolean(),
+                    message: t.String(),
+                }),
+                400: t.Object({
+                    success: t.Boolean(),
+                    message: t.String(),
+                    detail: t.String(),
+                }),
+                500: t.Object({
+                    success: t.Boolean(),
+                    message: t.String(),
+                    detail: t.String(),
+                }),
+                        },
+            summary: 'Update visit date',
+            description: 'Update visit date.',
+            tags: ['Screening'],
+    },
+        handler: async ({ params, set, body }: { params: {visit_id: string; }; set: any; body: UpdateVisitDateRequestDTO }) => {
+                try {
+                    const visitID = params.visit_id
+                    if (!visitID) {
+                        set.status = 400;
+                        return HttpResponse.badRequest('Visit ID is required');
+                    }
+                    await updateVisitDate(visitID, body);
+                     set.status = 200
+                return {
+                    success: true,
+                    message: 'Visit date updated successfully'
+                    };
+
+                } catch (err: unknown) {
+                    if (err instanceof Error) {
+                        set.status = 500;
+                        return HttpResponse.error(err.message);
+                    } else {
+                        set.status = 500;
+                       return HttpResponse.error('Unexpected error');
+                    }
+                }
+
         }
-    };
+    },
+}
+

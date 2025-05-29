@@ -1,8 +1,7 @@
 import { db } from "@/db";
-import { SqlScreeningByVisitIDResponse, SqlScreeningResponse, UpdateScreeningFormDTO } from "../model/screening.model";
+import { SqlScreeningByVisitIDResponse, SqlScreeningResponse, UpdateScreeningFormDTO, UpdateVisitDateRequestDTO } from "../model/screening.model";
 import { address, address_code, inscl_normalize, persons, screening_form, screenings, title_normalize, user_provider } from "@/db/schema";
-import { eq, is } from 'drizzle-orm';
-import { time } from "drizzle-orm/mysql-core";
+import { eq } from 'drizzle-orm';
 
 export type InsertScreening = typeof screenings.$inferInsert;
 export type SelectScreening = typeof screenings.$inferSelect;
@@ -107,8 +106,6 @@ export const ScreeningRepository = {
       is_assign_vhv: screenings.is_assign_vhv,
       is_assign_vhv_service_unit: screenings.is_assign_vhv_service_unit,
       is_assgin_official_service_unit: screenings.is_assgin_official_service_unit,
-      is_assign_vhv_village: screenings.is_assign_vhv_village,
-
       //ที่อยู่
       hno: address.hno,
       moo: address.moo,
@@ -116,7 +113,8 @@ export const ScreeningRepository = {
       village: address.village,
       provname: address_code.provname,
       distname: address_code.distname,
-      subdistname: address_code.subdistname
+      subdistname: address_code.subdistname,
+      hcode_cid: persons.hcode_cid
     })
     .from(screenings)
     .leftJoin(persons, eq(persons.pid, screenings.patient_id))
@@ -126,8 +124,25 @@ export const ScreeningRepository = {
     .leftJoin(address, eq(persons.hcode, address.hcode))
     .leftJoin(address_code, eq(address.villcode, address_code.addresscode))
     .where(eq(screenings.visit_id, visitID))
-    .limit(1);
+    .limit(1);    
 
     return result[0] || null;
+  },
+  async getScreeningByVisitID(visitID: string): Promise<boolean> {
+    const result = await db.select().from(screenings).where(eq(screenings.visit_id, visitID));
+    if (result.length > 0) {
+      return true;
+    } else {
+      return false;
+    }
+    
+  },
+  async updateVisitDate(visit_id: string, data: UpdateVisitDateRequestDTO): Promise<void> {
+    await db.update(screenings).
+    set(data).
+    where(eq(
+      screenings.visit_id, 
+      visit_id
+    ));
   },
 };

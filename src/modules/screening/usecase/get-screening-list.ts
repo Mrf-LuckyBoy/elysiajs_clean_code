@@ -123,15 +123,3 @@ function applyFilters(screeningList: SqlScreeningResponse[], query: PaginationQu
     return filteredData;
 }
 
-// function maskCardNumber(cardNumber: string): string {
-
-//     if (cardNumber.length !== 13) {
-//         console.log('Invalid card number length:', cardNumber.length);
-//     return cardNumber;
-//   }
-//     const maskedPart = cardNumber.slice(0, 9).replace(/\d/g, 'X');
-//     const lastFourDigits = cardNumber.slice(-4);
-//    const result = maskedPart + lastFourDigits;
-   
-//   return result;
-// }

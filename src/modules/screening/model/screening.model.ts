@@ -13,7 +13,7 @@ export interface ScreeningRequestDTO {
     status_screening?: string;
     is_self?: boolean;
     is_assign_official?: boolean;
-    is_assgin_vhv_village?: boolean;
+    is_assign_vhv_village?: boolean;
     is_assign_vhv?: boolean;
     is_assign_vhv_service_unit?: boolean;
     is_assgin_official_service_unit?: boolean;
@@ -156,6 +156,8 @@ export interface SqlScreeningResponse {
     status_screening: string;
     role: string | null;
     screening_form_id: string;
+
+    
 }
 export interface ScreeningListResponseDTO {
     visit_id: string,
@@ -211,3 +213,80 @@ export const PaginationSchema = t.Object({
     status: t.Optional(t.String()),
     date: t.Optional(t.String({ format: 'date' }))
 });
+
+export interface GetScreeningByVisitIDDTO {
+    visit_id: string;
+    person_cid: string;
+    visit_date: string;
+    visit_time: string;
+    pid: string;
+    person_name: string;
+    hn: string;
+    sex: string;
+    age: string;
+    address: string;
+    appointment_reason: string;
+    provider_name: string;
+    is_self: boolean;
+    is_assign_official: boolean;
+    is_assign_vhv: boolean;
+    is_assign_vhv_service_unit: boolean;
+    is_assgin_official_service_unit: boolean;
+    is_assign_vhv_village: boolean;
+    screening_form_id: string
+}
+
+export const GetScreeningByVisitIDSchema = t.Object({
+    visit_id: t.String(),
+    person_cid: t.String(),
+    visit_date: t.String(),
+    visit_time: t.String(),
+    pid: t.String(),
+    person_name: t.String(),
+    hn: t.String(),
+    sex: t.String(),
+    age: t.String(),
+    address: t.Union([t.String(), t.Null()]),
+    appointment_reason: t.String(),
+    provider_name: t.String(),
+    is_self: t.Boolean(),
+    is_assign_official: t.Boolean(),
+    is_assign_vhv: t.Boolean(),
+    is_assign_vhv_service_unit: t.Boolean(),
+    is_assgin_official_service_unit: t.Boolean(),
+    is_assign_vhv_village: t.Boolean(),
+    screening_form_id: t.String()
+});
+
+export interface SqlScreeningByVisitIDResponse {
+    visit_id: string;
+    visit_date: Date;
+    person_id: string | null;
+    person_cid: string | null;
+    person_title: string | null;
+    person_fname: string | null;
+    person_lname: string | null;
+    hn: string | null;
+    sex: string | null;
+    age: Date | null;
+    address: string | null;
+    appointment_reason: string;
+    provider_title: string  | null;
+    provider_fname: string  | null;
+    provider_lname: string  | null;
+    is_self: boolean;
+    is_assign_official: boolean;
+    is_assign_vhv: boolean;
+    is_assign_vhv_service_unit: boolean;
+    is_assgin_official_service_unit: boolean;
+    is_assign_vhv_village: boolean;
+    screening_form_id: string;
+    // address
+    hno: string | null;
+    moo: string | null;
+    street: string | null;
+    village: string | null;
+    provname: string | null;
+    distname: string | null;
+    subdistname: string | null;
+}

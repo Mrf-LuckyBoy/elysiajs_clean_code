@@ -1,11 +1,12 @@
-import { t } from "elysia";
-import { GetScreeningByVisitIDSchema, PaginationQuery, PaginationSchema, ScreeningListResponseSchema, ScreeningRequestDTO, ScreeningResponseSchema, ScreeningSchema, UpdateScreeningFormDTO, UpdateScreeningFormSchema, UpdateVisitDateRequestDTO, UpdateVisitDateRequestSchema } from "../model/screening.model";
+import { Cookie, t } from "elysia";
+import { GetScreeningByVisitIDSchema, PaginationQuery, PaginationSchema, ScreeningListResponseSchema, CreateScreeningRequestDTO, ScreeningResponseSchema, ScreeningSchema, UpdateScreeningFormDTO, UpdateScreeningFormSchema, UpdateVisitDateRequestDTO, UpdateVisitDateRequestSchema } from "../model/screening.model";
 import { createScreening } from "../usecase/create-screening";
 import { HttpResponse, HttpResponseSchema } from "@/core/http.response";
 import { updateScreeningFormData } from "../usecase/update-screening-form";
 import { getScreeningList } from "../usecase/get-screening-list";
 import { getScreeningByVisitID } from "../usecase/get-screening-by-id";
 import { updateVisitDate } from "../usecase/update-visit-date";
+import { Jwt } from "@/core/jwt";
 
 export const screeningController = {
     create: {
@@ -23,9 +24,17 @@ export const screeningController = {
             description: 'Creates a new screening record with the specified data.',
             tags: ['Screening'],
         },
-        handler: async ({ body, set }: { body: ScreeningRequestDTO; set: any }) => {
+        handler: async ({ body, set, cookie }: { body: CreateScreeningRequestDTO; set: any; cookie: Record<string, Cookie<string | undefined>>; }) => {
             try {
-                 const screening = await createScreening(body);
+                const token = cookie.auth_token.value;
+
+                const decoded = await Jwt.verify(token || '');
+                if (!decoded) {
+                    set.status = 401;
+                    return HttpResponse.unauthorized('Invalid or expired token');
+                }
+
+                 const screening = await createScreening(body, decoded);
                  set.status = 200
             return { 
                 success: true, 
@@ -121,9 +130,16 @@ export const screeningController = {
             description: 'Fetch all screening records.',
             tags: ['Screening'],
                  },
-        handler: async ({ query, set }: { query: PaginationQuery; set: any }) => {
+        handler: async ({ query, set, cookie }: { query: PaginationQuery; set: any; cookie: Record<string, Cookie<string | undefined>>; }) => {
             try {
-                const screeningList = await getScreeningList(query);
+                const token = cookie.auth_token.value;
+
+                const decoded = await Jwt.verify(token || '');
+                if (!decoded) {
+                    set.status = 401;
+                    return HttpResponse.unauthorized('Invalid or expired token');
+                }
+                const screeningList = await getScreeningList(query, decoded);
                  set.status = 200
             return screeningList;
             } catch (err: unknown) {

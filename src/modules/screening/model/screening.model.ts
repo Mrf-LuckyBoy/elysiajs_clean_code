@@ -1,15 +1,18 @@
 import { t } from 'elysia';
 
-export interface ScreeningRequestDTO {
-    visit_id?: string;
+export interface CreateScreeningRequestDTO {
+    // visit_id?: string;
     patient_id: string;
     visit_date: Date;
     reason_appointment: string;
     doctor_id: string;
     assign_id?: string | null;
-    assign_vhv_service_unit?: string | null;
-    screening_form_id?: string;
-    status_screening?: string;
+    // assign_official_service_unit?: string | null;
+    assign_id_vhv?: string | null;
+    // assign_vhv_service_unit?: string | null;
+    diagnosis_id?: string | null;
+    // screening_form_id?: string;
+    // status_screening?: string;
     is_self?: boolean;
     is_assign_official?: boolean;
     is_assign_vhv?: boolean;
@@ -26,7 +29,10 @@ export interface ScreeningResponseDTO {
     reason_appointment: string;
     doctor_id: string;
     assign_id: string | null;
+    assign_official_service_unit: string | null;
+    assign_id_vhv: string | null;
     assign_vhv_service_unit: string | null;
+    diagnosis_id: string | null;
     screening_form_id: string;
     status_screening: string;
     is_self: boolean;
@@ -40,15 +46,18 @@ export interface ScreeningResponseDTO {
 }
 
 export const ScreeningSchema = t.Object({
-    visit_id: t.Optional(t.String()),
+    // visit_id: t.Optional(t.String()),
     patient_id: t.String(),
     visit_date: t.Date(),
     reason_appointment: t.String(),
     doctor_id: t.String(),
     assign_id: t.Optional(t.Nullable(t.String())),
-    assign_vhv_service_unit: t.Optional(t.Nullable(t.String())),
-    screening_form_id: t.Optional(t.String()),
-    status_screening: t.Optional(t.String()),
+    // assign_official_service_unit: t.Optional(t.Nullable(t.String())),
+    assign_id_vhv: t.Optional(t.Nullable(t.String())),
+    // assign_vhv_service_unit: t.Optional(t.Nullable(t.String())),
+    diagnosis_id: t.Optional(t.Nullable(t.String())),
+    // screening_form_id: t.Optional(t.String()),
+    // status_screening: t.Optional(t.String()),
     is_self: t.Optional(t.Boolean()),
     is_assign_official: t.Optional(t.Boolean()),
     is_assign_vhv: t.Optional(t.Boolean()),
@@ -64,7 +73,10 @@ export const ScreeningResponseSchema = t.Object({
     reason_appointment: t.String(),
     doctor_id: t.String(),
     assign_id: t.Nullable(t.String()),
+    assign_official_service_unit: t.Nullable(t.String()),
+    assign_id_vhv: t.Nullable(t.String()),
     assign_vhv_service_unit: t.Nullable(t.String()),
+    diagnosis_id: t.Nullable(t.String()),
     screening_form_id: t.String(),
     status_screening: t.String(),
     is_self: t.Boolean(),
@@ -156,6 +168,7 @@ export interface ScreeningListResponseDTO {
     visit_id: string,
     visit_date: string,
     visit_time: string,
+    pid: string,
     person_fullname: string,
     provider_fullname: string,
     inscl_name: string,
@@ -169,6 +182,7 @@ export const ScreeningListResponseSchema = t.Object({
     visit_id: t.String(),
     visit_date: t.String(),
     visit_time: t.String(),
+    pid: t.String(),
     person_fullname: t.String(),
     inscl_name: t.String(),
     provider_fullname: t.String(),

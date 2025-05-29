@@ -2,9 +2,10 @@ import { ScreeningRepository } from "../infra/screening.repository";
 import { PaginationQuery, PaginationResponse, ScreeningListResponseDTO, SqlScreeningResponse } from "../model/screening.model";
 import { Crypto } from '@/core/crypto';
 
-export async function getScreeningList(query: PaginationQuery): Promise<PaginationResponse<ScreeningListResponseDTO>> {
+export async function getScreeningList(query: PaginationQuery, cookie: any): Promise<PaginationResponse<ScreeningListResponseDTO>> {
     try {
-    const rawScreeningList = await ScreeningRepository.findScreeningList();
+    const hosCode = cookie.hos_code;
+    const rawScreeningList = await ScreeningRepository.getScreeningList(hosCode);
 
     if (!rawScreeningList || rawScreeningList.length === 0) {
       return {
@@ -64,14 +65,14 @@ function convertToDTO(rawData: SqlScreeningResponse): ScreeningListResponseDTO {
         const decryptedPersonLname = Crypto.decrypt(rawData.person_lname || '');
         const decryptedProviderFname = Crypto.decrypt(rawData.provider_fname || '');
         const decryptedProviderLname = Crypto.decrypt(rawData.provider_lname || '');
-        const decryptedIDCard = Crypto.decrypt(rawData.id_card || '');
-        console.log("decryptedIDCard", decryptedIDCard);
+
         
 
     return {
         visit_id: rawData.visit_id,
         visit_date: date.toISOString().split('T')[0],
         visit_time: date.toISOString().split('T')[1].split('.')[0],
+        pid: rawData.person_id || '',
         person_fullname: `${rawData.person_title} ${decryptedPersonFname} ${decryptedPersonLname}`,
         inscl_name: rawData.inscl_name || '',
         provider_fullname: `${rawData.provider_title} ${decryptedProviderFname} ${decryptedProviderLname}`,

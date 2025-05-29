@@ -55,7 +55,7 @@ export const ScreeningRepository = {
         formID
       ));
   },
-  async findScreeningList(): Promise<SqlScreeningResponse[]> {
+  async getScreeningList(hosCode: any): Promise<SqlScreeningResponse[]> {
 
     const result = await db.select({
       visit_id: screenings.visit_id,
@@ -80,7 +80,7 @@ export const ScreeningRepository = {
     .leftJoin(user_provider, eq(user_provider.user_id, screenings.doctor_id))
     .leftJoin(title_normalize, eq(title_normalize.title_id, persons.title))
     .leftJoin(inscl_normalize, eq(inscl_normalize.insclCode, persons.inscl_code))
-
+    .where(eq(user_provider.hos_code, hosCode))
     return result;
   },
   async findScreeningByVisitID(visitID: string): Promise<SqlScreeningByVisitIDResponse | null> {

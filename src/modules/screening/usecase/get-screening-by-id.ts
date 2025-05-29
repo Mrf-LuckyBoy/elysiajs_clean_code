@@ -47,6 +47,12 @@ export async function getScreeningByVisitID(visitID: string): Promise<GetScreeni
         return `${years} ปี ${months} เดือน ${days} วัน`;
     };
 
+    if (screening.sex === 'M') {
+        screening.sex = 'ชาย';
+    } else if (screening.sex === 'F') {
+        screening.sex = 'หญิง';
+    }
+
     const result: GetScreeningByVisitIDDTO = {
         visit_id: screening.visit_id,
         person_cid: maskedIDCard || '',

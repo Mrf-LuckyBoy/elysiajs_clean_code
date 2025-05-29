@@ -1,10 +1,10 @@
 import { ScreeningRepository } from '../infra/screening.repository';
 import {
-  ScreeningRequestDTO,
+  CreateScreeningRequestDTO,
   ScreeningResponseDTO,
 } from '../model/screening.model';
 import { randomUUID } from 'crypto';
-export async function createScreening(body: ScreeningRequestDTO): Promise<void> {
+export async function createScreening(body: CreateScreeningRequestDTO, cookie: any): Promise<void> {
 const currentTime = new Date();
 const newScreeningFormID = randomUUID();
 
@@ -16,7 +16,10 @@ const newScreeningFormID = randomUUID();
         reason_edit: '',
         doctor_id: body.doctor_id,
         assign_id: null,
+        assign_official_service_unit: null,
+        assign_id_vhv: null,
         assign_vhv_service_unit: null,
+        diagnosis_id: null,
         screening_form_id: newScreeningFormID,
         status_screening: "รอบันทึก",
         is_self: false,
@@ -44,12 +47,12 @@ const newScreeningFormID = randomUUID();
          }else if (body.is_assgin_official_service_unit === true) {
         //is_assgin_official_service_unit
         newScreening.is_assgin_official_service_unit = true;
-        newScreening.assign_id = body.assign_id || null;
+        newScreening.assign_official_service_unit = cookie.hos_code || null;
        } else if (body.is_assign_vhv_service_unit === true) {
         //is_assign_vhv_service_unit
         newScreening.is_assign_vhv_service_unit = true;
-        newScreening.assign_id = null;
-        newScreening.assign_vhv_service_unit = body.assign_vhv_service_unit || null;
+        // newScreening.assign_id = null;
+        newScreening.assign_vhv_service_unit = cookie.hos_code || null;
       } else {
         throw new Error('Please select an assignment option');
     }

@@ -9,7 +9,7 @@ export async function updateVisitDate(visit_id: string, data: UpdateVisitDateReq
 
     const updateData: UpdateVisitDateRequestDTO = {
     visit_date: data.visit_date,
-    change_visit_date_reason: data.change_visit_date_reason,
+    reason_edit: data.reason_edit,
     updated_at: new Date()
   };
 

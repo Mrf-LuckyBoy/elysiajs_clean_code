@@ -60,6 +60,7 @@ export async function getScreeningByVisitID(visitID: string): Promise<GetScreeni
         sex: screening.sex || '',
         age: calulateAge(screening.age),
         address: addressData || '',
+        reason_edit: screening.reason_edit || '',
         appointment_reason: screening.appointment_reason,
         provider_name: `${screening.provider_title} ${decryptedProviderFname} ${decryptedProviderLname}`,
         is_self: screening.is_self,
@@ -68,7 +69,6 @@ export async function getScreeningByVisitID(visitID: string): Promise<GetScreeni
         is_assign_vhv_service_unit: screening.is_assign_vhv_service_unit,
         is_assgin_official_service_unit: screening.is_assgin_official_service_unit,
         screening_form_id: screening.screening_form_id,
-        hcode_cid: screening.hcode_cid || ''
     }
 
     return result;

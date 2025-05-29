@@ -22,6 +22,7 @@ export interface ScreeningResponseDTO {
     visit_id: string;
     patient_id: string;
     visit_date: Date;
+    reason_edit: string;
     reason_appointment: string;
     doctor_id: string;
     assign_id: string | null;
@@ -217,6 +218,7 @@ export interface GetScreeningByVisitIDDTO {
     sex: string;
     age: string;
     address: string;
+    reason_edit: string;
     appointment_reason: string;
     provider_name: string;
     is_self: boolean;
@@ -225,7 +227,6 @@ export interface GetScreeningByVisitIDDTO {
     is_assign_vhv_service_unit: boolean;
     is_assgin_official_service_unit: boolean;
     screening_form_id: string
-    hcode_cid: string
 }
 
 export const GetScreeningByVisitIDSchema = t.Object({
@@ -239,6 +240,7 @@ export const GetScreeningByVisitIDSchema = t.Object({
     sex: t.String(),
     age: t.String(),
     address: t.Union([t.String(), t.Null()]),
+    reason_edit: t.String(),
     appointment_reason: t.String(),
     provider_name: t.String(),
     is_self: t.Boolean(),
@@ -247,7 +249,6 @@ export const GetScreeningByVisitIDSchema = t.Object({
     is_assign_vhv_service_unit: t.Boolean(),
     is_assgin_official_service_unit: t.Boolean(),
     screening_form_id: t.String(),
-    hcode_cid: t.String()
 });
 
 export interface SqlScreeningByVisitIDResponse {
@@ -262,6 +263,7 @@ export interface SqlScreeningByVisitIDResponse {
     sex: string | null;
     age: Date | null;
     address: string | null;
+    reason_edit: string | null;
     appointment_reason: string;
     provider_title: string  | null;
     provider_fname: string  | null;
@@ -280,17 +282,16 @@ export interface SqlScreeningByVisitIDResponse {
     provname: string | null;
     distname: string | null;
     subdistname: string | null;
-    hcode_cid: string | null;
 }
 
 export interface UpdateVisitDateRequestDTO {
     visit_date: Date;
-    change_visit_date_reason: string;
+    reason_edit: string;
     updated_at?: Date
 }
 
 export const UpdateVisitDateRequestSchema = t.Object({
     visit_date: t.Date({ format: 'date' }),
-    change_visit_date_reason: t.String(),
+    reason_edit: t.String(),
     updated_at: t.Optional(t.Date({ format: 'date-time' }))
 });

@@ -96,6 +96,7 @@ export const ScreeningRepository = {
       person_fname: persons.first_name,
       person_lname: persons.last_name,
       address: persons.hcode,
+      reason_edit: screenings.reason_edit,
       appointment_reason: screenings.reason_appointment,
       provider_title: user_provider.title,
       provider_fname: user_provider.fname,
@@ -114,7 +115,6 @@ export const ScreeningRepository = {
       provname: address_code.provname,
       distname: address_code.distname,
       subdistname: address_code.subdistname,
-      hcode_cid: persons.hcode_cid
     })
     .from(screenings)
     .leftJoin(persons, eq(persons.pid, screenings.patient_id))

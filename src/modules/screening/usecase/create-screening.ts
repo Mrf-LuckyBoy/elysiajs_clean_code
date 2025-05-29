@@ -13,6 +13,7 @@ const newScreeningFormID = randomUUID();
         patient_id: body.patient_id,
         visit_date: body.visit_date,
         reason_appointment: body.reason_appointment,
+        reason_edit: '',
         doctor_id: body.doctor_id,
         assign_id: null,
         assign_vhv_service_unit: null,

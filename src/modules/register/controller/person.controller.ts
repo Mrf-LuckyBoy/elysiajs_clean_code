@@ -9,7 +9,8 @@ import {
   NewRegisterFormSchema,
   PersonDTO,
 } from '../model/person.model';
-import { getFormPerson } from '../usecase/get-formRegister';
+import { getFormPerson } from '../usecase/get-allRegister';
+import { getPersonById } from '../usecase/get-register';
 
 export const personController = {
   createPerson: {
@@ -61,18 +62,27 @@ export const personController = {
       }
     },
   },
-  getFormRegister: {
+  getFormAllRegister: {
     Schema: {
       query: t.Object({
-        search: t.String({ description: 'search name' }),
+        search: t.Optional(t.String({ description: 'search name' })),
+        page: t.Optional(t.Number({ default: 1 })),
+        limit: t.Optional(t.Number({ default: 10 })),
       }),
       response: {
         201: t.Object({
           success: t.Boolean(),
           message: t.String(),
+          pagination: t.Object({
+            page: t.Number(),
+            limit: t.Number(),
+            totalItems: t.Number(),
+            totalPages: t.Number(),
+          }),
           data: t.Array(
             t.Object({
               pid: t.String(),
+              hn: t.String(),
               title: t.String(),
               fullname: t.String(),
               // birth: t.Date(),
@@ -82,40 +92,110 @@ export const personController = {
             })
           ),
         }),
-        // 500: HttpResponseSchema.error(),
+        500: HttpResponseSchema.error(),
       },
-      summary: 'user vhv dropdown',
-      description: 'get list of user vhv',
+      summary: 'Form User Register',
+      description: 'get list of user',
       tags: ['Register'],
     },
     handler: async ({ set, query }: Context) => {
       try {
         const searchName = query.search?.toLowerCase() ?? '';
-        // const person: PersonDTO[] = await getFormPerson();
-        const person: PersonDTO[] = (await getFormPerson()) ?? [];
-        const personList = person
-          .map((person) => ({
-            pid: person.pid,
-            title: person.title,
-            fullname: `${person.title} ${person.first_name} ${person.last_name}`,
-            // birth: person.birth,
-            age: person.age,
-            phone: person.phone,
-            consent: person.consent,
-          }))
-          .filter((person) =>
-            person.fullname.toLowerCase().includes(searchName)
-          );
+        const page = query.page ?? 1;
+        const limit = query.limit ?? 10;
+
+        const { data, totalItems } = await getFormPerson(
+          searchName,
+          page,
+          limit
+        );
+
+        const personList = data.map((persons) => ({
+          pid: persons.pid,
+          hn: persons.hn,
+          title: persons.title,
+          fullname: `${persons.title} ${persons.first_name} ${persons.last_name}`,
+          age: persons.age,
+          phone: persons.phone,
+          consent: persons.consent,
+        }));
+        // .filter((persons) =>
+        //   persons.fullname.toLowerCase().includes(searchName)
+        // );
+
+        const totalPages = Math.ceil(totalItems / limit);
+
         set.status = 200;
-        return HttpResponse.success(personList);
+        return {
+          success: true,
+          message: 'success',
+          pagination: {
+            page,
+            limit,
+            totalItems,
+            totalPages,
+          },
+          data: personList,
+        };
       } catch (err: unknown) {
-        if (err instanceof Error) {
-          set.status = 500;
-          return HttpResponse.error(err.message);
-        } else {
-          set.status = 500;
-          return HttpResponse.error('Unexpected error');
-        }
+        set.status = 500;
+        return HttpResponse.error(
+          err instanceof Error ? err.message : 'Unexpected error'
+        );
+      }
+    },
+  },
+  getFormRegisterById: {
+    Schema: {
+      params: t.Object({
+        pid: t.String({ format: 'uuid', description: 'PID from persons' }),
+      }),
+      response: {
+        201: t.Object({
+          success: t.Boolean(),
+          message: t.String(),
+          data: t.Array(
+            t.Object({
+              pid: t.String(),
+            })
+          ),
+        }),
+        500: HttpResponseSchema.error(),
+      },
+      summary: 'Get person by ID',
+      description: 'Fetch a person using their unique UUID.',
+      tags: ['Register'],
+    },
+    handler: async ({ params, set }: Context) => {
+      try {
+        const person = await getPersonById(params.pid);
+        const personList = person.map((persons) => ({
+          pid: persons.pid,
+          hn: persons.hn,
+          sex: persons.sex,
+          idcard: persons.idcard,
+          title: persons.title,
+          fullname: `${persons.first_name} ${persons.last_name}`,
+          first_nmae: persons.first_name,
+          last_name: persons.last_name,
+          dirth: persons.birth,
+          age: persons.age,
+          boot_type: persons.blood_type,
+          phone: persons.phone,
+          consent: persons.consent,
+        }));
+        set.status = 200;
+
+        return {
+          success: true,
+          message: 'Fetched person successfully',
+          data: personList,
+        };
+      } catch (err: unknown) {
+        set.status = 500;
+        return HttpResponse.error(
+          err instanceof Error ? err.message : 'Unexpected error'
+        );
       }
     },
   },

@@ -1,7 +1,7 @@
-import { HttpResponse } from "@/core/http.response";
-import { Jwt } from "@/core/jwt";
-import { Elysia } from "elysia";
-import { screeningController } from "./controller/screening.controller";
+import { HttpResponse } from '@/core/http.response';
+import { Jwt } from '@/core/jwt';
+import { Elysia } from 'elysia';
+import { screeningController } from './controller/screening.controller';
 
 export const screeningRoute = new Elysia({ prefix: '/screening' })
   .onBeforeHandle(async ({ cookie: { auth_token }, set }) => {
@@ -18,4 +18,8 @@ export const screeningRoute = new Elysia({ prefix: '/screening' })
     }
   })
 
-  .post('/', screeningController.create.handler, screeningController.create.schema)
+  .post(
+    '/',
+    screeningController.create.handler,
+    screeningController.create.schema
+  );

@@ -23,6 +23,7 @@ export interface PersonDTO {
   hn: string;
   created_at: Date | null;
   updated_at: Date | null;
+  age: string;
 }
 
 export interface TitleNormalizeDTO {

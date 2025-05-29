@@ -8,7 +8,12 @@ export const personRoute = new Elysia({ prefix: '/person' })
     personController.createPerson.Schema
   )
   .get(
-    '/formRegister',
-    personController.getFormRegister.handler,
-    personController.getFormRegister.Schema
+    '/form-allRegister',
+    personController.getFormAllRegister.handler,
+    personController.getFormAllRegister.Schema
+  )
+  .get(
+    '/:pid',
+    personController.getFormRegisterById.handler,
+    personController.getFormRegisterById.Schema
   );

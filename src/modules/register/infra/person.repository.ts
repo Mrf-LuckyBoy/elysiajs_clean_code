@@ -15,9 +15,10 @@ import type {
   AddressDTO,
   NewRegisterFormDTO,
 } from '../model/person.model';
-import { eq, sql, desc, like } from 'drizzle-orm';
+import { eq, sql, desc, like, or } from 'drizzle-orm';
 import { randomUUID } from 'crypto';
 import dayjs from 'dayjs';
+import { count } from 'drizzle-orm';
 
 function formatAge(birth: Date): string {
   const start = dayjs(birth);
@@ -309,26 +310,79 @@ export const PersonRepository = {
     }
     return form;
   },
-  async finds(): Promise<PersonDTO[] | null> {
-    const result = await db
-      .select()
-      .from(persons)
-      .leftJoin(title_normalize, eq(persons.title, title_normalize.title_id))
-      .limit(5);
-    // .offset(1);
+  async findsPersonAll(
+    search: string,
+    page: number = 1,
+    limit: number = 5
+  ): Promise<{ data: PersonDTO[]; totalItems: number }> {
+    const offset = (page - 1) * limit;
+    const searchTerm = `%${search}%`;
 
-    if (!result || result.length === 0) return null;
-    const date: PersonDTO[] = result.map((row) => ({
+    const [dataResult] = await Promise.all([
+      db
+        .select()
+        .from(persons)
+        .leftJoin(title_normalize, eq(persons.title, title_normalize.title_id))
+        .where(
+          or(
+            like(persons.first_name, searchTerm),
+            like(persons.last_name, searchTerm)
+          )
+        )
+        .limit(limit)
+        .offset(offset),
+
+      db
+        .select({ count: count() })
+        .from(persons)
+        .where(
+          or(
+            like(persons.first_name, searchTerm),
+            like(persons.last_name, searchTerm)
+          )
+        ),
+    ]);
+
+    return dataResult.map((row) => ({
       pid: row.person.pid,
-      first_name: row.person.first_name,
-      last_name: row.person.last_name,
+      hn: row.person.hn,
+      first_name: Crypto.decrypt(row.person.first_name),
+      last_name: Crypto.decrypt(row.person.last_name),
       title: row.title_normalize?.title_th ?? row.person.title,
       birth: row.person.birth,
       age: formatAge(row.person.birth),
-      phone: row.person.phone,
+      phone: Crypto.decrypt(row.person.phone),
       consent: row.person.consent,
     }));
+  },
+  async countAllPersons(): Promise<number> {
+    const result = await db.select({ count: count() }).from(persons);
 
-    return date;
+    return result?.[0]?.count ?? 0;
+  },
+  async findPersonID(pid: string): Promise<PersonDTO[] | null> {
+    const resultID = await db
+      .select()
+      .from(persons)
+      .leftJoin(title_normalize, eq(persons.title, title_normalize.title_id))
+      .leftJoin(medical_history, eq(persons.med_id, medical_history.med_id))
+      .where(eq(persons.pid, pid));
+
+    if (resultID.length === 0) return null;
+
+    return resultID.map((row) => ({
+      pid: row.person.pid,
+      hn: row.person.hn,
+      sex: row.person.sex === 'm' ? 'ชื่อผู้ชาย' : 'ผู้หญิง',
+      idcard: Crypto.decrypt(row.person.idcard),
+      first_name: Crypto.decrypt(row.person.first_name),
+      last_name: Crypto.decrypt(row.person.last_name),
+      title: row.title_normalize?.title_th ?? row.person.title,
+      birth: row.person.birth,
+      age: formatAge(row.person.birth),
+      blood_type: row.person.blood_type,
+      phone: Crypto.decrypt(row.person.phone),
+      consent: row.person.consent,
+    }));
   },
 };

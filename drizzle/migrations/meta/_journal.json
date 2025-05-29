@@ -50,6 +50,13 @@
       "when": 1748339973711,
       "tag": "0006_empty_gorgon",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "5",
+      "when": 1748492193249,
+      "tag": "0007_zippy_zaladane",
+      "breakpoints": true
     }
   ]
 }

@@ -109,58 +109,58 @@ export const ScreeningResponseSchema = t.Object({
 });
 
 export interface UpdateScreeningFormDTO {
-  consent_by: string;
-  is_alone: boolean;
-  social_1: boolean;
-  social_2: boolean;
-  social_3: boolean;
-  elderly_1_1: boolean;
-  elderly_1_2: boolean;
-  elderly_2_1: boolean;
-  elderly_2_2: boolean;
-  elderly_3: boolean;
-  elderly_4: boolean;
-  elderly_5_1: boolean;
-  elderly_5_2: boolean;
-  elderly_6: boolean;
-  elderly_7: boolean;
-  elderly_8_1: boolean;
-  elderly_8_2: boolean;
-  elderly_9: boolean;
-  elderly_sum: string;
-  visit_screening: Date;
-  image_id: string;
-  word_recall: number;
-  clock_draw: number;
-  sum_mini_cog: number;
+  consent_by?: string;
+  is_alone?: boolean;
+  social_1?: boolean;
+  social_2?: boolean;
+  social_3?: boolean;
+  elderly_1_1?: boolean;
+  elderly_1_2?: boolean;
+  elderly_2_1?: boolean;
+  elderly_2_2?: boolean;
+  elderly_3?: boolean;
+  elderly_4?: boolean;
+  elderly_5_1?: boolean;
+  elderly_5_2?: boolean;
+  elderly_6?: boolean;
+  elderly_7?: boolean;
+  elderly_8_1?: boolean;
+  elderly_8_2?: boolean;
+  elderly_9?: boolean;
+  elderly_sum?: string;
+  visit_screening?: Date;
+  image_id?: string;
+  word_recall?: number;
+  clock_draw?: number;
+  sum_mini_cog?: number;
   updated_at?: Date;
 }
 
 export const UpdateScreeningFormSchema = t.Object({
-  consent_by: t.String(),
-  is_alone: t.Boolean(),
-  social_1: t.Boolean(),
-  social_2: t.Boolean(),
-  social_3: t.Boolean(),
-  elderly_1_1: t.Boolean(),
-  elderly_1_2: t.Boolean(),
-  elderly_2_1: t.Boolean(),
-  elderly_2_2: t.Boolean(),
-  elderly_3: t.Boolean(),
-  elderly_4: t.Boolean(),
-  elderly_5_1: t.Boolean(),
-  elderly_5_2: t.Boolean(),
-  elderly_6: t.Boolean(),
-  elderly_7: t.Boolean(),
-  elderly_8_1: t.Boolean(),
-  elderly_8_2: t.Boolean(),
-  elderly_9: t.Boolean(),
-  elderly_sum: t.String(),
-  visit_screening: t.Date(),
-  image_id: t.String(),
-  word_recall: t.Number(),
-  clock_draw: t.Number(),
-  sum_mini_cog: t.Number(),
+  consent_by: t.Optional(t.String()),
+  is_alone: t.Optional(t.Boolean()),
+  social_1: t.Optional(t.Boolean()),
+  social_2: t.Optional(t.Boolean()),
+  social_3: t.Optional(t.Boolean()),
+  elderly_1_1: t.Optional(t.Boolean()),
+  elderly_1_2: t.Optional(t.Boolean()),
+  elderly_2_1: t.Optional(t.Boolean()),
+  elderly_2_2: t.Optional(t.Boolean()),
+  elderly_3: t.Optional(t.Boolean()),
+  elderly_4: t.Optional(t.Boolean()),
+  elderly_5_1: t.Optional(t.Boolean()),
+  elderly_5_2: t.Optional(t.Boolean()),
+  elderly_6: t.Optional(t.Boolean()),
+  elderly_7: t.Optional(t.Boolean()),
+  elderly_8_1: t.Optional(t.Boolean()),
+  elderly_8_2: t.Optional(t.Boolean()),
+  elderly_9: t.Optional(t.Boolean()),
+  elderly_sum: t.Optional(t.String()),
+  visit_screening: t.Optional(t.Date({ format: 'date' })),
+  image_id: t.Optional(t.String()),
+  word_recall: t.Optional(t.Number()),
+  clock_draw: t.Optional(t.Number()),
+  sum_mini_cog: t.Optional(t.Number()),
   updated_at: t.Optional(t.Date()),
 });
 

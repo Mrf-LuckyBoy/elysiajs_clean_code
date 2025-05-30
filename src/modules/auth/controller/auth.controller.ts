@@ -84,6 +84,7 @@ export const authController = {
           }),
           httpOnly: true,
           sameSite: 'lax',
+          secure: false,
         });
         auth_token.value = token;
         set.status = 201;

@@ -57,9 +57,17 @@ export const AuthRepository = {
             })
         );
       else if (
-        ['0001', '0004', '0011', '0015', '0050', '0065'].includes(
-          organiz.position_id
-        )
+        [
+          '0001',
+          '0004',
+          '0011',
+          '0015',
+          '0050',
+          // mock add role
+          '0065',
+          '0024',
+          '0016',
+        ].includes(organiz.position_id)
       )
         promise_upsert.push(
           db

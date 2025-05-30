@@ -77,6 +77,7 @@ export const persons = mysqlTable(
     title: varchar('title', { length: 100 }).notNull(),
     first_name: varchar('first_name', { length: 255 }).notNull(),
     last_name: varchar('last_name', { length: 255 }).notNull(),
+    full_name: varchar('full_name', { length: 255 }),
     birth: date('birth').notNull(),
     phone: varchar('phone', { length: 255 }).notNull(),
     blood_type: varchar('boot_type', { length: 255 }).notNull(),

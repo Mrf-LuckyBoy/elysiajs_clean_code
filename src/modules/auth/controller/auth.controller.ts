@@ -84,6 +84,7 @@ export const authController = {
               ? 'localhost'
               : 'uat-parentcare.one.th',
           httpOnly: true,
+          sameSite: 'lax',
         });
         auth_token.value = token;
         set.status = 201;

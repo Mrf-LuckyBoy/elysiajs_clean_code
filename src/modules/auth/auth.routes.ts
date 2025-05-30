@@ -3,7 +3,7 @@ import { authController } from './controller/auth.controller';
 
 export const authRoute = new Elysia({ prefix: '/auth' })
   .post(
-    '/loginProvinder',
+    '/loginProvider',
     authController.loginProviderID.handler,
     authController.loginProviderID.Schema
   )

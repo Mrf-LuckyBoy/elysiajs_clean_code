@@ -22,6 +22,7 @@ export const user_provider = mysqlTable(
   {
     user_id: varchar('user_id', { length: 36 }).primaryKey().notNull(),
     cid_hash: varchar('cid_hash', { length: 255 }).notNull(),
+    cid: varchar('cid', { length: 255 }),
     hos_code: varchar('hos_code', { length: 10 }).notNull(),
     hos_name: varchar('hos_name', { length: 255 }),
     title: varchar('title', { length: 255 }),
@@ -45,6 +46,7 @@ export const user_provider_vhv = mysqlTable(
   {
     user_id: varchar('user_id', { length: 36 }).primaryKey().notNull(),
     cid_hash: varchar('cid_hash', { length: 255 }).notNull(),
+    cid: varchar('cid', { length: 255 }),
     hos_code: varchar('hos_code', { length: 10 }).notNull(),
     hos_name: varchar('hos_name', { length: 255 }),
     title: varchar('title', { length: 255 }),
@@ -75,6 +77,7 @@ export const persons = mysqlTable(
     title: varchar('title', { length: 100 }).notNull(),
     first_name: varchar('first_name', { length: 255 }).notNull(),
     last_name: varchar('last_name', { length: 255 }).notNull(),
+    full_name: varchar('full_name', { length: 255 }),
     birth: date('birth').notNull(),
     phone: varchar('phone', { length: 255 }).notNull(),
     blood_type: varchar('boot_type', { length: 255 }).notNull(),

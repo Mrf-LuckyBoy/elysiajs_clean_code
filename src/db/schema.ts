@@ -22,6 +22,7 @@ export const user_provider = mysqlTable(
   {
     user_id: varchar('user_id', { length: 36 }).primaryKey().notNull(),
     cid_hash: varchar('cid_hash', { length: 255 }).notNull(),
+    cid: varchar('cid', { length: 255 }),
     hos_code: varchar('hos_code', { length: 10 }).notNull(),
     hos_name: varchar('hos_name', { length: 255 }),
     title: varchar('title', { length: 255 }),
@@ -45,6 +46,7 @@ export const user_provider_vhv = mysqlTable(
   {
     user_id: varchar('user_id', { length: 36 }).primaryKey().notNull(),
     cid_hash: varchar('cid_hash', { length: 255 }).notNull(),
+    cid: varchar('cid', { length: 255 }),
     hos_code: varchar('hos_code', { length: 10 }).notNull(),
     hos_name: varchar('hos_name', { length: 255 }),
     title: varchar('title', { length: 255 }),
@@ -215,11 +217,15 @@ export const screenings = mysqlTable(
     visit_id: varchar('visit_id', { length: 36 }).primaryKey().notNull(),
     patient_id: varchar('patient_id', { length: 36 }).notNull(),
     visit_date: timestamp('visit_date', { mode: 'date' }).notNull(),
-    reason_appointment: varchar('reason_appointment', {length: 255,}).notNull(),
-    reason_edit: varchar('reason_edit', {length: 255,}).notNull(),
+    reason_appointment: varchar('reason_appointment', {
+      length: 255,
+    }).notNull(),
+    reason_edit: varchar('reason_edit', { length: 255 }).notNull(),
     doctor_id: varchar('doctor_id', { length: 36 }).notNull(),
     assign_id: varchar('assign_id', { length: 36 }),
-    assign_official_service_unit: varchar('assign_official_service_unit', { length: 36 }),
+    assign_official_service_unit: varchar('assign_official_service_unit', {
+      length: 36,
+    }),
     assign_id_vhv: varchar('assign_id_vhv', { length: 36 }),
     assign_vhv_service_unit: varchar('assign_vhv_service_unit', { length: 36 }),
     diagnosis_id: varchar('diagnosis_id', { length: 36 }),
@@ -227,7 +233,9 @@ export const screenings = mysqlTable(
     status_screening: varchar('status_screening', { length: 255 }).notNull(),
     is_self: boolean('is_self').notNull(),
     is_assign_official: boolean('is_assign_official').notNull(),
-    is_assgin_official_service_unit: boolean('is_assgin_official_service_unit').notNull(),
+    is_assgin_official_service_unit: boolean(
+      'is_assgin_official_service_unit'
+    ).notNull(),
     is_assign_vhv: boolean('is_assign_vhv').notNull(),
     is_assign_vhv_service_unit: boolean('is_assign_vhv_service_unit').notNull(),
     is_diagnosis: boolean('is_diagnosis').notNull(),

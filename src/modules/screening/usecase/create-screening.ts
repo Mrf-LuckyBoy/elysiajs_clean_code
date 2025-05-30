@@ -43,7 +43,7 @@ const newScreeningFormID = randomUUID();
          } else if (body.is_assign_vhv === true) {
         //is_assign_vhv
         newScreening.is_assign_vhv = true;
-        newScreening.assign_id = body.assign_id || null;
+        newScreening.assign_id_vhv = body.assign_id_vhv || null;
          }else if (body.is_assgin_official_service_unit === true) {
         //is_assgin_official_service_unit
         newScreening.is_assgin_official_service_unit = true;
@@ -51,7 +51,6 @@ const newScreeningFormID = randomUUID();
        } else if (body.is_assign_vhv_service_unit === true) {
         //is_assign_vhv_service_unit
         newScreening.is_assign_vhv_service_unit = true;
-        // newScreening.assign_id = null;
         newScreening.assign_vhv_service_unit = cookie.hos_code || null;
       } else {
         throw new Error('Please select an assignment option');

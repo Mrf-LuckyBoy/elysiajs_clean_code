@@ -116,8 +116,8 @@ export const authController = {
         400: HttpResponseSchema.badRequest(),
         500: HttpResponseSchema.error(),
       },
-      summary: 'Login Provider',
-      description: 'Set cookie after login',
+      summary: 'Set idcard',
+      description: 'Set idcard for the first time',
       tags: ['Auth'],
     },
     handler: async ({

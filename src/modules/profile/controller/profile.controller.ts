@@ -1,6 +1,6 @@
-import { HttpResponse, HttpResponseSchema } from '@/core/http.response';
+import { HttpResponseSchema } from '@/core/http.response';
 import { getUserProfile } from '../usecase/get-user-profile';
-import { Cookie, t } from 'elysia';
+import { Context, t } from 'elysia';
 import { UserProfile, VhvProfile } from '../model/profile.model';
 import { Jwt } from '@/core/jwt';
 
@@ -8,7 +8,7 @@ export const profileController = {
   getUserProfile: {
     schema: {
       response: {
-        200: t.Object({
+        201: t.Object({
           success: t.Boolean(),
           data: t.Union([UserProfile, VhvProfile]),
         }),
@@ -17,15 +17,9 @@ export const profileController = {
       },
       summary: 'Get user profile',
       description: 'Fetch user profile from auth token',
-      tags: ['User'],
+      tags: ['Profile'],
     },
-    handler: async ({
-      set,
-      cookie,
-    }: {
-      set: any;
-      cookie: Record<string, Cookie<string | undefined>>;
-    }) => {
+    handler: async ({ set, cookie }: Context & {}) => {
       try {
         const token = cookie.auth_token.value;
         if (!token) {
@@ -47,7 +41,7 @@ export const profileController = {
 
         const profile = await getUserProfile(decoded);
 
-        set.status = 200;
+        set.status = 201;
         return { success: true as const, data: profile };
       } catch (err: unknown) {
         set.status = 500;

@@ -108,11 +108,11 @@ export const authController = {
         cid: t.String(),
       }),
       response: {
-        // 200: t.Object({
-        //   success: t.Boolean(),
-        //   message: t.String(),
-        //   data: t.String(),
-        // }),
+        200: t.Object({
+          success: t.Boolean(),
+          message: t.String(),
+          data: t.String(),
+        }),
         400: HttpResponseSchema.badRequest(),
         500: HttpResponseSchema.error(),
       },
@@ -127,9 +127,15 @@ export const authController = {
       body: { cid_hash: string; cid: string };
     }) => {
       try {
+        if (!body.cid_hash || !body.cid) {
+          set.status = 400;
+          return HttpResponse.badRequest(
+            'Both cid_hash and cid are required to update'
+          );
+        }
         await UpdateCidFirstTime(body.cid_hash, body.cid);
         set.status = 200;
-        return HttpResponse.success('update success');
+        return HttpResponse.success('Update successful');
       } catch (err: unknown) {
         if (err instanceof Error) {
           set.status = 500;

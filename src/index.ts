@@ -5,7 +5,7 @@ import { ENV } from '@/config/env';
 import { AppRoutes } from './routes/index.routes';
 import { AppAuthRoutes } from './routes/auth.routes';
 import { HttpResponse } from '@/core/http.response';
-import { corsMiddleware } from '@/core/cors';
+import { corsMiddleware } from '@/plugins/cors.plugin';
 
 const app = new Elysia()
   .use(logger())

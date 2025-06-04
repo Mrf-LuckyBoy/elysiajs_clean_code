@@ -11,4 +11,9 @@ export const authRoute = new Elysia({ prefix: '/auth' })
     '/login',
     authController.loginSetCookie.handler,
     authController.loginSetCookie.Schema
+  )
+  .put(
+    '/updateCid',
+    authController.updateCid.handler,
+    authController.updateCid.Schema
   );

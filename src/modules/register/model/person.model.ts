@@ -10,6 +10,7 @@ export interface PersonDTO {
   title: string;
   first_name: string;
   last_name: string;
+  full_name: string;
   birth: Date;
   phone: string;
   blood_type: string;

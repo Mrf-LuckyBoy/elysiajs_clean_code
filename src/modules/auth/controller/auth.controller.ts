@@ -101,6 +101,38 @@ export const authController = {
       }
     },
   },
+  logoutRevmoveCookie: {
+    Schema: {
+      response: {
+        201: t.Object({
+          success: t.Boolean(),
+          message: t.String(),
+          data: t.String(),
+        }),
+        400: HttpResponseSchema.badRequest(),
+        500: HttpResponseSchema.error(),
+      },
+      summary: 'Logout',
+      description: 'Logout remove cookie',
+      tags: ['Auth'],
+    },
+    handler: async ({ cookie: { auth_token }, set }: Context) => {
+      try {
+        auth_token.remove();
+        set.status = 200;
+        return HttpResponse.success('Logout successful');
+      } catch (err: unknown) {
+        console.error(err);
+        if (err instanceof Error) {
+          set.status = 500;
+          return HttpResponse.error(err.message);
+        } else {
+          set.status = 500;
+          return HttpResponse.error('Unexpected error');
+        }
+      }
+    },
+  },
   updateCid: {
     Schema: {
       body: t.Object({

@@ -108,11 +108,11 @@ export const authController = {
         cid: t.String(),
       }),
       response: {
-        200: t.Object({
-          success: t.Boolean(),
-          message: t.String(),
-          data: t.String(),
-        }),
+        // 200: t.Object({
+        //   success: t.Boolean(),
+        //   message: t.String(),
+        //   data: t.String(),
+        // }),
         400: HttpResponseSchema.badRequest(),
         500: HttpResponseSchema.error(),
       },
@@ -134,7 +134,6 @@ export const authController = {
           );
         }
         await UpdateCidFirstTime(body.cid_hash, body.cid);
-        set.status = 200;
         return HttpResponse.success('Update successful');
       } catch (err: unknown) {
         if (err instanceof Error) {

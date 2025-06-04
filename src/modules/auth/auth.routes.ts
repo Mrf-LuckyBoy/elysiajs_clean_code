@@ -4,16 +4,16 @@ import { authController } from './controller/auth.controller';
 export const authRoute = new Elysia({ prefix: '/auth' })
   .post(
     '/loginProvider',
-    authController.loginProviderID.Schema,
-    authController.loginProviderID.handler
+    authController.loginProviderID.handler,
+    authController.loginProviderID.Schema
   )
   .post(
     '/login',
-    authController.loginSetCookie.Schema,
-    authController.loginSetCookie.handler
+    authController.loginSetCookie.handler,
+    authController.loginSetCookie.Schema
   )
   .put(
     '/updateCid',
-    authController.updateCid.Schema,
-    authController.updateCid.handler
+    authController.updateCid.handler,
+    authController.updateCid.Schema
   );

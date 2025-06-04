@@ -3,6 +3,7 @@ import { getUserProfile } from '../usecase/get-user-profile';
 import { Context, t } from 'elysia';
 import { UserProfile, VhvProfile } from '../model/profile.model';
 import { Jwt } from '@/core/jwt';
+import { DecodedToken } from '@/modules/screening/model/screening.model';
 
 export const profileController = {
   getUserProfile: {
@@ -30,7 +31,7 @@ export const profileController = {
           };
         }
 
-        const decoded = await Jwt.verify(token || '');
+        const decoded = (await Jwt.verify(token || '')) as DecodedToken;
         if (!decoded) {
           set.status = 401;
           return {

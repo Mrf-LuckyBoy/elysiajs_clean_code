@@ -8,7 +8,6 @@ export interface PersonDTO {
   sex: string; // likely 'M' or 'F', but just string as per varchar(1)
   idcard: string;
   title: string;
-  full_name: string;
   first_name: string;
   last_name: string;
   full_name: string;
@@ -27,7 +26,6 @@ export interface PersonDTO {
   email: string;
   created_at: Date | null;
   updated_at: Date | null;
-  age: string;
 }
 
 export interface TitleNormalizeDTO {
@@ -69,7 +67,6 @@ export interface AddressDTO {
   villcode: string;
   created_at: Date;
   updated_at: Date;
-  hcode_cid: string;
 }
 
 export interface Address_codeDTO {
@@ -309,33 +306,27 @@ export interface PersonViewDTO {
   title: string;
   first_name: string;
   last_name: string;
-  birth: Date;
-  phone: string;
+  birth: string;
+  phone: string | null;
   blood_type: string;
-  status: 'approve' | 'cancel' | 'delete';
-  reason_cancel: string;
   consent: boolean;
   hcode: string;
   guardian: string;
-  is_delete: boolean | null; // nullable because not `.notNull()`
   village: string;
-  hn: string;
+  hn: string | null;
   inscl_code: string;
-  email: string;
-  created_at: Date | null;
-  updated_at: Date | null;
+  email: string | null;
   age: string;
-  address?: AddressDTO;
-  guardians?: GuardianDTO;
-  relationship?: RegisterFormDTO;
-  address_code?: Address_codeDTO;
-  medical_history?: MedicalHistoryDTO;
+  address?: AddressDTO_1;
+  guardians?: GuardianByIdDTO;
+  relationship: string;
+  address_code?: Address_code_1DTO;
+  medical_history?: MedicalHistory_1DTO;
   inscl_normalize?: InsclDTO;
 }
 
 export interface InsclDTO {
-  inscl_code: string;
-  inscl_name_th: string;
+  insclNameTh: string;
 }
 
 export interface editPersonDTO {
@@ -367,7 +358,6 @@ export const EditPersonFormSchema = t.Object({
   allergy_history: t.String(),
   allergy_symptoms: t.String(),
 });
-
 export interface editGuardianDTO {
   guardian_id: string;
   idcard: string;
@@ -418,3 +408,44 @@ export const FormAddressSchema = t.Object({
   moo: t.String(),
   villcode: t.String(),
 });
+export interface AddressDTO_1 {
+  street: string;
+  moo: string;
+  fullAddress: string;
+}
+export interface ListPersonDTO {
+  pid: string;
+  hn: string;
+  idcard: string;
+  title: string;
+  first_name: string;
+  last_name: string;
+  birth: Date;
+  phone: string;
+  age: string;
+  consent: boolean;
+}
+export interface GuardianByIdDTO {
+  guardian_id: string;
+  idcard: string;
+  relationships: string;
+  title: string;
+  first_name: string;
+  last_name: string;
+  birth: string;
+  phone: string;
+  hcode: string;
+  age: string;
+  fullAddress: string;
+}
+export interface Address_code_1DTO {
+  provname: string;
+  distname: string;
+  subdistname: string;
+}
+
+export interface MedicalHistory_1DTO {
+  chronic_disease: string | null;
+  allergy_history: string | null;
+  allergy_symptoms: string | null;
+}

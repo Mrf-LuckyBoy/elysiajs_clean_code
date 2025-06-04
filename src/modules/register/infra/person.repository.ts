@@ -19,8 +19,9 @@ import type {
   PersonViewDTO,
   editPersonDTO,
   editGuardianDTO,
+  ListPersonDTO,
 } from '../model/person.model';
-import { eq, sql, desc, like, or } from 'drizzle-orm';
+import { eq, sql, desc, like } from 'drizzle-orm';
 import { randomUUID } from 'crypto';
 import dayjs from 'dayjs';
 import { count } from 'drizzle-orm';
@@ -309,7 +310,7 @@ export const PersonRepository = {
     search: string,
     page: number = 1,
     limit: number = 5
-  ): Promise<{ data: PersonDTO[]; totalItems: number }> {
+  ): Promise<{ data: ListPersonDTO[]; totalItems: number }> {
     const offset = (page - 1) * limit;
 
     const allRows = await db
@@ -341,7 +342,7 @@ export const PersonRepository = {
 
     const data = paginated.map((entry) => ({
       pid: entry.row.person.pid,
-      hn: entry.row.person.hn,
+      hn: entry.row.person.hn ?? '',
       idcard: entry.decryptedIdcard,
       first_name: entry.decryptedFirstName,
       last_name: entry.decryptedLastName,
@@ -362,7 +363,7 @@ export const PersonRepository = {
 
     return result?.[0]?.count ?? 0;
   },
-  async findPersonID(pid: string): Promise<PersonViewDTO[] | null> {
+  async findPersonID(pid: string): Promise<Partial<PersonViewDTO>[] | null> {
     const resultID = await db
       .select({
         pid: persons.pid,
@@ -375,9 +376,8 @@ export const PersonRepository = {
         last_name: persons.last_name,
         birth: persons.birth,
         phone: persons.phone,
-        boot_type: persons.blood_type,
+        blood_type: persons.blood_type,
         consent: persons.consent,
-        status: persons.status,
         hcode: persons.hcode,
         guardian: persons.guardian,
         inscl_code: persons.inscl_code,
@@ -444,13 +444,13 @@ export const PersonRepository = {
       idcard: Crypto.decrypt(row.idcard),
       first_name: Crypto.decrypt(row.first_name),
       last_name: Crypto.decrypt(row.last_name),
-      title: row.title_th ?? row.title,
+      title: row.title,
       birth: row.birth.toISOString().split('T')[0],
-      age: formatAge(row.birth),
-      blood_type: row.boot_type,
-      phone: row.phone ? Crypto.decrypt(row.phone) : null,
+      phone: Crypto.decrypt(row.phone),
+      blood_type: row.blood_type,
       consent: row.consent,
-      inscl_code: row.inscl,
+      inscl_code: row.inscl_code,
+      village: row.village,
       email: row.email,
       hn: row.hn,
       medical_history: {
@@ -459,30 +459,30 @@ export const PersonRepository = {
         allergy_symptoms: row.allergy_symptoms ?? null,
       },
       address: {
-        street: row.street,
-        moo: row.moo,
-        fullAddress: row.fullAddress,
+        street: row.street ?? '',
+        moo: row.moo ?? '',
+        fullAddress: row.fullAddress ?? '',
       },
       address_code: {
-        subdistname: row.subdistname,
-        distname: row.distname,
-        provname: row.provname,
+        subdistname: row.subdistname ?? '',
+        distname: row.distname ?? '',
+        provname: row.provname ?? '',
       },
       guardians: row.guardian
         ? {
-            guardian_id: row.guardian_id,
-            relationships: row.relationship_th,
-            idcard: Crypto.decrypt(row.gid),
-            title: row.title_th ?? row.pname,
-            first_name: Crypto.decrypt(row.fname),
-            last_name: Crypto.decrypt(row.lname),
-            phone: row.phone_number,
-            birth: row.birth_day?.toISOString().split('T')[0] ?? null,
-            age: formatAge(row.birth_day),
-            hcode: row.address_code,
-            fullAddress: row.fullAddress,
+            guardian_id: row.guardian_id ?? '',
+            idcard: Crypto.decrypt(row.idcard ?? ''),
+            relationships: row.relationship_th ?? '',
+            title: row.title_th ?? row.pname ?? '',
+            first_name: Crypto.decrypt(row.fname ?? ''),
+            last_name: Crypto.decrypt(row.lname ?? ''),
+            birth: row.birth_day?.toISOString().split('T')[0] ?? '',
+            phone: row.phone_number ?? '',
+            hcode: row.address_code ?? '',
+            age: row.birth_day ? formatAge(row.birth_day) : '',
+            fullAddress: row.fullAddress ?? '',
           }
-        : '',
+        : undefined,
     }));
   },
   async editFormPerson(person: editPersonDTO): Promise<void> {
@@ -498,7 +498,7 @@ export const PersonRepository = {
           birth: person.birth,
           blood_type: person.blood_type,
           phone: person.phone ? Crypto.encrypt(person.phone) : '',
-        }).filter(([_, v]) => v !== '')
+        }).filter(([, v]) => v !== '')
       );
 
       const updateMedHistoryData = Object.fromEntries(
@@ -506,7 +506,7 @@ export const PersonRepository = {
           chronic_disease: person.chronic_disease,
           allergy_history: person.allergy_history,
           allergy_symptoms: person.allergy_symptoms,
-        }).filter(([_, v]) => v !== '')
+        }).filter(([, v]) => v !== '')
       );
 
       if (Object.keys(updatePersonData).length > 0) {
@@ -539,7 +539,7 @@ export const PersonRepository = {
             : '',
           birth: guardian.birth,
           phone: guardian.phone ? Crypto.encrypt(guardian.phone) : '',
-        }).filter(([_, v]) => v !== '')
+        }).filter(([, v]) => v !== '')
       );
 
       if (!guardian.guardian_id) {
@@ -552,7 +552,7 @@ export const PersonRepository = {
           moo: guardian.moo,
           street: guardian.street,
           villcode: guardian.villcode,
-        }).filter(([_, v]) => v !== '')
+        }).filter(([, v]) => v !== '')
       );
 
       if (Object.keys(updateguardianData).length > 0) {
@@ -580,7 +580,7 @@ export const PersonRepository = {
         street: editaddress.street,
         villcode: editaddress.villcode,
         hcode: editaddress.hcode,
-      }).filter(([_, v]) => v !== '')
+      }).filter(([, v]) => v !== '')
     );
 
     await db

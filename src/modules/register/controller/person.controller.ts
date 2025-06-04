@@ -153,8 +153,8 @@ export const personController = {
     handler: async ({ set, query }: Context) => {
       try {
         const searchName = query.search?.toLowerCase() ?? '';
-        const page = query.page ?? 1;
-        const limit = query.limit ?? 10;
+        const page = Number(query.page) || 1;
+        const limit = Number(query.limit) || 10;
 
         const { data, totalItems } = await getFormPerson(
           searchName,

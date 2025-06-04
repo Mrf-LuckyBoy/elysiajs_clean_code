@@ -237,6 +237,10 @@ export const PersonRepository = {
       await Promise.all([
         db.insert(address).values(address_guardians),
         db.insert(guardians).values(guardians_data),
+        db
+          .update(persons)
+          .set({ guardian: guardian_id })
+          .where(eq(persons.pid, form.pid)),
       ]);
       form.guardian.hcode = address_id;
       const fullAddressCurrent: {

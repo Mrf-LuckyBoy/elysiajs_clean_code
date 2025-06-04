@@ -8,6 +8,7 @@ export interface PersonDTO {
   sex: string; // likely 'M' or 'F', but just string as per varchar(1)
   idcard: string;
   title: string;
+  full_name: string;
   first_name: string;
   last_name: string;
   full_name: string;

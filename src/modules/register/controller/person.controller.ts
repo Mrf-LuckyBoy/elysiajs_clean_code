@@ -231,7 +231,7 @@ export const personController = {
                 distname: persons.address_code?.distname,
                 provname: persons.address_code?.provname,
               }
-            : null,
+            : '',
         }));
 
         set.status = 200;

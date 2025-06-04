@@ -336,7 +336,9 @@ export const PersonRepository = {
       decryptedIdcard: Crypto.decrypt(row.person.idcard),
       decryptedFirstName: Crypto.decrypt(row.person.first_name).toLowerCase(),
       decryptedLastName: Crypto.decrypt(row.person.last_name).toLowerCase(),
-      decryptedFullName: Crypto.decrypt(row.person.full_name).toLowerCase(),
+      decryptedFullName: row.person.full_name
+        ? Crypto.decrypt(row.person.full_name).toLowerCase()
+        : '',
     }));
 
     const filtered = search
@@ -494,7 +496,7 @@ export const PersonRepository = {
             hcode: row.address_code,
             fullAddress: row.fullAddress,
           }
-        : null,
+        : '',
     }));
   },
   async editFormPerson(person: editPersonDTO): Promise<void> {

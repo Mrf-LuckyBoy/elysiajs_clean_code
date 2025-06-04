@@ -81,6 +81,7 @@ export const PersonRepository = {
         title: form.title,
         first_name: Crypto.encrypt(form.first_name),
         last_name: Crypto.encrypt(form.last_name),
+        full_name: Crypto.encrypt(form.first_name + form.last_name),
         birth: form.birth,
         blood_type: form.blood_type,
         phone: Crypto.encrypt(form.phone),

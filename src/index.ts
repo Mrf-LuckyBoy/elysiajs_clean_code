@@ -12,7 +12,7 @@ const app = new Elysia()
   .use(corsMiddleware)
   .use(
     swagger({
-      exclude: ['/swagger'],
+      path: 'api/swagger',
       autoDarkMode: true,
       documentation: {
         info: {

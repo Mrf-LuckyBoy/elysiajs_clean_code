@@ -1,11 +1,5 @@
 import { db } from '@/db';
-import {
-  persons,
-  address_code,
-  medical_history,
-  guardians,
-  address,
-} from '@/db/schema';
+import { persons, address_code, medical_history, guardians, address } from '@/db/schema';
 import type {
   PersonDTO,
   MedicalHistoryDTO,
@@ -82,11 +76,7 @@ export const PersonRepository = {
       await db.insert(persons).values(person);
 
       form.pid = person_id;
-    } else if (
-      form.address_cid.villcode !== '' &&
-      form.address_cid.villcode !== '' &&
-      form.guardian.idcard === ''
-    ) {
+    } else if (form.address_cid.villcode !== '' && form.address_cid.villcode !== '' && form.guardian.idcard === '') {
       if (form.type_card === true) {
         const address_id = randomUUID();
         const address_person: AddressDTO = {
@@ -101,10 +91,7 @@ export const PersonRepository = {
           updated_at: new Date(),
         };
         await db.insert(address).values(address_person);
-        await db
-          .update(persons)
-          .set({ hcode: address_id, hcode_cid: address_id })
-          .where(eq(persons.pid, form.pid));
+        await db.update(persons).set({ hcode: address_id, hcode_cid: address_id }).where(eq(persons.pid, form.pid));
         form.address_current.hcode = address_id;
         form.address_cid.hcode = address_id;
         form.address_current.hno = form.address_cid.hno;
@@ -138,20 +125,14 @@ export const PersonRepository = {
           updated_at: new Date(),
         };
         await db.insert(address).values(address_person2);
-        await db
-          .update(persons)
-          .set({ hcode: address_id, hcode_cid: address2 })
-          .where(eq(persons.pid, form.pid));
+        await db.update(persons).set({ hcode: address_id, hcode_cid: address2 }).where(eq(persons.pid, form.pid));
         form.address_current.hcode = address2;
         form.address_cid.hcode = address_id;
       }
     } else if (form.guardian.idcard !== '') {
       const guardian_id = randomUUID();
       if (form.type_guardian === true) {
-        const hcodeA = await db
-          .select({ hcode: persons.hcode })
-          .from(persons)
-          .where(eq(persons.pid, form.pid));
+        const hcodeA = await db.select({ hcode: persons.hcode }).from(persons).where(eq(persons.pid, form.pid));
         const guardians_data: GuardianDTO = {
           guardian_id,
           idcard: Crypto.encrypt(form.guardian.idcard),
@@ -166,10 +147,7 @@ export const PersonRepository = {
           updated_at: new Date(),
         };
         await db.insert(guardians).values(guardians_data);
-        await db
-          .update(persons)
-          .set({ guardian: guardian_id })
-          .where(eq(persons.pid, form.pid));
+        await db.update(persons).set({ guardian: guardian_id }).where(eq(persons.pid, form.pid));
         form.guardian.hcode = hcodeA[0].hcode;
         const fullAddressCurrent: {
           fullAddress: string;
@@ -181,10 +159,7 @@ export const PersonRepository = {
               ),
           })
           .from(address)
-          .leftJoin(
-            address_code,
-            eq(address.villcode, address_code.addresscode)
-          )
+          .leftJoin(address_code, eq(address.villcode, address_code.addresscode))
           .where(eq(address.hcode, form.address_current.hcode));
         const fullAddressCid: {
           fullAddress: string;
@@ -196,10 +171,7 @@ export const PersonRepository = {
               ),
           })
           .from(address)
-          .leftJoin(
-            address_code,
-            eq(address.villcode, address_code.addresscode)
-          )
+          .leftJoin(address_code, eq(address.villcode, address_code.addresscode))
           .where(eq(address.hcode, form.address_cid.hcode));
         const fullGuardian: {
           fullAddress: string;
@@ -211,10 +183,7 @@ export const PersonRepository = {
               ),
           })
           .from(address)
-          .leftJoin(
-            address_code,
-            eq(address.villcode, address_code.addresscode)
-          )
+          .leftJoin(address_code, eq(address.villcode, address_code.addresscode))
           .where(eq(address.hcode, form.guardian.hcode));
         form.address_current_string = fullAddressCurrent[0].fullAddress;
         form.address_cid_string = fullAddressCid[0].fullAddress;
@@ -258,10 +227,7 @@ export const PersonRepository = {
               ),
           })
           .from(address)
-          .leftJoin(
-            address_code,
-            eq(address.villcode, address_code.addresscode)
-          )
+          .leftJoin(address_code, eq(address.villcode, address_code.addresscode))
           .where(eq(address.hcode, form.address_current.hcode));
         const fullAddressCid: {
           fullAddress: string;
@@ -273,10 +239,7 @@ export const PersonRepository = {
               ),
           })
           .from(address)
-          .leftJoin(
-            address_code,
-            eq(address.villcode, address_code.addresscode)
-          )
+          .leftJoin(address_code, eq(address.villcode, address_code.addresscode))
           .where(eq(address.hcode, form.address_cid.hcode));
         const fullGuardian: {
           fullAddress: string;
@@ -288,10 +251,7 @@ export const PersonRepository = {
               ),
           })
           .from(address)
-          .leftJoin(
-            address_code,
-            eq(address.villcode, address_code.addresscode)
-          )
+          .leftJoin(address_code, eq(address.villcode, address_code.addresscode))
           .where(eq(address.hcode, form.guardian.hcode));
         form.address_current_string = fullAddressCurrent[0].fullAddress;
         form.address_cid_string = fullAddressCid[0].fullAddress;

@@ -1,12 +1,14 @@
 import { ScreeningRepository } from '../infra/screening.repository';
-import { GetScreeningByVisitIDDTO } from '../model/screening.model';
+import { DecodedToken, GetScreeningByVisitIDDTO } from '../model/screening.model';
 import { Crypto } from '@/core/crypto';
 export async function getScreeningByVisitID(
-  visitID: string
-): Promise<GetScreeningByVisitIDDTO> {
-  const screening = await ScreeningRepository.findScreeningByVisitID(visitID);
+  visitID: string,
+  cookie: DecodedToken
+): Promise<GetScreeningByVisitIDDTO | null> {
+  const hosCode = cookie.hos_code;
+  const screening = await ScreeningRepository.findScreeningByVisitID(visitID, hosCode);
   if (!screening) {
-    throw new Error('Screening not found');
+    return null;
   }
 
   const decryptedPersonFname = Crypto.decrypt(screening.person_fname || '');

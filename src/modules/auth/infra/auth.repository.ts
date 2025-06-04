@@ -7,9 +7,7 @@ import { randomUUID } from 'crypto';
 import { Crypto } from '@/core/crypto';
 
 export const AuthRepository = {
-  async upsertUserProvider(
-    providerUser: ProviderData
-  ): Promise<UserProviderDTO[]> {
+  async upsertUserProvider(providerUser: ProviderData): Promise<UserProviderDTO[]> {
     const promise_upsert = [];
     const result: UserProviderDTO[] = [];
     for (const organiz of providerUser.organization) {
@@ -23,9 +21,7 @@ export const AuthRepository = {
         lname: providerUser.lastname_th,
         position: organiz.position,
         hno: organiz.address.address,
-        soi_road: !organiz.address.soi
-          ? organiz.address.street || '-'
-          : organiz.address.soi || '-',
+        soi_road: !organiz.address.soi ? organiz.address.street || '-' : organiz.address.soi || '-',
         province: organiz.address.province,
         district: organiz.address.district,
         sub_district: organiz.address.sub_district,
@@ -100,21 +96,13 @@ export const AuthRepository = {
         .select()
         .from(user_provider_vhv)
         .where(
-          and(
-            eq(user_provider_vhv.cid_hash, loginUser.cid_hash),
-            eq(user_provider_vhv.hos_code, loginUser.hos_code)
-          )
+          and(eq(user_provider_vhv.cid_hash, loginUser.cid_hash), eq(user_provider_vhv.hos_code, loginUser.hos_code))
         );
     } else {
       result = await db
         .select()
         .from(user_provider)
-        .where(
-          and(
-            eq(user_provider.cid_hash, loginUser.cid_hash),
-            eq(user_provider.hos_code, loginUser.hos_code)
-          )
-        );
+        .where(and(eq(user_provider.cid_hash, loginUser.cid_hash), eq(user_provider.hos_code, loginUser.hos_code)));
     }
     return result[0];
   },
@@ -125,10 +113,7 @@ export const AuthRepository = {
         cidVhv: user_provider_vhv.cid,
       })
       .from(user_provider)
-      .leftJoin(
-        user_provider_vhv,
-        eq(user_provider.cid_hash, user_provider_vhv.cid_hash)
-      )
+      .leftJoin(user_provider_vhv, eq(user_provider.cid_hash, user_provider_vhv.cid_hash))
       .where(eq(user_provider.cid_hash, cidHash));
     if (result.length === 0) {
       return '';
@@ -138,23 +123,15 @@ export const AuthRepository = {
     }
 
     if (result[0].cidOffice && result[0].cidVhv) {
-      return result[0].cidOffice === result[0].cidVhv
-        ? result[0].cidOffice
-        : result[0].cidOffice || result[0].cidVhv;
+      return result[0].cidOffice === result[0].cidVhv ? result[0].cidOffice : result[0].cidOffice || result[0].cidVhv;
     }
     return result[0].cidOffice || result[0].cidVhv || '';
   },
   async updateCidUser(cidHash: string, cid: string): Promise<void> {
     cid = Crypto.encrypt(cid);
     await Promise.all([
-      db
-        .update(user_provider)
-        .set({ cid: cid })
-        .where(eq(user_provider.cid_hash, cidHash)),
-      db
-        .update(user_provider_vhv)
-        .set({ cid: cid })
-        .where(eq(user_provider_vhv.cid_hash, cidHash)),
+      db.update(user_provider).set({ cid: cid }).where(eq(user_provider.cid_hash, cidHash)),
+      db.update(user_provider_vhv).set({ cid: cid }).where(eq(user_provider_vhv.cid_hash, cidHash)),
     ]);
   },
 };

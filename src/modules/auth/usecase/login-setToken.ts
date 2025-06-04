@@ -4,8 +4,7 @@ import type { UserProviderDTO, LoginUser } from '../model/auth.model';
 import { Crypto } from '@/core/crypto';
 
 export async function loginSetToken(loginUser: LoginUser): Promise<string> {
-  const result: UserProviderDTO =
-    await AuthRepository.checkLoginUser(loginUser);
+  const result: UserProviderDTO = await AuthRepository.checkLoginUser(loginUser);
   if (!result) {
     return '';
   }

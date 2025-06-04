@@ -164,6 +164,246 @@ export const UpdateScreeningFormSchema = t.Object({
   updated_at: t.Optional(t.Date()),
 });
 
+export interface GetScreeningFormDetailsDTO {
+  screening_form_id: string;
+  sex: string;
+  cid: string;
+  title: string;
+  first_name: string;
+  last_name: string;
+  //address
+  is_alone?: boolean | null;
+  hno: string | null;
+  moo: string | null;
+  soi_road: string | null;
+  province: string | null;
+  district: string | null;
+  sub_district: string | null;
+  postal_code: string | null;
+  //part 1
+  social_1?: boolean | null;
+  social_2?: boolean | null;
+  social_3?: boolean | null;
+  //part 2
+  elderly_1_1?: boolean | null;
+  elderly_1_2?: boolean | null;
+  elderly_2_1?: boolean | null;
+  elderly_2_2?: boolean | null;
+  elderly_3?: boolean | null;
+  elderly_4?: boolean | null;
+  elderly_5_1?: boolean | null;
+  elderly_5_2?: boolean | null;
+  elderly_6?: boolean | null;
+  elderly_7?: boolean | null;
+  elderly_8_1?: boolean | null;
+  elderly_8_2?: boolean | null;
+  elderly_9?: boolean | null;
+  elderly_sum?: string | null;
+  //part 3
+  visit_screening?: Date | null;
+  image_id?: string | null;
+  word_recall?: number | null;
+  clock_draw?: number | null;
+  sum_mini_cog?: number | null;
+  created_at?: Date;
+  updated_at?: Date;
+}
+
+export interface PersonalDetailsDTO {
+  sex: string;
+  cid: string;
+  title: string;
+  first_name: string;
+  last_name: string;
+  //address
+  is_alone?: boolean;
+  hno: string;
+  moo: string;
+  soi_road: string;
+  province: string;
+  district: string;
+  sub_district: string;
+  postal_code: string;
+}
+
+export interface SocialSectionDTO {
+  social_1?: boolean | null;
+  social_2?: boolean | null;
+  social_3?: boolean | null;
+}
+
+export interface ElderlySectionDTO {
+  elderly_1_1?: boolean | null;
+  elderly_1_2?: boolean | null;
+  elderly_2_1?: boolean | null;
+  elderly_2_2?: boolean | null;
+  elderly_3?: boolean | null;
+  elderly_4?: boolean | null;
+  elderly_5_1?: boolean | null;
+  elderly_5_2?: boolean | null;
+  elderly_6?: boolean | null;
+  elderly_7?: boolean | null;
+  elderly_8_1?: boolean | null;
+  elderly_8_2?: boolean | null;
+  elderly_9?: boolean | null;
+  elderly_sum?: string | null;
+}
+
+export interface MiniCogDTO {
+  visit_screening?: Date | null;
+  image_id?: string | null;
+  word_recall?: number | null;
+  clock_draw?: number | null;
+  sum_mini_cog?: number | null;
+}
+
+export interface GetFormDetailsQuery {
+  part?: '0' | '1' | '2' | '3';
+}
+
+export const GetFormDetailsQuerySchema = t.Object({
+  part: t.Optional(
+    t.Union([t.Literal('0'), t.Literal('1'), t.Literal('2'), t.Literal('3')])
+  ),
+});
+
+export const GetScreeningFormDetailsSchema = t.Object({
+  screening_form_id: t.String(),
+  consent_by: t.Optional(t.String()),
+  sex: t.String(),
+  cid: t.String(),
+  title: t.String(),
+  first_name: t.String(),
+  last_name: t.String(),
+  is_alone: t.Optional(t.Boolean()),
+  hno: t.Nullable(t.String()),
+  moo: t.Nullable(t.String()),
+  soi_road: t.Nullable(t.String()),
+  province: t.Nullable(t.String()),
+  district: t.Nullable(t.String()),
+  sub_district: t.Nullable(t.String()),
+  postal_code: t.Nullable(t.String()),
+
+  social_1: t.Optional(t.Nullable(t.Boolean())),
+  social_2: t.Optional(t.Nullable(t.Boolean())),
+  social_3: t.Optional(t.Nullable(t.Boolean())),
+
+  elderly_1_1: t.Optional(t.Nullable(t.Boolean())),
+  elderly_1_2: t.Optional(t.Nullable(t.Boolean())),
+  elderly_2_1: t.Optional(t.Nullable(t.Boolean())),
+  elderly_2_2: t.Optional(t.Nullable(t.Boolean())),
+  elderly_3: t.Optional(t.Nullable(t.Boolean())),
+  elderly_4: t.Optional(t.Nullable(t.Boolean())),
+  elderly_5_1: t.Optional(t.Nullable(t.Boolean())),
+  elderly_5_2: t.Optional(t.Nullable(t.Boolean())),
+  elderly_6: t.Optional(t.Nullable(t.Boolean())),
+  elderly_7: t.Optional(t.Nullable(t.Boolean())),
+  elderly_8_1: t.Optional(t.Nullable(t.Boolean())),
+  elderly_8_2: t.Optional(t.Nullable(t.Boolean())),
+  elderly_9: t.Optional(t.Nullable(t.Boolean())),
+  elderly_sum: t.Optional(t.Nullable(t.String())),
+
+  visit_screening: t.Optional(t.Nullable(t.Date())),
+  image_id: t.Optional(t.Nullable(t.String())),
+  word_recall: t.Optional(t.Nullable(t.Number())),
+  clock_draw: t.Optional(t.Nullable(t.Number())),
+  sum_mini_cog: t.Optional(t.Nullable(t.Number())),
+
+  created_at: t.Optional(t.Date()),
+  updated_at: t.Optional(t.Date()),
+});
+
+export const PersonalDetailsSchema = t.Object({
+  sex: t.String(),
+  cid: t.String(),
+  title: t.String(),
+  first_name: t.String(),
+  last_name: t.String(),
+  is_alone: t.Optional(t.Boolean()),
+  hno: t.String(),
+  moo: t.String(),
+  soi_road: t.String(),
+  province: t.String(),
+  district: t.String(),
+  sub_district: t.String(),
+  postal_code: t.String(),
+});
+
+export const SocialSectionSchema = t.Object({
+  social_1: t.Optional(t.Nullable(t.Boolean())),
+  social_2: t.Optional(t.Nullable(t.Boolean())),
+  social_3: t.Optional(t.Nullable(t.Boolean())),
+});
+
+export const ElderlySectionSchema = t.Object({
+  elderly_1_1: t.Optional(t.Nullable(t.Boolean())),
+  elderly_1_2: t.Optional(t.Nullable(t.Boolean())),
+  elderly_2_1: t.Optional(t.Nullable(t.Boolean())),
+  elderly_2_2: t.Optional(t.Nullable(t.Boolean())),
+  elderly_3: t.Optional(t.Nullable(t.Boolean())),
+  elderly_4: t.Optional(t.Nullable(t.Boolean())),
+  elderly_5_1: t.Optional(t.Nullable(t.Boolean())),
+  elderly_5_2: t.Optional(t.Nullable(t.Boolean())),
+  elderly_6: t.Optional(t.Nullable(t.Boolean())),
+  elderly_7: t.Optional(t.Nullable(t.Boolean())),
+  elderly_8_1: t.Optional(t.Nullable(t.Boolean())),
+  elderly_8_2: t.Optional(t.Nullable(t.Boolean())),
+  elderly_9: t.Optional(t.Nullable(t.Boolean())),
+  elderly_sum: t.Optional(t.Nullable(t.String())),
+});
+
+export const MiniCogSchema = t.Object({
+  visit_screening: t.Optional(t.Nullable(t.Date())),
+  image_id: t.Optional(t.Nullable(t.String())),
+  word_recall: t.Optional(t.Nullable(t.Number())),
+  clock_draw: t.Optional(t.Nullable(t.Number())),
+  sum_mini_cog: t.Optional(t.Nullable(t.Number())),
+});
+
+export interface Answer {
+  img: string;
+  value: string;
+  label: string;
+}
+
+export interface Question {
+  id: string;
+  title: string;
+  answer: Answer[];
+}
+
+export interface MockupItem {
+  id: string;
+  title: string;
+  question: Question[];
+}
+
+export interface MockupData {
+  MOCKUPDATA: MockupItem[];
+}
+
+export const answerSchema = t.Object({
+  img: t.String(),
+  value: t.String(),
+  label: t.String(),
+});
+
+export const questionSchema = t.Object({
+  id: t.String(),
+  title: t.String(),
+  answer: t.Array(answerSchema),
+});
+
+export const mockupItemSchema = t.Object({
+  id: t.String(),
+  title: t.String(),
+  question: t.Array(questionSchema),
+});
+
+export const mockupDataSchema = t.Object({
+  MOCKUPDATA: t.Array(mockupItemSchema),
+});
+
 export interface SqlScreeningResponse {
   visit_id: string;
   visit_date: Date;
@@ -316,5 +556,5 @@ export interface UpdateVisitDateRequestDTO {
 export const UpdateVisitDateRequestSchema = t.Object({
   visit_date: t.Date({ format: 'date' }),
   reason_edit: t.String(),
-  updated_at: t.Optional(t.Date({ format: 'date-time' })),
+  updated_at: t.Optional(t.Nullable(t.Date())),
 });

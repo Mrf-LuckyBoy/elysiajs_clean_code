@@ -1,10 +1,6 @@
 import qs from 'qs';
 import { httpHealthID, httpProvider } from '@/core/http/fetch';
-import {
-  HealthIdLoginResponse,
-  TokenProviderIDResponse,
-  ProviderResponse,
-} from './model/response.model';
+import { HealthIdLoginResponse, TokenProviderIDResponse, ProviderResponse } from './model/response.model';
 import { ENV } from '@/config/env';
 
 export const ProviderClient = {
@@ -44,16 +40,13 @@ export const ProviderClient = {
   },
 
   async serviceCheckStaff(code: string): Promise<ProviderResponse> {
-    return await httpProvider<ProviderResponse>(
-      '/services/moph-idp/check-staff',
-      {
-        method: 'GET',
-        headers: {
-          'client-id': ENV.PROVIDER_CLIENT_ID,
-          'secret-key': ENV.PROVIDER_SECRET_KEY,
-          Authorization: `Bearer ${code}`,
-        },
-      }
-    );
+    return await httpProvider<ProviderResponse>('/services/moph-idp/check-staff', {
+      method: 'GET',
+      headers: {
+        'client-id': ENV.PROVIDER_CLIENT_ID,
+        'secret-key': ENV.PROVIDER_SECRET_KEY,
+        Authorization: `Bearer ${code}`,
+      },
+    });
   },
 };

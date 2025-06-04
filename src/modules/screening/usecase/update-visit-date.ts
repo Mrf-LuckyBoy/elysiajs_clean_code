@@ -1,12 +1,8 @@
 import { ScreeningRepository } from '../infra/screening.repository';
 import { UpdateVisitDateRequestDTO } from '../model/screening.model';
 
-export async function updateVisitDate(
-  visit_id: string,
-  data: UpdateVisitDateRequestDTO
-): Promise<void> {
-  const existingForm =
-    await ScreeningRepository.getScreeningByVisitID(visit_id);
+export async function updateVisitDate(visit_id: string, data: UpdateVisitDateRequestDTO): Promise<void> {
+  const existingForm = await ScreeningRepository.getScreeningByVisitID(visit_id);
   if (!existingForm) {
     throw new Error('Screening form not found');
   }

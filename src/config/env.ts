@@ -1,9 +1,7 @@
 import { z } from 'zod';
 
 const envSchema = z.object({
-  NODE_ENV: z
-    .enum(['development', 'production', 'test'])
-    .default('development'),
+  NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   PORT: z.string().default('3000'),
   DB_HOST: z.string(),
   DB_PORT: z.string().default('3306'),
@@ -30,10 +28,7 @@ const envSchema = z.object({
 const _env = envSchema.safeParse(process.env);
 
 if (!_env.success) {
-  console.error(
-    '❌ Invalid environment variables:',
-    _env.error.flatten().fieldErrors
-  );
+  console.error('❌ Invalid environment variables:', _env.error.flatten().fieldErrors);
   process.exit(1);
 }
 

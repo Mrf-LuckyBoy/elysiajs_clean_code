@@ -12,14 +12,13 @@ const app = new Elysia()
   .use(corsMiddleware)
   .use(
     swagger({
-      path: '/api/swagger',
-      exclude: ['/api/swagger'],
+      exclude: ['/swagger'],
       autoDarkMode: true,
       documentation: {
         info: {
-          title: '🦊 this is title',
-          description: 'this is description',
-          version: 'this is version',
+          title: '🦊 parent care api doc',
+          description: 'this is swagger document api',
+          version: '1.0.0-alpha',
         },
       },
     })

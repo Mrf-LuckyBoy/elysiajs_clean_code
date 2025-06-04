@@ -18,6 +18,11 @@ export interface UserProviderDTO {
   updateAt: Date | null;
 }
 
+export interface UserProviderResponseDTO {
+  cid: string;
+  useable: UserProviderDTO[];
+}
+
 export const UserProviderSchema = t.Object({
   user_id: t.String(),
   cid_hash: t.String(),
@@ -34,6 +39,11 @@ export const UserProviderSchema = t.Object({
   sub_district: t.Optional(t.Nullable(t.String())),
   createAt: t.Nullable(t.Date()),
   updateAt: t.Nullable(t.Date()),
+});
+
+export const UserProviderResponseSchema = t.Object({
+  cid: t.String(),
+  useable: t.Array(UserProviderSchema),
 });
 
 export interface LoginUser {

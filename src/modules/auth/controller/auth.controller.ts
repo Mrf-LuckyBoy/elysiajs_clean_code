@@ -79,11 +79,12 @@ export const authController = {
           return HttpResponse.badRequest('not found user');
         }
         auth_token.set({
-          domain:
-            ENV.BUN_ENV === 'development'
-              ? 'localhost'
-              : 'uat-parentcare.one.th',
+          ...(ENV.BUN_ENV !== 'development' && {
+            domain: 'uat-parentcare.one.th',
+          }),
           httpOnly: true,
+          sameSite: 'lax',
+          secure: false,
         });
         auth_token.value = token;
         set.status = 201;

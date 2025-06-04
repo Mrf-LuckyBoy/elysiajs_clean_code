@@ -1,10 +1,13 @@
+import { DecodedToken } from '@/modules/screening/model/screening.model';
 import {
   ProfileResult,
   UserProfileDTO,
   VhvProfileDTO,
 } from '../model/profile.model';
 
-export async function getUserProfile(decoded: any): Promise<ProfileResult> {
+export async function getUserProfile(
+  decoded: DecodedToken
+): Promise<ProfileResult> {
   let right = 'ผู้ใช้งานทั่วไป';
 
   const isVhv =
@@ -15,13 +18,13 @@ export async function getUserProfile(decoded: any): Promise<ProfileResult> {
     right = 'อสม.';
 
     const vhvProfile: VhvProfileDTO = {
-      cid: decoded.cid_hash,
+      cid: decoded.cid_hash || '-',
       name: `${decoded.title} ${decoded.fname} ${decoded.lname}`.trim(),
       position: decoded.position || '-',
-      phone_number: decoded.phone_number || '-',
+      phone_number: '-',
       usage_rights: right,
-      dob: decoded.dob || '-',
-      work_area: decoded.work_area || '-',
+      dob: '-',
+      work_area: '-',
       hno: decoded.hno || '-',
       soi_road: decoded.soi_road || '-',
       province: decoded.province || '-',
@@ -35,11 +38,11 @@ export async function getUserProfile(decoded: any): Promise<ProfileResult> {
       hos_code: decoded.hos_code,
       name: `${decoded.title || ''} ${decoded.fname || ''} ${decoded.lname || '-'}`.trim(),
       position: decoded.position,
-      phone_number: decoded.phone_number || '-',
+      phone_number: '-',
       usage_rights: right,
-      dob: decoded.dob || '-',
-      email: decoded.email || '-',
-      signature_pad: decoded.signature_pad || null,
+      dob: '-',
+      email: '-',
+      signature_pad: null,
       hno: decoded.hno || '-',
       soi_road: decoded.soi_road || '-',
       province: decoded.province || '-',

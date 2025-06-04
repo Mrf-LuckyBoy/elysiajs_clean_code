@@ -138,7 +138,7 @@ export const dropdownController = {
         const dropdownList = userResult
           .map((user) => ({
             user_id: user.user_id,
-            fullname: `${Crypto.decrypt(user.fname)} ${Crypto.decrypt(user.lname)}`,
+            fullname: `${Crypto.decrypt(user.fname || '')} ${Crypto.decrypt(user.lname || '')}`,
           }))
           .filter((user) => user.fullname.toLowerCase().includes(searchName));
         set.status = 200;
@@ -183,7 +183,7 @@ export const dropdownController = {
         const dropdownListVhv = userVhvResult
           .map((user) => ({
             user_id: user.user_id,
-            fullname: `${Crypto.decrypt(user.fname)} ${Crypto.decrypt(user.lname)}`,
+            fullname: `${Crypto.decrypt(user.fname || '')} ${Crypto.decrypt(user.lname || '')}`,
           }))
           .filter((user) => user.fullname.toLowerCase().includes(searchName));
         set.status = 200;

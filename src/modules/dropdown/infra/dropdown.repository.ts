@@ -34,12 +34,30 @@ export const DropdownRepository = {
   },
 
   async dropdownUser(): Promise<users[]> {
-    const userResult: users[] = await db.select().from(user_provider);
+    const userResult: users[] = await db
+      .select({
+        user_id: user_provider.user_id,
+        hos_code: user_provider.hos_code,
+        hos_name: user_provider.hos_name,
+        title: user_provider.title,
+        fname: user_provider.fname,
+        lname: user_provider.lname,
+      })
+      .from(user_provider);
     return userResult;
   },
 
   async dropdownUserVhv(): Promise<usersVhv[]> {
-    const userVhvResult: usersVhv[] = await db.select().from(user_provider_vhv);
+    const userVhvResult: usersVhv[] = await db
+      .select({
+        user_id: user_provider_vhv.user_id,
+        hos_code: user_provider_vhv.hos_code,
+        hos_name: user_provider_vhv.hos_name,
+        title: user_provider_vhv.title,
+        fname: user_provider_vhv.fname,
+        lname: user_provider_vhv.lname,
+      })
+      .from(user_provider_vhv);
     return userVhvResult;
   },
   // async dropdownฏoctor(): Promise<>

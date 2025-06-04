@@ -124,8 +124,9 @@ export const persons = mysqlTable(
 // title
 export const title_normalize = mysqlTable('title_normalize', {
   title_id: varchar('title_id', { length: 45 }).notNull().primaryKey(),
-  title_th: varchar('title_th', { length: 45 }).notNull(),
-  // title_en: varchar('title_en', { length: 45 }).notNull(),
+  title_th: varchar('title_th', { length: 45 }),
+  title_th_short: varchar('title_th_short', { length: 45 }),
+  gender: varchar('gender', { length: 3 }),
 });
 
 // guardian table

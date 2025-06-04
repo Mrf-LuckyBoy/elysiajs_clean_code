@@ -7,10 +7,18 @@ import {
   // RegisterFormSchema,
   NewRegisterFormDTO,
   NewRegisterFormSchema,
-  PersonDTO,
+  EditPersonFormSchema,
+  EditGuardianFormSchema,
+  editPersonDTO,
+  editGuardianDTO,
+  FormAddressSchema,
+  FormAddressDTO,
 } from '../model/person.model';
 import { getFormPerson } from '../usecase/get-allRegister';
 import { getPersonById } from '../usecase/get-register';
+import { editPerson } from '../usecase/edit-person';
+import { editGuardian } from '../usecase/edit-guardian';
+import { editAddress } from '../usecase/edit-address';
 
 export const personController = {
   createPerson: {
@@ -82,6 +90,7 @@ export const personController = {
             t.Object({
               pid: t.String(),
               hn: t.String(),
+              // idcard: t.String(),
               title: t.String(),
               fullname: t.String(),
               // birth: t.Date(),
@@ -118,10 +127,6 @@ export const personController = {
           phone: persons.phone,
           consent: persons.consent,
         }));
-        // .filter((persons) =>
-        //   persons.fullname.toLowerCase().includes(searchName)
-        // );
-
         const totalPages = Math.ceil(totalItems / limit);
 
         set.status = 200;
@@ -175,16 +180,61 @@ export const personController = {
           idcard: persons.idcard,
           title: persons.title,
           fullname: `${persons.first_name} ${persons.last_name}`,
-          first_nmae: persons.first_name,
+          first_name: persons.first_name,
           last_name: persons.last_name,
-          dirth: persons.birth,
+          birth: persons.birth,
           age: persons.age,
-          boot_type: persons.blood_type,
+          blood_type: persons.blood_type,
           phone: persons.phone,
           consent: persons.consent,
+          inscl_code: persons.inscl_code,
+          email: persons.email,
+          medical_history: {
+            chronic_disease: persons.medical_history?.chronic_disease,
+            allergy_history: persons.medical_history?.allergy_history,
+            allergy_symptoms: persons.medical_history?.allergy_symptoms,
+          },
+          address: {
+            hcode: {
+              fullAddress: persons.address?.fullAddress,
+              street: persons.address?.street,
+              moo: persons.address?.moo,
+              subdistname: persons.address_code?.subdistname,
+              distname: persons.address_code?.distname,
+              provname: persons.address_code?.provname,
+            },
+            hcode_cid: {
+              fullAddress: persons.address?.fullAddress,
+              street: persons.address?.street,
+              moo: persons.address?.moo,
+              subdistname: persons.address_code?.subdistname,
+              distname: persons.address_code?.distname,
+              provname: persons.address_code?.provname,
+            },
+          },
+          guardians: persons.guardians
+            ? {
+                guardian_id: persons.guardians.guardian_id,
+                relationships: persons.guardians.relationships,
+                idcard: persons.guardians.idcard,
+                title: persons.guardians.title,
+                first_name: persons.guardians.first_name,
+                last_name: persons.guardians.last_name,
+                birth: persons.guardians.birth,
+                age: persons.guardians.age,
+                phone: persons.guardians.phone,
+                hcode: persons.guardians.hcode,
+                fullAddress: persons.guardians.fullAddress,
+                street: persons.address?.street,
+                moo: persons.address?.moo,
+                subdistname: persons.address_code?.subdistname,
+                distname: persons.address_code?.distname,
+                provname: persons.address_code?.provname,
+              }
+            : null,
         }));
-        set.status = 200;
 
+        set.status = 200;
         return {
           success: true,
           message: 'Fetched person successfully',
@@ -195,6 +245,104 @@ export const personController = {
         return HttpResponse.error(
           err instanceof Error ? err.message : 'Unexpected error'
         );
+      }
+    },
+  },
+  editFormPerson: {
+    Schema: {
+      body: EditPersonFormSchema,
+      response: {
+        201: t.Object({
+          success: t.Boolean(),
+          message: t.String(),
+          data: EditPersonFormSchema,
+        }),
+        400: HttpResponseSchema.badRequest(),
+        500: HttpResponseSchema.error(),
+      },
+      summary: 'to update person',
+      description: 'Update a person with person id.',
+      tags: ['Register'],
+    },
+    handler: async ({ body, set }: Context & { body: editPersonDTO }) => {
+      try {
+        const person = await editPerson(body);
+        set.status = 201;
+        return HttpResponse.success(person);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          set.status = 500;
+          return HttpResponse.error('some error detail');
+        } else {
+          set.status = 500;
+          return HttpResponse.error('Unexpected error');
+        }
+      }
+    },
+  },
+  editFormGuardian: {
+    Schema: {
+      body: EditGuardianFormSchema,
+      response: {
+        201: t.Object({
+          success: t.Boolean(),
+          message: t.String(),
+          data: EditGuardianFormSchema,
+        }),
+        400: HttpResponseSchema.badRequest(),
+        500: HttpResponseSchema.error(),
+      },
+      summary: 'to update guardian',
+      description: 'Update a guardian with guardian id.',
+      tags: ['Register'],
+    },
+    handler: async ({ body, set }: Context & { body: editGuardianDTO }) => {
+      try {
+        const person = await editGuardian(body);
+        set.status = 201;
+        return HttpResponse.success(person);
+      } catch (err: unknown) {
+        console.log(err);
+        if (err instanceof Error) {
+          set.status = 500;
+          return HttpResponse.error('some error detail');
+        } else {
+          set.status = 500;
+          return HttpResponse.error('Unexpected error');
+        }
+      }
+    },
+  },
+  editFormAddress: {
+    Schema: {
+      body: FormAddressSchema,
+      response: {
+        201: t.Object({
+          success: t.Boolean(),
+          message: t.String(),
+          data: FormAddressSchema,
+        }),
+        400: HttpResponseSchema.badRequest(),
+        500: HttpResponseSchema.error(),
+      },
+      summary: 'to update address',
+      description: 'Update a address with address id.',
+      tags: ['Register'],
+    },
+    handler: async ({ body, set }: Context & { body: FormAddressDTO }) => {
+      try {
+        const address = await editAddress(body);
+        set.status = 201;
+        return HttpResponse.success(address);
+      } catch (err: unknown) {
+        console.log(err);
+        if (err instanceof Error) {
+          set.status = 500;
+          return HttpResponse.error('some error detail');
+        } else {
+          set.status = 500;
+          return HttpResponse.error('Unexpected error');
+        }
       }
     },
   },

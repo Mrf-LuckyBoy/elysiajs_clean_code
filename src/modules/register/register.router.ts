@@ -16,4 +16,19 @@ export const personRoute = new Elysia({ prefix: '/person' })
     '/:pid',
     personController.getFormRegisterById.handler,
     personController.getFormRegisterById.Schema
+  )
+  .put(
+    '/',
+    personController.editFormPerson.handler,
+    personController.editFormPerson.Schema
+  )
+  .put(
+    '/guardian',
+    personController.editFormGuardian.handler,
+    personController.editFormGuardian.Schema
+  )
+  .put(
+    '/address',
+    personController.editFormAddress.handler,
+    personController.editFormAddress.Schema
   );

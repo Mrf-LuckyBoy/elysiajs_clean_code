@@ -35,6 +35,7 @@ export const authController = {
         set.status = 201;
         return HttpResponse.success(useable);
       } catch (err: unknown) {
+        console.error(err);
         if (err instanceof Error) {
           set.status = 500;
           return HttpResponse.error(err.message);

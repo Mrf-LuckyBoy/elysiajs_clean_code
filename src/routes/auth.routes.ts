@@ -16,9 +16,14 @@ const routesAuth = new Elysia({ prefix: 'api/v1' })
     }
 
     const decoded = await Jwt.verify(token);
-    if (!decoded) {
+    if (decoded === 'expired') {
       set.status = 401;
-      return HttpResponse.unauthorized('Invalid or expired token');
+      return HttpResponse.unauthorized('Token expired');
+    }
+
+    if (decoded === 'invalid' || !decoded) {
+      set.status = 401;
+      return HttpResponse.unauthorized('Invalid token');
     }
   })
   .use(personRoute)

@@ -2,14 +2,16 @@ import { t } from 'elysia';
 
 export interface TitleName {
   title_id: string;
-  title_th: string;
-  title_en: string;
+  title_th: string | null;
+  title_th_short: string | null;
+  gender: string | null;
 }
 
 export const TitleNormalizeSchema = t.Object({
   title_id: t.String({ maxLength: 45 }),
   title_th: t.String({ maxLength: 45 }),
-  title_en: t.String({ maxLength: 45 }),
+  title_th_short: t.String({ maxLength: 45 }),
+  gender: t.String({ maxLength: 45 }),
 });
 
 export interface AddressCode {
@@ -52,17 +54,17 @@ export const RelationshipSchema = t.Object({
 export interface users {
   user_id: string;
   hos_code: string;
-  hos_name: string;
-  title: string;
-  fname: string;
-  lname: string;
+  hos_name: string | null;
+  title: string | null;
+  fname: string | null;
+  lname: string | null;
 }
 
 export interface usersVhv {
   user_id: string;
   hos_code: string;
-  hos_name: string;
-  title: string;
-  fname: string;
-  lname: string;
+  hos_name: string | null;
+  title: string | null;
+  fname: string | null;
+  lname: string | null;
 }

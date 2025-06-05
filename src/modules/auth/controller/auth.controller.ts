@@ -35,6 +35,7 @@ export const authController = {
         set.status = 201;
         return HttpResponse.success(useable);
       } catch (err: unknown) {
+        console.error(err);
         if (err instanceof Error) {
           set.status = 500;
           return HttpResponse.error(err.message);
@@ -101,6 +102,38 @@ export const authController = {
       }
     },
   },
+  logoutRevmoveCookie: {
+    Schema: {
+      response: {
+        201: t.Object({
+          success: t.Boolean(),
+          message: t.String(),
+          data: t.String(),
+        }),
+        400: HttpResponseSchema.badRequest(),
+        500: HttpResponseSchema.error(),
+      },
+      summary: 'Logout',
+      description: 'Logout remove cookie',
+      tags: ['Auth'],
+    },
+    handler: async ({ cookie: { auth_token }, set }: Context) => {
+      try {
+        auth_token.remove();
+        set.status = 200;
+        return HttpResponse.success('Logout successful');
+      } catch (err: unknown) {
+        console.error(err);
+        if (err instanceof Error) {
+          set.status = 500;
+          return HttpResponse.error(err.message);
+        } else {
+          set.status = 500;
+          return HttpResponse.error('Unexpected error');
+        }
+      }
+    },
+  },
   updateCid: {
     Schema: {
       body: t.Object({
@@ -127,9 +160,14 @@ export const authController = {
       body: { cid_hash: string; cid: string };
     }) => {
       try {
+        if (!body.cid_hash || !body.cid) {
+          set.status = 400;
+          return HttpResponse.badRequest(
+            'Both cid_hash and cid are required to update'
+          );
+        }
         await UpdateCidFirstTime(body.cid_hash, body.cid);
-        set.status = 200;
-        return HttpResponse.success('update success');
+        return HttpResponse.success('Update successful');
       } catch (err: unknown) {
         if (err instanceof Error) {
           set.status = 500;

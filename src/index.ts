@@ -1,28 +1,16 @@
 import { Elysia } from 'elysia';
 import logger from 'logixlysia';
-import swagger from '@elysiajs/swagger';
+import { swag } from '@/plugins/swagger.plugin';
 import { ENV } from '@/config/env';
 import { AppRoutes } from './routes/index.routes';
 import { AppAuthRoutes } from './routes/auth.routes';
 import { HttpResponse } from '@/core/http.response';
-import { corsMiddleware } from '@/core/cors';
+import { corsMiddleware } from '@/plugins/cors.plugin';
 
 const app = new Elysia()
   .use(logger())
   .use(corsMiddleware)
-  .use(
-    swagger({
-      path: 'api/swagger',
-      autoDarkMode: true,
-      documentation: {
-        info: {
-          title: '🦊 parent care api doc',
-          description: 'this is swagger document api',
-          version: '1.0.0-alpha',
-        },
-      },
-    })
-  )
+  .use(swag)
   .use(AppRoutes)
   .use(AppAuthRoutes)
   .onError(({ code, error }) => {

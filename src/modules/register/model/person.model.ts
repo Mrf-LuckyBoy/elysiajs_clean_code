@@ -296,3 +296,156 @@ export const NewRegisterFormSchema = t.Object({
   address_cid_string: t.String(),
   address_guardian_string: t.String(),
 });
+
+export interface PersonViewDTO {
+  pid: string;
+  med_id: string;
+  hcode_cid: string;
+  sex: string; // likely 'M' or 'F', but just string as per varchar(1)
+  idcard: string;
+  title: string;
+  first_name: string;
+  last_name: string;
+  birth: string;
+  phone: string | null;
+  blood_type: string;
+  consent: boolean;
+  hcode: string;
+  guardian: string;
+  village: string;
+  hn: string | null;
+  inscl_code: string;
+  email: string | null;
+  age: string;
+  address?: AddressDTO_1;
+  guardians?: GuardianByIdDTO;
+  relationship: string;
+  address_code?: Address_code_1DTO;
+  medical_history?: MedicalHistory_1DTO;
+  inscl_normalize?: InsclDTO;
+}
+
+export interface InsclDTO {
+  insclNameTh: string;
+}
+
+export interface editPersonDTO {
+  pid: string;
+  sex: string;
+  title: string;
+  first_name: string;
+  last_name: string;
+  birth: Date;
+  blood_type: string;
+  phone: string;
+  med_id: string;
+  chronic_disease: string;
+  allergy_history: string;
+  allergy_symptoms: string;
+}
+
+export const EditPersonFormSchema = t.Object({
+  pid: t.String(),
+  sex: t.String(),
+  title: t.String(),
+  first_name: t.String(),
+  last_name: t.String(),
+  birth: t.String({ format: 'date-time', default: '2001-11-11' }),
+  blood_type: t.String(),
+  phone: t.String(),
+  med_id: t.String(),
+  chronic_disease: t.String(),
+  allergy_history: t.String(),
+  allergy_symptoms: t.String(),
+});
+export interface editGuardianDTO {
+  guardian_id: string;
+  idcard: string;
+  relationships: string;
+  title: string;
+  first_name: string;
+  last_name: string;
+  birth: Date;
+  phone: string;
+  hcode: string;
+  hno: string;
+  moo: string;
+  street: string;
+  villcode: string;
+}
+
+export const EditGuardianFormSchema = t.Object({
+  guardian_id: t.String(),
+  idcard: t.String(),
+  relationships: t.String(),
+  title: t.String(),
+  first_name: t.String(),
+  last_name: t.String(),
+  birth: t.String({ format: 'date-time', default: '2001-11-11' }),
+  phone: t.String(),
+  hcode: t.String(),
+  hno: t.String(),
+  moo: t.String(),
+  street: t.String(),
+  villcode: t.String(),
+});
+
+export interface FormAddressDTO {
+  hcode: string;
+  hcode_cid: string;
+  hno: string;
+  village: string;
+  street: string;
+  moo: string;
+  villcode: string;
+}
+
+export const FormAddressSchema = t.Object({
+  hcode: t.String(),
+  hno: t.String(),
+  village: t.String(),
+  street: t.String(),
+  moo: t.String(),
+  villcode: t.String(),
+});
+export interface AddressDTO_1 {
+  street: string;
+  moo: string;
+  fullAddress: string;
+}
+export interface ListPersonDTO {
+  pid: string;
+  hn: string;
+  idcard: string;
+  title: string;
+  first_name: string;
+  last_name: string;
+  birth: Date;
+  phone: string;
+  age: string;
+  consent: boolean;
+}
+export interface GuardianByIdDTO {
+  guardian_id: string;
+  idcard: string;
+  relationships: string;
+  title: string;
+  first_name: string;
+  last_name: string;
+  birth: string;
+  phone: string;
+  hcode: string;
+  age: string;
+  fullAddress: string;
+}
+export interface Address_code_1DTO {
+  provname: string;
+  distname: string;
+  subdistname: string;
+}
+
+export interface MedicalHistory_1DTO {
+  chronic_disease: string | null;
+  allergy_history: string | null;
+  allergy_symptoms: string | null;
+}

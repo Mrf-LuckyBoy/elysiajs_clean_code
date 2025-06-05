@@ -1,18 +1,23 @@
 import { ScreeningRepository } from '../infra/screening.repository';
 import { UpdateScreeningFormDTO } from '../model/screening.model';
 
-export async function updateScreeningFormData(formID: string, data: UpdateScreeningFormDTO): Promise<void> {
+export async function updateScreeningFormData(
+  formID: string,
+  data: UpdateScreeningFormDTO,
+  imageID: string
+): Promise<void> {
   const existingForm = await ScreeningRepository.findScreeningFormById(formID);
   if (!existingForm) {
     throw new Error('Screening form not found');
   }
+
+  imageID = '123';
   const abnormalSum = calculateabnormalSum(data);
   const currentTime = new Date();
   const updateData: UpdateScreeningFormDTO = {
     ...data,
     elderly_sum: abnormalSum.toString(),
-    // sum_mini_cog:
-    //   data.word_recall !== undefined && data.clock_draw !== undefined ? data.word_recall + data.clock_draw : undefined, //ให้ user คำนวนเองก่อน
+    image_id: imageID,
     updated_at: currentTime,
   };
 
@@ -39,7 +44,7 @@ function calculateabnormalSum(data: UpdateScreeningFormDTO): number {
   if (data.elderly_7) sum++;
   if (data.elderly_8_1) sum++;
   if (data.elderly_8_2) sum++;
-  if (data.elderly_9) sum--; //ข้อนี้ถ้าตอบ true หมายถึงความคิดความจำปกติ
+  if (data.elderly_9) sum--; //ข้อนี้ถ้าตอบ true หมายถึงความคิดความจำปกติ ไม่นับเป็นความผิดปกติ
 
   return sum;
 }
@@ -77,4 +82,11 @@ function checkFormCompletion(data: UpdateScreeningFormDTO): boolean {
   }
 
   return true;
+}
+
+export async function uploadToMinIOImage(imageFile: File | undefined): Promise<string> {
+  if (imageFile) {
+    return 'imageID';
+  }
+  return '';
 }

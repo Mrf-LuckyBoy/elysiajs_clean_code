@@ -10,7 +10,7 @@ import {
   MockupData,
 } from '../model/screening.model';
 import { getScreeningFormJson } from './get-screening-form-json';
-
+import data from '@/mockdata/form.json';
 export async function getScreeningFormDetails(
   formID: string,
   query: GetFormDetailsQuery
@@ -42,28 +42,47 @@ export async function getScreeningFormDetails(
           social_3: formDetails.social_3,
         } as SocialSectionDTO;
       case '2':
-        const elderlyData: ElderlySectionDTO = {
-          elderly_1_1: formDetails.elderly_1_1,
-          elderly_1_2: formDetails.elderly_1_2,
-          elderly_2_1: formDetails.elderly_2_1,
-          elderly_2_2: formDetails.elderly_2_2,
-          elderly_3: formDetails.elderly_3,
-          elderly_4: formDetails.elderly_4,
-          elderly_5_1: formDetails.elderly_5_1,
-          elderly_5_2: formDetails.elderly_5_2,
-          elderly_6: formDetails.elderly_6,
-          elderly_7: formDetails.elderly_7,
-          elderly_8_1: formDetails.elderly_8_1,
-          elderly_8_2: formDetails.elderly_8_2,
-          elderly_9: formDetails.elderly_9,
-          elderly_sum: formDetails.elderly_sum,
-        };
+        const hasData = [
+          formDetails.elderly_1_1,
+          formDetails.elderly_1_2,
+          formDetails.elderly_2_1,
+          formDetails.elderly_2_2,
+          formDetails.elderly_3,
+          formDetails.elderly_4,
+          formDetails.elderly_5_1,
+          formDetails.elderly_5_2,
+          formDetails.elderly_6,
+          formDetails.elderly_7,
+          formDetails.elderly_8_1,
+          formDetails.elderly_8_2,
+          formDetails.elderly_9,
+        ].some((field) => field !== null && field !== undefined);
+        if (!hasData) {
+          return { MOCKUPDATA: data.data, elderly_sum: '0' } as MockupData;
+        } else {
+          const elderlyData: ElderlySectionDTO = {
+            elderly_1_1: formDetails.elderly_1_1,
+            elderly_1_2: formDetails.elderly_1_2,
+            elderly_2_1: formDetails.elderly_2_1,
+            elderly_2_2: formDetails.elderly_2_2,
+            elderly_3: formDetails.elderly_3,
+            elderly_4: formDetails.elderly_4,
+            elderly_5_1: formDetails.elderly_5_1,
+            elderly_5_2: formDetails.elderly_5_2,
+            elderly_6: formDetails.elderly_6,
+            elderly_7: formDetails.elderly_7,
+            elderly_8_1: formDetails.elderly_8_1,
+            elderly_8_2: formDetails.elderly_8_2,
+            elderly_9: formDetails.elderly_9,
+            elderly_sum: formDetails.elderly_sum,
+          };
 
-        const mockupData = getScreeningFormJson(elderlyData);
-        return mockupData as MockupData;
+          const mockupData = getScreeningFormJson(elderlyData);
+          return mockupData as MockupData;
+        }
       case '3':
         return {
-          visit_screening: formDetails.visit_screening,
+          visit_screening: formatDate(formDetails.visit_screening || null),
           image_id: formDetails.image_id,
           word_recall: formDetails.word_recall,
           clock_draw: formDetails.clock_draw,
@@ -91,4 +110,15 @@ export async function getScreeningFormDetails(
     console.error('Error getting screening form details:', error);
     throw new Error('เกิดข้อผิดพลาดในการดึงข้อมูล screening form details: ' + error);
   }
+}
+
+function formatDate(data: Date | null): string | null {
+  if (!data) {
+    return null;
+  }
+  const d = new Date(data);
+  const day = d.getDate().toString().padStart(2, '0');
+  const month = (d.getMonth() + 1).toString().padStart(2, '0');
+  const year = (d.getFullYear() + 543).toString();
+  return `${day}/${month}/${year}`;
 }

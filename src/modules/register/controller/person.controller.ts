@@ -156,11 +156,7 @@ export const personController = {
         const page = Number(query.page) || 1;
         const limit = Number(query.limit) || 10;
 
-        const { data, totalItems } = await getFormPerson(
-          searchName,
-          page,
-          limit
-        );
+        const { data, totalItems } = await getFormPerson(searchName, page, limit);
 
         const personList = data.map((persons) => ({
           pid: persons.pid,
@@ -187,9 +183,7 @@ export const personController = {
         };
       } catch (err: unknown) {
         set.status = 500;
-        return HttpResponse.error(
-          err instanceof Error ? err.message : 'Unexpected error'
-        );
+        return HttpResponse.error(err instanceof Error ? err.message : 'Unexpected error');
       }
     },
   },
@@ -286,9 +280,7 @@ export const personController = {
         };
       } catch (err: unknown) {
         set.status = 500;
-        return HttpResponse.error(
-          err instanceof Error ? err.message : 'Unexpected error'
-        );
+        return HttpResponse.error(err instanceof Error ? err.message : 'Unexpected error');
       }
     },
   },

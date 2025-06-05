@@ -15,8 +15,10 @@ import {
   screenings,
   title_normalize,
   user_provider,
+  user_provider_vhv,
 } from '@/db/schema';
 import { eq, sql, and } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/mysql-core';
 
 export type InsertScreening = typeof screenings.$inferInsert;
 export type SelectScreening = typeof screenings.$inferSelect;
@@ -82,7 +84,7 @@ export const ScreeningRepository = {
         screening_form_id: screening_form.screening_form_id,
         sex: persons.sex,
         cid: persons.idcard,
-        title: title_normalize.title_th,
+        title: sql<string>`COALESCE(${title_normalize.title_th}, '')`,
         first_name: persons.first_name,
         last_name: persons.last_name,
         //address
@@ -114,7 +116,7 @@ export const ScreeningRepository = {
         elderly_9: screening_form.elderly_9,
         elderly_sum: screening_form.elderly_sum,
         //sum minicog
-        visit_screening: screenings.visit_date,
+        visit_screening: screening_form.visit_screening,
         image_id: screening_form.image_id,
         word_recall: screening_form.word_recall,
         clock_draw: screening_form.clock_draw,
@@ -123,7 +125,7 @@ export const ScreeningRepository = {
       .from(screening_form)
       .leftJoin(screenings, eq(screening_form.screening_form_id, screenings.screening_form_id))
       .innerJoin(persons, eq(persons.pid, screenings.patient_id))
-      .innerJoin(title_normalize, eq(title_normalize.title_id, persons.title))
+      .leftJoin(title_normalize, eq(title_normalize.title_id, persons.title))
       .leftJoin(address, eq(address.hcode, persons.hcode))
       .leftJoin(address_code, eq(address.villcode, address_code.addresscode))
       .where(eq(screening_form.screening_form_id, formID))
@@ -158,6 +160,8 @@ export const ScreeningRepository = {
     return result;
   },
   async findScreeningByVisitID(visitID: string, hosCode: string): Promise<SqlScreeningByVisitIDResponse | null> {
+    const vhvAssign = alias(user_provider_vhv, 'vhv_assign');
+    const officialAssign = alias(user_provider, 'official_assign');
     const result = await db
       .select({
         visit_id: screenings.visit_id,
@@ -176,12 +180,27 @@ export const ScreeningRepository = {
         provider_fname: user_provider.fname,
         provider_lname: user_provider.lname,
         screening_form_id: screenings.screening_form_id,
+        assign_id: screenings.assign_id,
+        assign_id_vhv: screenings.assign_id_vhv,
         is_self: screenings.is_self,
         is_assign_official: screenings.is_assign_official,
         is_assign_vhv: screenings.is_assign_vhv,
         is_assign_vhv_service_unit: screenings.is_assign_vhv_service_unit,
         is_assgin_official_service_unit: screenings.is_assgin_official_service_unit,
-
+        assign_fname: sql<string>`CASE
+        WHEN ${screenings.assign_id_vhv} IS NOT NULL THEN
+          COALESCE(vhv_assign.fname, '')
+        WHEN ${screenings.assign_id} IS NOT NULL THEN
+          COALESCE(official_assign.fname, '')
+        ELSE NULL
+      END`,
+        assign_lname: sql<string>`CASE
+        WHEN ${screenings.assign_id_vhv} IS NOT NULL THEN
+          COALESCE(vhv_assign.lname, '')
+        WHEN ${screenings.assign_id} IS NOT NULL THEN
+          COALESCE(official_assign.lname, '')
+        ELSE NULL
+      END`,
         address: sql<string>`CONCAT(
         COALESCE(${address.hno}, ''), ' ',
         COALESCE(${address.village}, ''), ' ',
@@ -199,6 +218,9 @@ export const ScreeningRepository = {
       //ที่อยู่
       .leftJoin(address, eq(persons.hcode, address.hcode))
       .leftJoin(address_code, eq(address.villcode, address_code.addresscode))
+      .leftJoin(vhvAssign, eq(vhvAssign.user_id, screenings.assign_id_vhv))
+      .leftJoin(officialAssign, eq(officialAssign.user_id, screenings.assign_id))
+
       .where(and(eq(screenings.visit_id, visitID), eq(user_provider.hos_code, hosCode)))
       .limit(1);
 

@@ -4,7 +4,6 @@ import {
   PaginationSchema,
   CreateScreeningRequestDTO,
   ScreeningSchema,
-  UpdateScreeningFormDTO,
   UpdateScreeningFormSchema,
   UpdateVisitDateRequestDTO,
   UpdateVisitDateRequestSchema,
@@ -19,10 +18,11 @@ import {
   // GetScreeningFormDetailsSchema,
   GetFormDetailsQuery,
   mockupDataSchema,
+  UpdateScreeningFormRequestDTO,
 } from '../model/screening.model';
 import { createScreening } from '../usecase/create-screening';
 import { HttpResponse, HttpResponseSchema } from '@/core/http.response';
-import { updateScreeningFormData } from '../usecase/update-screening-form';
+import { updateScreeningFormData, uploadToMinIOImage } from '../usecase/update-screening-form';
 import { getScreeningList } from '../usecase/get-screening-list';
 import { getScreeningByVisitID } from '../usecase/get-screening-by-id';
 import { updateVisitDate } from '../usecase/update-visit-date';
@@ -159,11 +159,13 @@ export const screeningController = {
           success: t.Boolean(),
           message: t.String(),
         }),
+        400: HttpResponseSchema.badRequest(),
         500: HttpResponseSchema.error(),
       },
       summary: 'Update screening data',
       description: 'Update screening record with the specified data.',
       tags: ['Screening'],
+      type: 'multipart/form-data',
     },
     handler: async ({
       params,
@@ -171,11 +173,12 @@ export const screeningController = {
       set,
     }: Context & {
       params: { form_id: string };
-      body: UpdateScreeningFormDTO;
+      body: UpdateScreeningFormRequestDTO;
     }) => {
       try {
+        const imageID = await uploadToMinIOImage(body.image_file);
         const formID = params.form_id;
-        await updateScreeningFormData(formID, body);
+        await updateScreeningFormData(formID, body, imageID);
         set.status = 201;
         return {
           success: true,
@@ -183,6 +186,10 @@ export const screeningController = {
         };
       } catch (err: unknown) {
         if (err instanceof Error) {
+          if (err.message.includes('Invalid image file')) {
+            set.status = 400;
+            return HttpResponse.badRequest(`"ประเภทไฟล์ไม่ถูกต้อง"`);
+          }
           set.status = 500;
           return HttpResponse.error(err.message);
         } else {

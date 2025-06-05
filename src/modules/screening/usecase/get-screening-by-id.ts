@@ -17,6 +17,8 @@ export async function getScreeningByVisitID(
   const decryptedProviderLname = Crypto.decrypt(screening.provider_lname || '');
   const decryptedIDCard = Crypto.decrypt(screening.person_cid || '');
   const maskedIDCard = decryptedIDCard.replace(/.(?=.{4})/g, 'X');
+  const decryptedAssignFname = screening.assign_fname ? Crypto.decrypt(screening.assign_fname) : '';
+  const decryptedAssignLname = screening.assign_lname ? Crypto.decrypt(screening.assign_lname) : '';
   const date = new Date(screening.visit_date.getTime() + 7 * 60 * 60 * 1000);
   const calulateAge = (birthDate: Date | null): string => {
     if (!birthDate) {
@@ -55,6 +57,20 @@ export async function getScreeningByVisitID(
     screening.sex = 'หญิง';
   }
 
+  let typeAssign = '';
+
+  if (screening.is_self) {
+    typeAssign = 'is_self';
+  } else if (screening.is_assign_official) {
+    typeAssign = 'is_assign_official';
+  } else if (screening.is_assign_vhv) {
+    typeAssign = 'is_assign_vhv';
+  } else if (screening.is_assign_vhv_service_unit) {
+    typeAssign = 'is_assign_vhv_service_unit';
+  } else if (screening.is_assgin_official_service_unit) {
+    typeAssign = 'is_assgin_official_service_unit';
+  }
+
   const result: GetScreeningByVisitIDDTO = {
     visit_id: screening.visit_id,
     person_cid: maskedIDCard || '',
@@ -69,11 +85,8 @@ export async function getScreeningByVisitID(
     reason_edit: screening.reason_edit || '',
     appointment_reason: screening.appointment_reason,
     provider_name: `${screening.provider_title} ${decryptedProviderFname} ${decryptedProviderLname}`,
-    is_self: screening.is_self,
-    is_assign_official: screening.is_assign_official,
-    is_assign_vhv: screening.is_assign_vhv,
-    is_assign_vhv_service_unit: screening.is_assign_vhv_service_unit,
-    is_assgin_official_service_unit: screening.is_assgin_official_service_unit,
+    type_assign: typeAssign,
+    assign_name: `${decryptedAssignFname} ${decryptedAssignLname}`,
     screening_form_id: screening.screening_form_id,
   };
 

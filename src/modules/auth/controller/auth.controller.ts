@@ -162,9 +162,7 @@ export const authController = {
       try {
         if (!body.cid_hash || !body.cid) {
           set.status = 400;
-          return HttpResponse.badRequest(
-            'Both cid_hash and cid are required to update'
-          );
+          return HttpResponse.badRequest('Both cid_hash and cid are required to update');
         }
         await UpdateCidFirstTime(body.cid_hash, body.cid);
         return HttpResponse.success('Update successful');

@@ -135,6 +135,31 @@ export interface UpdateScreeningFormDTO {
   sum_mini_cog?: number;
   updated_at?: Date;
 }
+export interface UpdateScreeningFormRequestDTO {
+  consent_by?: string;
+  is_alone?: boolean;
+  social_1?: boolean;
+  social_2?: boolean;
+  social_3?: boolean;
+  elderly_1_1?: boolean;
+  elderly_1_2?: boolean;
+  elderly_2_1?: boolean;
+  elderly_2_2?: boolean;
+  elderly_3?: boolean;
+  elderly_4?: boolean;
+  elderly_5_1?: boolean;
+  elderly_5_2?: boolean;
+  elderly_6?: boolean;
+  elderly_7?: boolean;
+  elderly_8_1?: boolean;
+  elderly_8_2?: boolean;
+  elderly_9?: boolean;
+  visit_screening?: Date;
+  image_file?: File; // ไฟล์ที่ upload
+  word_recall?: number;
+  clock_draw?: number;
+  sum_mini_cog?: number;
+}
 
 export const UpdateScreeningFormSchema = t.Object({
   consent_by: t.Optional(t.String()),
@@ -157,7 +182,7 @@ export const UpdateScreeningFormSchema = t.Object({
   elderly_9: t.Optional(t.Boolean()),
   elderly_sum: t.Optional(t.String()),
   visit_screening: t.Optional(t.Date({ format: 'date' })),
-  image_id: t.Optional(t.String()),
+  image_id: t.Optional(t.File()),
   word_recall: t.Optional(t.Number()),
   clock_draw: t.Optional(t.Number()),
   sum_mini_cog: t.Optional(t.Number()),
@@ -506,11 +531,8 @@ export interface GetScreeningByVisitIDDTO {
   reason_edit: string;
   appointment_reason: string;
   provider_name: string;
-  is_self: boolean;
-  is_assign_official: boolean;
-  is_assign_vhv: boolean;
-  is_assign_vhv_service_unit: boolean;
-  is_assgin_official_service_unit: boolean;
+  type_assign: string;
+  assign_name?: string | null;
   screening_form_id: string;
 }
 
@@ -528,11 +550,8 @@ export const GetScreeningByVisitIDSchema = t.Object({
   reason_edit: t.String(),
   appointment_reason: t.String(),
   provider_name: t.String(),
-  is_self: t.Boolean(),
-  is_assign_official: t.Boolean(),
-  is_assign_vhv: t.Boolean(),
-  is_assign_vhv_service_unit: t.Boolean(),
-  is_assgin_official_service_unit: t.Boolean(),
+  type_assign: t.String(),
+  assign_name: t.Nullable(t.String()),
   screening_form_id: t.String(),
 });
 
@@ -553,12 +572,16 @@ export interface SqlScreeningByVisitIDResponse {
   provider_title: string | null;
   provider_fname: string | null;
   provider_lname: string | null;
+  assign_fname: string | null;
+  assign_lname: string | null;
   is_self: boolean;
   is_assign_official: boolean;
   is_assign_vhv: boolean;
   is_assign_vhv_service_unit: boolean;
   is_assgin_official_service_unit: boolean;
   screening_form_id: string;
+  assign_id: string | null;
+  assign_id_vhv: string | null;
 }
 
 export interface UpdateVisitDateRequestDTO {

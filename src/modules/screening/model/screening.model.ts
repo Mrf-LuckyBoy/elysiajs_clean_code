@@ -258,13 +258,11 @@ export interface MiniCogDTO {
 }
 
 export interface GetFormDetailsQuery {
-  part?: '0' | '1' | '2' | '3';
+  part?: '' | '1' | '2' | '3';
 }
 
 export const GetFormDetailsQuerySchema = t.Object({
-  part: t.Optional(
-    t.Union([t.Literal('0'), t.Literal('1'), t.Literal('2'), t.Literal('3')])
-  ),
+  part: t.Optional(t.Union([t.Literal(''), t.Literal('1'), t.Literal('2'), t.Literal('3')])),
 });
 
 export const GetScreeningFormDetailsSchema = t.Object({
@@ -380,6 +378,7 @@ export interface MockupItem {
 
 export interface MockupData {
   MOCKUPDATA: MockupItem[];
+  elderly_sum: string;
 }
 
 export const answerSchema = t.Object({
@@ -402,6 +401,7 @@ export const mockupItemSchema = t.Object({
 
 export const mockupDataSchema = t.Object({
   MOCKUPDATA: t.Array(mockupItemSchema),
+  elderly_sum: t.String(),
 });
 
 export interface SqlScreeningResponse {

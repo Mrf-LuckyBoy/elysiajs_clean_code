@@ -11,8 +11,8 @@ export async function updateScreeningFormData(formID: string, data: UpdateScreen
   const updateData: UpdateScreeningFormDTO = {
     ...data,
     elderly_sum: abnormalSum.toString(),
-    sum_mini_cog:
-      data.word_recall !== undefined && data.clock_draw !== undefined ? data.word_recall + data.clock_draw : undefined,
+    // sum_mini_cog:
+    //   data.word_recall !== undefined && data.clock_draw !== undefined ? data.word_recall + data.clock_draw : undefined, //ให้ user คำนวนเองก่อน
     updated_at: currentTime,
   };
 
@@ -39,7 +39,7 @@ function calculateabnormalSum(data: UpdateScreeningFormDTO): number {
   if (data.elderly_7) sum++;
   if (data.elderly_8_1) sum++;
   if (data.elderly_8_2) sum++;
-  if (data.elderly_9) sum++;
+  if (data.elderly_9) sum--; //ข้อนี้ถ้าตอบ true หมายถึงความคิดความจำปกติ
 
   return sum;
 }

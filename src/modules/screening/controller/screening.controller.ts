@@ -16,7 +16,7 @@ import {
   MiniCogSchema,
   GetFormDetailsQuerySchema,
   PersonalDetailsSchema,
-  GetScreeningFormDetailsSchema,
+  // GetScreeningFormDetailsSchema,
   GetFormDetailsQuery,
   mockupDataSchema,
 } from '../model/screening.model';
@@ -93,7 +93,7 @@ export const screeningController = {
         201: t.Object({
           success: t.Boolean(),
           data: t.Union([
-            GetScreeningFormDetailsSchema,
+            // GetScreeningFormDetailsSchema,
             PersonalDetailsSchema,
             SocialSectionSchema,
             ElderlySectionSchema,

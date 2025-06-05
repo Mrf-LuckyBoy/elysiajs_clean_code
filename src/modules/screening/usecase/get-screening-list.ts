@@ -5,6 +5,7 @@ import {
   PaginationResponse,
   ScreeningListResponseDTO,
   SqlScreeningResponse,
+  StatusCounts,
 } from '../model/screening.model';
 import { Crypto } from '@/core/crypto';
 
@@ -24,10 +25,13 @@ export async function getScreeningList(
           total: 0,
           page: query.page || 1,
           limit: query.limit || 10,
+          statusCounts: { waiting: 0, draft: 0, completed: 0 },
         },
         message: 'Data not found',
       };
     }
+
+    const statusCounts = calculateStatusCounts(rawScreeningList);
 
     let filteredRawData = applyFilters(rawScreeningList, query);
     let screeningList = filteredRawData.map(convertToDTO);
@@ -48,6 +52,7 @@ export async function getScreeningList(
         total,
         page,
         limit,
+        statusCounts,
       },
       message: 'Data fetched successfully',
     };
@@ -60,6 +65,7 @@ export async function getScreeningList(
         total: 0,
         page: query.page || 1,
         limit: query.limit || 10,
+        statusCounts: { waiting: 0, draft: 0, completed: 0 },
       },
       message: 'Failed to fetch screening list',
     };
@@ -128,4 +134,18 @@ function applyFilters(screeningList: SqlScreeningResponse[], query: PaginationQu
   });
 
   return filteredData;
+}
+
+function calculateStatusCounts(screeningList: SqlScreeningResponse[]): StatusCounts {
+  const counts: StatusCounts = { waiting: 0, draft: 0, completed: 0 };
+  screeningList.forEach((item) => {
+    if (item.status_screening === 'รอบันทึก') {
+      counts.waiting += 1;
+    } else if (item.status_screening === 'บันทึกร่าง') {
+      counts.draft += 1;
+    } else if (item.status_screening === 'เสร็จสิ้น') {
+      counts.completed += 1;
+    }
+  });
+  return counts;
 }

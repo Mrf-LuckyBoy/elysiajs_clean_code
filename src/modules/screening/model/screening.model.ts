@@ -449,6 +449,12 @@ export const ScreeningListResponseSchema = t.Object({
   screening_form_id: t.String(),
 });
 
+export interface StatusCounts {
+  waiting: number;
+  draft: number;
+  completed: number;
+}
+
 export interface PaginationQuery {
   page?: number;
   limit?: number;
@@ -465,9 +471,16 @@ export interface PaginationResponse<T> {
     total: number;
     page: number;
     limit: number;
+    statusCounts?: StatusCounts;
   };
   message: string;
 }
+
+export const StatusCountsSchema = t.Object({
+  waiting: t.Number(),
+  draft: t.Number(),
+  completed: t.Number(),
+});
 
 export const PaginationSchema = t.Object({
   page: t.Optional(t.Number({ minimum: 1, default: 1 })),
@@ -476,6 +489,7 @@ export const PaginationSchema = t.Object({
   filter: t.Optional(t.String()),
   status: t.Optional(t.String()),
   date: t.Optional(t.String({ format: 'date' })),
+  statusCounts: t.Optional(StatusCountsSchema),
 });
 
 export interface GetScreeningByVisitIDDTO {

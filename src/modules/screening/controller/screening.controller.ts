@@ -203,6 +203,13 @@ export const screeningController = {
             total: t.Number(),
             page: t.Number(),
             limit: t.Number(),
+            statusCounts: t.Optional(
+              t.Object({
+                waiting: t.Number(),
+                draft: t.Number(),
+                completed: t.Number(),
+              })
+            ),
           }),
           message: t.String(),
         }),

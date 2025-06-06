@@ -191,4 +191,14 @@ export const db = drizzle(pool, { schema, mode: 'default' });
     - commit and push `dev-migration` to make it sync to with database
 ---
 
+## container for local test
+1. database in this sample maridb
+```bash
+docker run -d --name mariadb-container -e MARIADB_ROOT_PASSWORD=yourpassword -e MARIADB_DATABASE=yourdb -e MARIADB_USER=youruser -e MARIADB_PASSWORD=youruserpassword -p 3306:3306 mariadb:latest
+```
+2. redis
+```bash
+docker run -d --name redis -p 6379:6379 redis:7-alpine redis-server --requirepass your_redis_password
+```
+
 

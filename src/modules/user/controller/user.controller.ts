@@ -1,9 +1,10 @@
-import { Cookie, t } from 'elysia';
+import { t } from 'elysia';
 import { getUserById } from '../usecase/get-user';
 import { createUser } from '../usecase/create-user';
 import { getUsers } from '../usecase/gets-user';
 import { updateUser } from '../usecase/update-user';
 import { deleteUser } from '../usecase/delete-user';
+import { redisService } from '@/core/redis';
 
 export const userController = {
   gets: {
@@ -43,7 +44,16 @@ export const userController = {
       tags: ['User'],
     },
     handler: async ({ params }: { params: { id: string } }) => {
+      const checkCache = await redisService.getCache(`${params.id}`);
+      if (checkCache) {
+        return { success: true, data: JSON.parse(checkCache) };
+      }
       const user = await getUserById(params.id);
+      await redisService.setCache(
+        `${params.id}`,
+        JSON.stringify(user),
+        60 * 60
+      );
       return { success: true, data: user };
     },
   },
@@ -86,7 +96,15 @@ export const userController = {
       tags: ['User'],
     },
     handler: async ({ body }: { body: { name: string; id: string } }) => {
+      const checkCache = await redisService.getCache(`${body.id}`);
+      if (checkCache) {
+        await redisService.delCache(`${body.id}`);
+      }
       const user = await updateUser(body);
+      await redisService.setCache(
+        `${body.id}`,JSON.stringify({ id: user.id, name: user.name }),
+        60 * 60
+      );
       return { success: true, data: user };
     },
   },
@@ -104,6 +122,10 @@ export const userController = {
       tags: ['User'],
     },
     handler: async ({ params }: { params: { id: string } }) => {
+      const checkCache = await redisService.existsCache(`${params.id}`);
+      if (checkCache) {
+        await redisService.delCache(`${params.id}`);
+      }
       const result = await deleteUser(params.id);
       if (result === false)
         return { success: false, message: 'not found user' };

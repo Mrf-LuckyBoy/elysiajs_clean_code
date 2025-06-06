@@ -6,6 +6,11 @@ import { AppRoutes } from './routes/index.routes';
 import { AppAuthRoutes } from './routes/auth.routes';
 import { HttpResponse } from '@/core/http.response';
 import { corsMiddleware } from '@/plugins/cors.plugin';
+import { testConnection } from '@/test-db';
+import { testDrizzle } from '@/test-drizzle';
+
+await testConnection();
+await testDrizzle();
 
 const app = new Elysia()
   .use(logger())

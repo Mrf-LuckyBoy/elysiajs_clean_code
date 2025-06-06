@@ -1,1 +1,0 @@
-ALTER TABLE `screenings` ADD `reason_edit` varchar(255) NOT NULL;

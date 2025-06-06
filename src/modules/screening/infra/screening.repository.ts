@@ -75,7 +75,9 @@ export const ScreeningRepository = {
   async updateScreeningStatus(formID: string, status: string): Promise<void> {
     await db
       .update(screenings)
-      .set({ status_screening: status, updated_at: new Date() })
+      .set({
+        status_screening: status,
+      })
       .where(eq(screenings.screening_form_id, formID));
   },
   async getScreeningFormDetails(formID: string): Promise<GetScreeningFormDetailsDTO | null> {

@@ -10,8 +10,12 @@ export async function updateScreeningFormData(
   if (!existingForm) {
     throw new Error('Screening form not found');
   }
+  if (imageID !== '') {
+    imageID = '123';
+  } else {
+    imageID = '';
+  }
 
-  imageID = '123';
   const currentTime = new Date();
   const updateData: UpdateScreeningFormDTO = {
     ...data,
@@ -64,14 +68,13 @@ function checkFormCompletion(data: GetScreeningFormDetailsDTO): boolean {
 
   for (const field of requiredFields) {
     const value = data[field as keyof GetScreeningFormDetailsDTO];
-    if (value === undefined || value === null) {
+    if (value === undefined || value === null || value === '') {
       missingFields.push(field);
     }
   }
 
   if (missingFields.length > 0) {
     console.log('Missing fields:', missingFields);
-    console.log('Current data:', JSON.stringify(data, null, 2));
     return false;
   }
 

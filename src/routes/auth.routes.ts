@@ -2,8 +2,8 @@ import Elysia from 'elysia';
 import { HttpResponse } from '@/core/http.response';
 import { Jwt } from '@/core/jwt';
 
-const routesAuth = new Elysia({ prefix: 'api/v1' })
-  .onBeforeHandle(async ({ cookie: { auth_token }, set }) => {
+const routesAuth = new Elysia({ prefix: 'api/v1' }).onBeforeHandle(
+  async ({ cookie: { auth_token }, set }) => {
     const token = auth_token.value;
     if (!token) {
       set.status = 401;
@@ -20,6 +20,7 @@ const routesAuth = new Elysia({ prefix: 'api/v1' })
       set.status = 401;
       return HttpResponse.unauthorized('Invalid token');
     }
-  });
+  }
+);
 
 export { routesAuth as AppAuthRoutes };

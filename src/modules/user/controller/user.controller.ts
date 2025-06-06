@@ -102,7 +102,8 @@ export const userController = {
       }
       const user = await updateUser(body);
       await redisService.setCache(
-        `${body.id}`,JSON.stringify({ id: user.id, name: user.name }),
+        `${body.id}`,
+        JSON.stringify({ id: user.id, name: user.name }),
         60 * 60
       );
       return { success: true, data: user };

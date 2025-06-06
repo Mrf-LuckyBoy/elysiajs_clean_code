@@ -14,6 +14,10 @@ const envSchema = z.object({
   JWT_SECRET: z.string(),
   ENCRYPT_SECRET: z.string(),
   BUN_ENV: z.string(),
+  REDIS_HOST: z.string(),
+  REDIS_PORT: z.string(),
+  REDIS_PASSWORD: z.string(),
+  REDIS_DB: z.string(),
 });
 
 // Validate and parse

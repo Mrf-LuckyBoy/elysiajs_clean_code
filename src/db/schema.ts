@@ -274,7 +274,7 @@ export const screening_form = mysqlTable('screening_form', {
   elderly_8_1: boolean('elderly_8_1'),
   elderly_8_2: boolean('elderly_8_2'),
   elderly_9: boolean('elderly_9'),
-  elderly_sum: varchar('elderly_sum', { length: 1 }),
+  elderly_sum: varchar('elderly_sum', { length: 15 }),
   visit_screening: datetime('visit_screening', { mode: 'date' }),
   image_id: varchar('image_id', { length: 255 }),
   word_recall: int('word_recall'),

@@ -1,12 +1,18 @@
 import { ScreeningRepository } from '../infra/screening.repository';
-import { DecodedToken, GetScreeningByVisitIDDTO } from '../model/screening.model';
+import {
+  DecodedToken,
+  GetScreeningByVisitIDDTO,
+} from '../model/screening.model';
 import { Crypto } from '@/core/crypto';
 export async function getScreeningByVisitID(
   visitID: string,
   cookie: DecodedToken
 ): Promise<GetScreeningByVisitIDDTO | null> {
   const hosCode = cookie.hos_code;
-  const screening = await ScreeningRepository.findScreeningByVisitID(visitID, hosCode);
+  const screening = await ScreeningRepository.findScreeningByVisitID(
+    visitID,
+    hosCode
+  );
   if (!screening) {
     return null;
   }
@@ -17,8 +23,12 @@ export async function getScreeningByVisitID(
   const decryptedProviderLname = Crypto.decrypt(screening.provider_lname || '');
   const decryptedIDCard = Crypto.decrypt(screening.person_cid || '');
   const maskedIDCard = decryptedIDCard.replace(/.(?=.{4})/g, 'X');
-  const decryptedAssignFname = screening.assign_fname ? Crypto.decrypt(screening.assign_fname) : '';
-  const decryptedAssignLname = screening.assign_lname ? Crypto.decrypt(screening.assign_lname) : '';
+  const decryptedAssignFname = screening.assign_fname
+    ? Crypto.decrypt(screening.assign_fname)
+    : '';
+  const decryptedAssignLname = screening.assign_lname
+    ? Crypto.decrypt(screening.assign_lname)
+    : '';
   const calulateAge = (birthDate: Date | null): string => {
     if (!birthDate) {
       return '0 ปี 0 เดือน 0 วัน';

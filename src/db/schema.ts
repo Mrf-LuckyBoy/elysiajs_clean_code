@@ -235,7 +235,9 @@ export const screenings = mysqlTable(
     status_screening: varchar('status_screening', { length: 255 }).notNull(),
     is_self: boolean('is_self').notNull(),
     is_assign_official: boolean('is_assign_official').notNull(),
-    is_assgin_official_service_unit: boolean('is_assgin_official_service_unit').notNull(),
+    is_assgin_official_service_unit: boolean(
+      'is_assgin_official_service_unit'
+    ).notNull(),
     is_assign_vhv: boolean('is_assign_vhv').notNull(),
     is_assign_vhv_service_unit: boolean('is_assign_vhv_service_unit').notNull(),
     is_diagnosis: boolean('is_diagnosis').notNull(),
@@ -255,7 +257,9 @@ export const screenings = mysqlTable(
 );
 
 export const screening_form = mysqlTable('screening_form', {
-  screening_form_id: varchar('screening_form_id', { length: 36 }).primaryKey().notNull(),
+  screening_form_id: varchar('screening_form_id', { length: 36 })
+    .primaryKey()
+    .notNull(),
   consent_by: varchar('consent_by', { length: 255 }),
   is_alone: boolean('is_alone'),
   social_1: boolean('social_1'),

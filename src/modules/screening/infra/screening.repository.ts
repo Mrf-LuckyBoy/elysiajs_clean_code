@@ -47,8 +47,14 @@ export const ScreeningRepository = {
       try {
         await tx.insert(screenings).values(screeningData);
       } catch (screeningInsertError: unknown) {
-        console.error('failed to insert into screenings:', screeningInsertError);
-        const errorMessage = screeningInsertError instanceof Error ? screeningInsertError.message : 'Unknown error';
+        console.error(
+          'failed to insert into screenings:',
+          screeningInsertError
+        );
+        const errorMessage =
+          screeningInsertError instanceof Error
+            ? screeningInsertError.message
+            : 'Unknown error';
         throw new Error(`Failed to create screening: ${errorMessage}`);
       }
       return {
@@ -61,7 +67,10 @@ export const ScreeningRepository = {
     return result;
   },
   async findScreeningFormById(formID: string): Promise<boolean> {
-    const result = await db.select().from(screening_form).where(eq(screening_form.screening_form_id, formID));
+    const result = await db
+      .select()
+      .from(screening_form)
+      .where(eq(screening_form.screening_form_id, formID));
 
     if (result.length > 0) {
       return true;
@@ -69,8 +78,14 @@ export const ScreeningRepository = {
       return false;
     }
   },
-  async updateScreeningForm(formID: string, data: UpdateScreeningFormDTO): Promise<void> {
-    await db.update(screening_form).set(data).where(eq(screening_form.screening_form_id, formID));
+  async updateScreeningForm(
+    formID: string,
+    data: UpdateScreeningFormDTO
+  ): Promise<void> {
+    await db
+      .update(screening_form)
+      .set(data)
+      .where(eq(screening_form.screening_form_id, formID));
   },
   async updateScreeningStatus(formID: string, status: string): Promise<void> {
     await db
@@ -80,7 +95,9 @@ export const ScreeningRepository = {
       })
       .where(eq(screenings.screening_form_id, formID));
   },
-  async getScreeningFormDetails(formID: string): Promise<GetScreeningFormDetailsDTO | null> {
+  async getScreeningFormDetails(
+    formID: string
+  ): Promise<GetScreeningFormDetailsDTO | null> {
     const result = await db
       .select({
         screening_form_id: screening_form.screening_form_id,
@@ -125,7 +142,10 @@ export const ScreeningRepository = {
         sum_mini_cog: screening_form.sum_mini_cog,
       })
       .from(screening_form)
-      .leftJoin(screenings, eq(screening_form.screening_form_id, screenings.screening_form_id))
+      .leftJoin(
+        screenings,
+        eq(screening_form.screening_form_id, screenings.screening_form_id)
+      )
       .innerJoin(persons, eq(persons.pid, screenings.patient_id))
       .leftJoin(title_normalize, eq(title_normalize.title_id, persons.title))
       .leftJoin(address, eq(address.hcode, persons.hcode))
@@ -157,11 +177,17 @@ export const ScreeningRepository = {
       .leftJoin(persons, eq(persons.pid, screenings.patient_id))
       .leftJoin(user_provider, eq(user_provider.user_id, screenings.doctor_id))
       .leftJoin(title_normalize, eq(title_normalize.title_id, persons.title))
-      .leftJoin(inscl_normalize, eq(inscl_normalize.insclCode, persons.inscl_code))
+      .leftJoin(
+        inscl_normalize,
+        eq(inscl_normalize.insclCode, persons.inscl_code)
+      )
       .where(eq(user_provider.hos_code, hosCode));
     return result;
   },
-  async findScreeningByVisitID(visitID: string, hosCode: string): Promise<SqlScreeningByVisitIDResponse | null> {
+  async findScreeningByVisitID(
+    visitID: string,
+    hosCode: string
+  ): Promise<SqlScreeningByVisitIDResponse | null> {
     const vhvAssign = alias(user_provider_vhv, 'vhv_assign');
     const officialAssign = alias(user_provider, 'official_assign');
     const result = await db
@@ -188,7 +214,8 @@ export const ScreeningRepository = {
         is_assign_official: screenings.is_assign_official,
         is_assign_vhv: screenings.is_assign_vhv,
         is_assign_vhv_service_unit: screenings.is_assign_vhv_service_unit,
-        is_assgin_official_service_unit: screenings.is_assgin_official_service_unit,
+        is_assgin_official_service_unit:
+          screenings.is_assgin_official_service_unit,
         assign_fname: sql<string>`CASE
         WHEN ${screenings.assign_id_vhv} IS NOT NULL THEN
           COALESCE(vhv_assign.fname, '')
@@ -221,22 +248,39 @@ export const ScreeningRepository = {
       .leftJoin(address, eq(persons.hcode, address.hcode))
       .leftJoin(address_code, eq(address.villcode, address_code.addresscode))
       .leftJoin(vhvAssign, eq(vhvAssign.user_id, screenings.assign_id_vhv))
-      .leftJoin(officialAssign, eq(officialAssign.user_id, screenings.assign_id))
+      .leftJoin(
+        officialAssign,
+        eq(officialAssign.user_id, screenings.assign_id)
+      )
 
-      .where(and(eq(screenings.visit_id, visitID), eq(user_provider.hos_code, hosCode)))
+      .where(
+        and(
+          eq(screenings.visit_id, visitID),
+          eq(user_provider.hos_code, hosCode)
+        )
+      )
       .limit(1);
 
     return result[0] || null;
   },
   async getScreeningByVisitID(visitID: string): Promise<boolean> {
-    const result = await db.select().from(screenings).where(eq(screenings.visit_id, visitID));
+    const result = await db
+      .select()
+      .from(screenings)
+      .where(eq(screenings.visit_id, visitID));
     if (result.length > 0) {
       return true;
     } else {
       return false;
     }
   },
-  async updateVisitDate(visit_id: string, data: UpdateVisitDateRequestDTO): Promise<void> {
-    await db.update(screenings).set(data).where(eq(screenings.visit_id, visit_id));
+  async updateVisitDate(
+    visit_id: string,
+    data: UpdateVisitDateRequestDTO
+  ): Promise<void> {
+    await db
+      .update(screenings)
+      .set(data)
+      .where(eq(screenings.visit_id, visit_id));
   },
 };

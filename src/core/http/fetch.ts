@@ -5,7 +5,11 @@ const defaultHeaders = {
   'Content-Type': 'application/json',
 };
 
-const createFetcher = (baseURL?: string, defaultOptions?: RequestInit, timeout = 10000) => {
+const createFetcher = (
+  baseURL?: string,
+  defaultOptions?: RequestInit,
+  timeout = 10000
+) => {
   return async <T>(path: string, options: RequestInit = {}): Promise<T> => {
     const controller = new AbortController();
     const id = setTimeout(() => controller.abort(), timeout);
@@ -33,5 +37,7 @@ const createFetcher = (baseURL?: string, defaultOptions?: RequestInit, timeout =
 export const httpHealthID = createFetcher(`${ENV.HEALTHID_DOMAIN}/api/v1`);
 export const httpProvider = createFetcher(`${ENV.PROVIDER_DOMAIN}/api/v1`);
 export const httpFDH = createFetcher(`${ENV.FDH_DOMAIN}/api/v1`);
-export const httpMophBuddy = createFetcher(`${ENV.MOPH_BUDDY_DOMAIN}/open-api/api/v1`);
+export const httpMophBuddy = createFetcher(
+  `${ENV.MOPH_BUDDY_DOMAIN}/open-api/api/v1`
+);
 export const http = createFetcher(); // default/global

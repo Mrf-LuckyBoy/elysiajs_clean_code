@@ -287,7 +287,9 @@ export interface GetFormDetailsQuery {
 }
 
 export const GetFormDetailsQuerySchema = t.Object({
-  part: t.Optional(t.Union([t.Literal(''), t.Literal('1'), t.Literal('2'), t.Literal('3')])),
+  part: t.Optional(
+    t.Union([t.Literal(''), t.Literal('1'), t.Literal('2'), t.Literal('3')])
+  ),
 });
 
 export const GetScreeningFormDetailsSchema = t.Object({

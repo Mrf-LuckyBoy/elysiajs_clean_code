@@ -15,7 +15,8 @@ export async function getScreeningList(
 ): Promise<PaginationResponse<ScreeningListResponseDTO>> {
   try {
     const hosCode = cookie.hos_code;
-    const rawScreeningList = await ScreeningRepository.getScreeningList(hosCode);
+    const rawScreeningList =
+      await ScreeningRepository.getScreeningList(hosCode);
 
     if (!rawScreeningList || rawScreeningList.length === 0) {
       return {
@@ -93,7 +94,10 @@ function convertToDTO(rawData: SqlScreeningResponse): ScreeningListResponseDTO {
   };
 }
 
-function applyFilters(screeningList: SqlScreeningResponse[], query: PaginationQuery): SqlScreeningResponse[] {
+function applyFilters(
+  screeningList: SqlScreeningResponse[],
+  query: PaginationQuery
+): SqlScreeningResponse[] {
   let filteredData = [...screeningList];
 
   if (query.search) {
@@ -101,16 +105,22 @@ function applyFilters(screeningList: SqlScreeningResponse[], query: PaginationQu
     const encryptedSearch = Crypto.encrypt(searchQuery);
 
     filteredData = filteredData.filter((item) => {
-      const firstNameMatch = item.person_fname === encryptedSearch || item.person_lname === encryptedSearch;
+      const firstNameMatch =
+        item.person_fname === encryptedSearch ||
+        item.person_lname === encryptedSearch;
       const idCardMatch = item.id_card === encryptedSearch;
-      const providerNameMatch = item.provider_fname === encryptedSearch || item.provider_lname === encryptedSearch;
+      const providerNameMatch =
+        item.provider_fname === encryptedSearch ||
+        item.provider_lname === encryptedSearch;
 
       return firstNameMatch || idCardMatch || providerNameMatch;
     });
   }
 
   if (query.status) {
-    filteredData = filteredData.filter((item) => item.status_screening === query.status);
+    filteredData = filteredData.filter(
+      (item) => item.status_screening === query.status
+    );
   }
 
   if (query.filter) {
@@ -133,7 +143,9 @@ function applyFilters(screeningList: SqlScreeningResponse[], query: PaginationQu
   return filteredData;
 }
 
-function calculateStatusCounts(screeningList: SqlScreeningResponse[]): StatusCounts {
+function calculateStatusCounts(
+  screeningList: SqlScreeningResponse[]
+): StatusCounts {
   const counts: StatusCounts = { waiting: 0, draft: 0, completed: 0 };
   screeningList.forEach((item) => {
     if (item.status_screening === 'รอบันทึก') {

@@ -1,12 +1,21 @@
 import { AuthRepository } from '../infra/auth.repository';
-import type { UserProviderDTO, UserProviderResponseDTO } from '../model/auth.model';
+import type {
+  UserProviderDTO,
+  UserProviderResponseDTO,
+} from '../model/auth.model';
 import { ProviderClient } from '@/core/http/provider.client';
 import { Crypto } from '@/core/crypto';
 
-export async function loginProviderID(codeRedirect: string): Promise<UserProviderResponseDTO> {
+export async function loginProviderID(
+  codeRedirect: string
+): Promise<UserProviderResponseDTO> {
   const result = await ProviderClient.getHealthIdToken(codeRedirect);
-  const provider = await ProviderClient.serviceTokenProviderID(result.data.access_token);
-  const userStuff = await ProviderClient.serviceCheckStaff(provider.data.access_token);
+  const provider = await ProviderClient.serviceTokenProviderID(
+    result.data.access_token
+  );
+  const userStuff = await ProviderClient.serviceCheckStaff(
+    provider.data.access_token
+  );
   let cid = await AuthRepository.checkCidUser(userStuff.data.hash_cid);
   if (cid !== '') {
     cid = Crypto.decrypt(cid ?? '');
@@ -36,7 +45,8 @@ export async function loginProviderID(codeRedirect: string): Promise<UserProvide
       useable: [],
     };
   }
-  const useableLits: UserProviderDTO[] = await AuthRepository.upsertUserProvider(userStuff.data);
+  const useableLits: UserProviderDTO[] =
+    await AuthRepository.upsertUserProvider(userStuff.data);
   const response: UserProviderResponseDTO = {
     cid: cid,
     useable: useableLits,

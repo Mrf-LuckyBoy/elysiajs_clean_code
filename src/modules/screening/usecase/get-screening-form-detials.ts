@@ -15,10 +15,16 @@ export async function getScreeningFormDetails(
   query: GetFormDetailsQuery
 ): Promise<
   // | GetScreeningFormDetailsDTO
-  PersonalDetailsDTO | SocialSectionDTO | ElderlySectionDTO | MiniCogDTO | MockupData | null
+  | PersonalDetailsDTO
+  | SocialSectionDTO
+  | ElderlySectionDTO
+  | MiniCogDTO
+  | MockupData
+  | null
 > {
   try {
-    const formDetails = await ScreeningRepository.getScreeningFormDetails(formID);
+    const formDetails =
+      await ScreeningRepository.getScreeningFormDetails(formID);
 
     if (!formDetails) {
       return null;
@@ -88,7 +94,9 @@ export async function getScreeningFormDetails(
     }
   } catch (error) {
     console.error('Error getting screening form details:', error);
-    throw new Error('เกิดข้อผิดพลาดในการดึงข้อมูล screening form details: ' + error);
+    throw new Error(
+      'เกิดข้อผิดพลาดในการดึงข้อมูล screening form details: ' + error
+    );
   }
 }
 

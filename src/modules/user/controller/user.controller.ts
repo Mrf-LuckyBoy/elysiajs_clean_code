@@ -105,7 +105,8 @@ export const userController = {
     },
     handler: async ({ params }: { params: { id: string } }) => {
       const result = await deleteUser(params.id);
-      if (result === false) return { success: false, message: 'not found user' };
+      if (result === false)
+        return { success: false, message: 'not found user' };
       return { success: true, message: 'delete success' };
     },
   },

@@ -16,7 +16,10 @@ export const UserRepository = {
     return result || null;
   },
   async update(user: UserDTO): Promise<void> {
-    await db.update(users).set({ name: user.name }).where(eq(users.id, user.id));
+    await db
+      .update(users)
+      .set({ name: user.name })
+      .where(eq(users.id, user.id));
   },
   async delete(id: string): Promise<boolean> {
     const existing = await db.select().from(users).where(eq(users.id, id));

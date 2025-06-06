@@ -1,5 +1,8 @@
 import { ScreeningRepository } from '../infra/screening.repository';
-import { GetScreeningFormDetailsDTO, UpdateScreeningFormDTO } from '../model/screening.model';
+import {
+  GetScreeningFormDetailsDTO,
+  UpdateScreeningFormDTO,
+} from '../model/screening.model';
 
 export async function updateScreeningFormData(
   formID: string,
@@ -81,7 +84,9 @@ function checkFormCompletion(data: GetScreeningFormDetailsDTO): boolean {
   return true;
 }
 
-export async function uploadToMinIOImage(imageFile: File | undefined): Promise<string> {
+export async function uploadToMinIOImage(
+  imageFile: File | undefined
+): Promise<string> {
   if (imageFile) {
     return 'imageID';
   }

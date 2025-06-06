@@ -22,7 +22,10 @@ import {
 } from '../model/screening.model';
 import { createScreening } from '../usecase/create-screening';
 import { HttpResponse, HttpResponseSchema } from '@/core/http.response';
-import { updateScreeningFormData, uploadToMinIOImage } from '../usecase/update-screening-form';
+import {
+  updateScreeningFormData,
+  uploadToMinIOImage,
+} from '../usecase/update-screening-form';
 import { getScreeningList } from '../usecase/get-screening-list';
 import { getScreeningByVisitID } from '../usecase/get-screening-by-id';
 import { updateVisitDate } from '../usecase/update-visit-date';
@@ -221,7 +224,9 @@ export const screeningController = {
           return HttpResponse.error('Unexpected error');
         }
       }
-      function parseBoolean(value: boolean | string | undefined | null): boolean | undefined {
+      function parseBoolean(
+        value: boolean | string | undefined | null
+      ): boolean | undefined {
         if (value === undefined || value === null) return undefined;
         if (typeof value === 'boolean') return value;
         if (typeof value === 'string') {
@@ -230,7 +235,9 @@ export const screeningController = {
         return undefined;
       }
 
-      function parseNumber(value: number | string | undefined | null): number | undefined {
+      function parseNumber(
+        value: number | string | undefined | null
+      ): number | undefined {
         if (value === undefined || value === null) return undefined;
         if (typeof value === 'number') return value;
         if (typeof value === 'string') {

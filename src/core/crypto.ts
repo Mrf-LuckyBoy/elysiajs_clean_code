@@ -1,4 +1,9 @@
-import { createCipheriv, createDecipheriv, createHash, scryptSync } from 'crypto';
+import {
+  createCipheriv,
+  createDecipheriv,
+  createHash,
+  scryptSync,
+} from 'crypto';
 import { ENV } from '@/config/env';
 
 const ALGORITHM = 'aes-256-gcm';
@@ -15,7 +20,10 @@ export const Crypto = {
     const iv = createHash('md5').update(text).digest().subarray(0, IV_LENGTH);
 
     const cipher = createCipheriv(ALGORITHM, KEY, iv);
-    const encrypted = Buffer.concat([cipher.update(text, 'utf8'), cipher.final()]);
+    const encrypted = Buffer.concat([
+      cipher.update(text, 'utf8'),
+      cipher.final(),
+    ]);
     const authTag = cipher.getAuthTag();
 
     return `${iv.toString('hex')}:${authTag.toString('hex')}:${encrypted.toString('hex')}`;
@@ -31,7 +39,10 @@ export const Crypto = {
     const decipher = createDecipheriv(ALGORITHM, KEY, iv);
     decipher.setAuthTag(authTag);
 
-    const decrypted = Buffer.concat([decipher.update(encrypted), decipher.final()]);
+    const decrypted = Buffer.concat([
+      decipher.update(encrypted),
+      decipher.final(),
+    ]);
 
     return decrypted.toString('utf8');
   },

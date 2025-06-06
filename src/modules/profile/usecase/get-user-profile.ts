@@ -1,7 +1,13 @@
 import { DecodedToken } from '@/modules/screening/model/screening.model';
-import { ProfileResult, UserProfileDTO, VhvProfileDTO } from '../model/profile.model';
+import {
+  ProfileResult,
+  UserProfileDTO,
+  VhvProfileDTO,
+} from '../model/profile.model';
 
-export async function getUserProfile(decoded: DecodedToken): Promise<ProfileResult> {
+export async function getUserProfile(
+  decoded: DecodedToken
+): Promise<ProfileResult> {
   let right = 'ผู้ใช้งานทั่วไป';
 
   const isVhv =

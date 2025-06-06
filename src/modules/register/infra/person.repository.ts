@@ -115,7 +115,10 @@ export const PersonRepository = {
       };
       await Promise.all([
         await db.insert(address).values(address_person),
-        await db.update(persons).set({ hcode: address_id, hcode_cid: address_id }).where(eq(persons.pid, form.pid)),
+        await db
+          .update(persons)
+          .set({ hcode: address_id, hcode_cid: address_id })
+          .where(eq(persons.pid, form.pid)),
       ]);
       form.address_current.hcode = address_id;
       form.address_cid.hcode = address_id;
@@ -151,14 +154,20 @@ export const PersonRepository = {
       await Promise.all([
         await db.insert(address).values(address_person),
         await db.insert(address).values(address_person2),
-        await db.update(persons).set({ hcode: address_id, hcode_cid: address2 }).where(eq(persons.pid, form.pid)),
+        await db
+          .update(persons)
+          .set({ hcode: address_id, hcode_cid: address2 })
+          .where(eq(persons.pid, form.pid)),
       ]);
       form.address_current.hcode = address2;
       form.address_cid.hcode = address_id;
     }
     const guardian_id = randomUUID();
     if (form.type_guardian === true) {
-      const hcodeA = await db.select({ hcode: persons.hcode }).from(persons).where(eq(persons.pid, form.pid));
+      const hcodeA = await db
+        .select({ hcode: persons.hcode })
+        .from(persons)
+        .where(eq(persons.pid, form.pid));
       const guardians_data: GuardianDTO = {
         guardian_id,
         idcard: Crypto.encrypt(form.guardian.idcard),
@@ -174,7 +183,10 @@ export const PersonRepository = {
       };
       await Promise.all([
         db.insert(guardians).values(guardians_data),
-        db.update(persons).set({ guardian: guardian_id }).where(eq(persons.pid, form.pid)),
+        db
+          .update(persons)
+          .set({ guardian: guardian_id })
+          .where(eq(persons.pid, form.pid)),
       ]);
       form.guardian.hcode = hcodeA[0].hcode;
       const fullAddressCurrent: {
@@ -245,7 +257,10 @@ export const PersonRepository = {
       await Promise.all([
         db.insert(address).values(address_guardians),
         db.insert(guardians).values(guardians_data),
-        db.update(persons).set({ guardian: guardian_id }).where(eq(persons.pid, form.pid)),
+        db
+          .update(persons)
+          .set({ guardian: guardian_id })
+          .where(eq(persons.pid, form.pid)),
       ]);
       form.guardian.hcode = address_id;
       const fullAddressCurrent: {
@@ -308,7 +323,9 @@ export const PersonRepository = {
       decryptedIdcard: Crypto.decrypt(row.person.idcard),
       decryptedFirstName: Crypto.decrypt(row.person.first_name).toLowerCase(),
       decryptedLastName: Crypto.decrypt(row.person.last_name).toLowerCase(),
-      decryptedFullName: row.person.full_name ? Crypto.decrypt(row.person.full_name).toLowerCase() : '',
+      decryptedFullName: row.person.full_name
+        ? Crypto.decrypt(row.person.full_name).toLowerCase()
+        : '',
     }));
 
     const filtered = search
@@ -409,8 +426,14 @@ export const PersonRepository = {
       .leftJoin(address, eq(persons.hcode, address.hcode))
       .leftJoin(address_code, eq(address.villcode, address_code.addresscode))
       .leftJoin(guardians, eq(persons.guardian, guardians.guardian_id))
-      .leftJoin(relationship, eq(guardians.relationships, relationship.relationship_id))
-      .leftJoin(inscl_normalize, eq(persons.inscl_code, inscl_normalize.insclCode))
+      .leftJoin(
+        relationship,
+        eq(guardians.relationships, relationship.relationship_id)
+      )
+      .leftJoin(
+        inscl_normalize,
+        eq(persons.inscl_code, inscl_normalize.insclCode)
+      )
       .where(eq(persons.pid, pid));
 
     if (resultID.length === 0) return null;
@@ -468,7 +491,9 @@ export const PersonRepository = {
         Object.entries({
           sex: person.sex,
           title: person.title,
-          first_name: person.first_name ? Crypto.encrypt(person.first_name) : '',
+          first_name: person.first_name
+            ? Crypto.encrypt(person.first_name)
+            : '',
           last_name: person.last_name ? Crypto.encrypt(person.last_name) : '',
           birth: person.birth,
           blood_type: person.blood_type,
@@ -485,11 +510,17 @@ export const PersonRepository = {
       );
 
       if (Object.keys(updatePersonData).length > 0) {
-        await tx.update(persons).set(updatePersonData).where(eq(persons.pid, person.pid));
+        await tx
+          .update(persons)
+          .set(updatePersonData)
+          .where(eq(persons.pid, person.pid));
       }
 
       if (Object.keys(updateMedHistoryData).length > 0) {
-        await tx.update(medical_history).set(updateMedHistoryData).where(eq(medical_history.med_id, person.med_id));
+        await tx
+          .update(medical_history)
+          .set(updateMedHistoryData)
+          .where(eq(medical_history.med_id, person.med_id));
       }
     });
   },
@@ -500,8 +531,12 @@ export const PersonRepository = {
           idcard: guardian.idcard ? Crypto.encrypt(guardian.idcard) : '',
           relationships: guardian.relationships,
           title: guardian.title,
-          first_name: guardian.first_name ? Crypto.encrypt(guardian.first_name) : '',
-          last_name: guardian.last_name ? Crypto.encrypt(guardian.last_name) : '',
+          first_name: guardian.first_name
+            ? Crypto.encrypt(guardian.first_name)
+            : '',
+          last_name: guardian.last_name
+            ? Crypto.encrypt(guardian.last_name)
+            : '',
           birth: guardian.birth,
           phone: guardian.phone ? Crypto.encrypt(guardian.phone) : '',
         }).filter(([, v]) => v !== '')
@@ -521,11 +556,17 @@ export const PersonRepository = {
       );
 
       if (Object.keys(updateguardianData).length > 0) {
-        await tx.update(guardians).set(updateguardianData).where(eq(guardians.guardian_id, guardian.guardian_id));
+        await tx
+          .update(guardians)
+          .set(updateguardianData)
+          .where(eq(guardians.guardian_id, guardian.guardian_id));
       }
 
       if (Object.keys(updateAddressData).length > 0) {
-        await tx.update(address).set(updateAddressData).where(eq(address.hcode, guardian.hcode));
+        await tx
+          .update(address)
+          .set(updateAddressData)
+          .where(eq(address.hcode, guardian.hcode));
       }
     });
   },
@@ -542,6 +583,9 @@ export const PersonRepository = {
       }).filter(([, v]) => v !== '')
     );
 
-    await db.update(address).set(updateData).where(eq(address.hcode, whereHcode));
+    await db
+      .update(address)
+      .set(updateData)
+      .where(eq(address.hcode, whereHcode));
   },
 };

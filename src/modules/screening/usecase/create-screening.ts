@@ -1,7 +1,14 @@
 import { ScreeningRepository } from '../infra/screening.repository';
-import { CreateScreeningRequestDTO, DecodedToken, ScreeningResponseDTO } from '../model/screening.model';
+import {
+  CreateScreeningRequestDTO,
+  DecodedToken,
+  ScreeningResponseDTO,
+} from '../model/screening.model';
 import { randomUUID } from 'crypto';
-export async function createScreening(body: CreateScreeningRequestDTO, cookie: DecodedToken): Promise<void> {
+export async function createScreening(
+  body: CreateScreeningRequestDTO,
+  cookie: DecodedToken
+): Promise<void> {
   const currentTime = new Date();
   const newScreeningFormID = randomUUID();
 

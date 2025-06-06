@@ -52,10 +52,12 @@ function checkFormCompletion(data: GetScreeningFormDetailsDTO): boolean {
     'elderly_8_1',
     'elderly_8_2',
     'elderly_9',
+    'elderly_sum',
     'visit_screening',
     'image_id',
     'word_recall',
     'clock_draw',
+    'sum_mini_cog',
   ];
 
   const missingFields: string[] = [];

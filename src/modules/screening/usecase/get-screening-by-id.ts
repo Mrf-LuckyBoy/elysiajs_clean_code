@@ -19,7 +19,6 @@ export async function getScreeningByVisitID(
   const maskedIDCard = decryptedIDCard.replace(/.(?=.{4})/g, 'X');
   const decryptedAssignFname = screening.assign_fname ? Crypto.decrypt(screening.assign_fname) : '';
   const decryptedAssignLname = screening.assign_lname ? Crypto.decrypt(screening.assign_lname) : '';
-  const date = new Date(screening.visit_date.getTime() + 7 * 60 * 60 * 1000);
   const calulateAge = (birthDate: Date | null): string => {
     if (!birthDate) {
       return '0 ปี 0 เดือน 0 วัน';
@@ -74,8 +73,8 @@ export async function getScreeningByVisitID(
   const result: GetScreeningByVisitIDDTO = {
     visit_id: screening.visit_id,
     person_cid: maskedIDCard || '',
-    visit_date: date.toISOString().split('T')[0],
-    visit_time: date.toISOString().split('T')[1].split('.')[0],
+    visit_date: screening.visit_date.toISOString().split('T')[0],
+    visit_time: screening.visit_date.toISOString().split('T')[1].split('.')[0],
     pid: screening.person_id || '',
     person_name: `${screening.person_title} ${decryptedPersonFname} ${decryptedPersonLname}`,
     hn: screening.hn || '',

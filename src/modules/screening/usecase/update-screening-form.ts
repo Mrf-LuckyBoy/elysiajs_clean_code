@@ -1,5 +1,5 @@
 import { ScreeningRepository } from '../infra/screening.repository';
-import { UpdateScreeningFormDTO } from '../model/screening.model';
+import { GetScreeningFormDetailsDTO, UpdateScreeningFormDTO } from '../model/screening.model';
 
 export async function updateScreeningFormData(
   formID: string,
@@ -12,44 +12,28 @@ export async function updateScreeningFormData(
   }
 
   imageID = '123';
-  const abnormalSum = calculateabnormalSum(data);
   const currentTime = new Date();
   const updateData: UpdateScreeningFormDTO = {
     ...data,
-    elderly_sum: abnormalSum.toString(),
     image_id: imageID,
     updated_at: currentTime,
   };
 
-  const isComplete = checkFormCompletion(updateData);
-  const newStatus = isComplete ? 'เสร็จสิ้น' : 'บันทึกร่าง';
   await ScreeningRepository.updateScreeningForm(formID, updateData);
+
+  const formDetails = await ScreeningRepository.getScreeningFormDetails(formID);
+  if (!formDetails) {
+    throw new Error('Failed to retrieve updated form data');
+  }
+
+  const isComplete = checkFormCompletion(formDetails);
+  const newStatus = isComplete ? 'เสร็จสิ้น' : 'บันทึกร่าง';
 
   await ScreeningRepository.updateScreeningStatus(formID, newStatus);
   return;
 }
 
-function calculateabnormalSum(data: UpdateScreeningFormDTO): number {
-  let sum = 0;
-
-  if (data.elderly_1_1) sum++;
-  if (data.elderly_1_2) sum++;
-  if (data.elderly_2_1) sum++;
-  if (data.elderly_2_2) sum++;
-  if (data.elderly_3) sum++;
-  if (data.elderly_4) sum++;
-  if (data.elderly_5_1) sum++;
-  if (data.elderly_5_2) sum++;
-  if (data.elderly_6) sum++;
-  if (data.elderly_7) sum++;
-  if (data.elderly_8_1) sum++;
-  if (data.elderly_8_2) sum++;
-  if (data.elderly_9) sum--; //ข้อนี้ถ้าตอบ true หมายถึงความคิดความจำปกติ ไม่นับเป็นความผิดปกติ
-
-  return sum;
-}
-
-function checkFormCompletion(data: UpdateScreeningFormDTO): boolean {
+function checkFormCompletion(data: GetScreeningFormDetailsDTO): boolean {
   const requiredFields = [
     'is_alone',
     'social_1',
@@ -74,11 +58,19 @@ function checkFormCompletion(data: UpdateScreeningFormDTO): boolean {
     'clock_draw',
   ];
 
+  const missingFields: string[] = [];
+
   for (const field of requiredFields) {
-    const value = data[field as keyof UpdateScreeningFormDTO];
+    const value = data[field as keyof GetScreeningFormDetailsDTO];
     if (value === undefined || value === null) {
-      return false;
+      missingFields.push(field);
     }
+  }
+
+  if (missingFields.length > 0) {
+    console.log('Missing fields:', missingFields);
+    console.log('Current data:', JSON.stringify(data, null, 2));
+    return false;
   }
 
   return true;

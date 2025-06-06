@@ -176,9 +176,33 @@ export const screeningController = {
       body: UpdateScreeningFormRequestDTO;
     }) => {
       try {
-        const imageID = await uploadToMinIOImage(body.image_file);
+        const formatBody = {
+          ...body,
+          is_alone: parseBoolean(body.is_alone),
+          social_1: parseBoolean(body.social_1),
+          social_2: parseBoolean(body.social_2),
+          social_3: parseBoolean(body.social_3),
+          elderly_1_1: parseBoolean(body.elderly_1_1),
+          elderly_1_2: parseBoolean(body.elderly_1_2),
+          elderly_2_1: parseBoolean(body.elderly_2_1),
+          elderly_2_2: parseBoolean(body.elderly_2_2),
+          elderly_3: parseBoolean(body.elderly_3),
+          elderly_4: parseBoolean(body.elderly_4),
+          elderly_5_1: parseBoolean(body.elderly_5_1),
+          elderly_5_2: parseBoolean(body.elderly_5_2),
+          elderly_6: parseBoolean(body.elderly_6),
+          elderly_7: parseBoolean(body.elderly_7),
+          elderly_8_1: parseBoolean(body.elderly_8_1),
+          elderly_8_2: parseBoolean(body.elderly_8_2),
+          elderly_9: parseBoolean(body.elderly_9),
+          word_recall: parseNumber(body.word_recall),
+          clock_draw: parseNumber(body.clock_draw),
+          sum_mini_cog: parseNumber(body.sum_mini_cog),
+        };
+
+        const imageID = await uploadToMinIOImage(formatBody.image_file);
         const formID = params.form_id;
-        await updateScreeningFormData(formID, body, imageID);
+        await updateScreeningFormData(formID, formatBody, imageID);
         set.status = 201;
         return {
           success: true,
@@ -196,6 +220,24 @@ export const screeningController = {
           set.status = 500;
           return HttpResponse.error('Unexpected error');
         }
+      }
+      function parseBoolean(value: boolean | string | undefined | null): boolean | undefined {
+        if (value === undefined || value === null) return undefined;
+        if (typeof value === 'boolean') return value;
+        if (typeof value === 'string') {
+          return value.toLowerCase() === 'true';
+        }
+        return undefined;
+      }
+
+      function parseNumber(value: number | string | undefined | null): number | undefined {
+        if (value === undefined || value === null) return undefined;
+        if (typeof value === 'number') return value;
+        if (typeof value === 'string') {
+          const parsed = parseFloat(value);
+          return isNaN(parsed) ? undefined : parsed;
+        }
+        return undefined;
       }
     },
   },

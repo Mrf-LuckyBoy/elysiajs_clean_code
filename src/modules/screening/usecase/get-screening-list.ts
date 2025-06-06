@@ -73,8 +73,6 @@ export async function getScreeningList(
 }
 
 function convertToDTO(rawData: SqlScreeningResponse): ScreeningListResponseDTO {
-  const date = new Date(rawData.visit_date.getTime() + 7 * 60 * 60 * 1000);
-
   const decryptedPersonFname = Crypto.decrypt(rawData.person_fname || '');
   const decryptedPersonLname = Crypto.decrypt(rawData.person_lname || '');
   const decryptedProviderFname = Crypto.decrypt(rawData.provider_fname || '');
@@ -82,8 +80,8 @@ function convertToDTO(rawData: SqlScreeningResponse): ScreeningListResponseDTO {
 
   return {
     visit_id: rawData.visit_id,
-    visit_date: date.toISOString().split('T')[0],
-    visit_time: date.toISOString().split('T')[1].split('.')[0],
+    visit_date: rawData.visit_date.toISOString().split('T')[0],
+    visit_time: rawData.visit_date.toISOString().split('T')[1].split('.')[0],
     pid: rawData.person_id || '',
     person_fullname: `${rawData.person_title} ${decryptedPersonFname} ${decryptedPersonLname}`,
     inscl_name: rawData.inscl_name || '',
@@ -121,15 +119,14 @@ function applyFilters(screeningList: SqlScreeningResponse[], query: PaginationQu
 
   if (query.date) {
     filteredData = filteredData.filter((item) => {
-      const itemDate = new Date(item.visit_date.getTime() + 7 * 60 * 60 * 1000);
-      const itemDateString = itemDate.toISOString().split('T')[0];
+      const itemDateString = item.visit_date.toISOString().split('T')[0];
       return itemDateString === query.date;
     });
   }
 
   filteredData.sort((a, b) => {
-    const dateA = new Date(a.visit_date.getTime() + 7 * 60 * 60 * 1000);
-    const dateB = new Date(b.visit_date.getTime() + 7 * 60 * 60 * 1000);
+    const dateA = new Date(a.visit_date.getTime());
+    const dateB = new Date(b.visit_date.getTime());
     return dateB.getTime() - dateA.getTime(); // เรียงจากใหม่ไปเก่า
   });
 

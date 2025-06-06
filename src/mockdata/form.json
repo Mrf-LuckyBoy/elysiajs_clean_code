@@ -1,0 +1,266 @@
+{
+  "data": [
+    {
+      "id": "1.1",
+      "title": "ด้านการเคลื่อนไหวร่างกาย (LIMITED MOBILITY)",
+      "question": [
+        {
+          "id": "1",
+          "title": "ให้ผู้สูงอายุเดินไปและกลับด้วยตนเอง 6 เมตร ภายในระยะเวลา 12 วินาที (TIME UP AND GO TEST)",
+          "answer": [
+            {
+              "img": "../../../../../assets/img/health-screening/checked2.png",
+              "value": "0",
+              "label": "สามารถทำได้"
+            },
+            {
+              "img": "../../../../../assets/img/health-screening/checked-CC.png",
+              "value": "0",
+              "label": "ไม่สามารถทำได้"
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "title": "มีประวัติหกล้มภายใน 6 เดือน อย่างน้อย 1 ครั้ง",
+          "answer": [
+            {
+              "img": "../../../../../assets/img/health-screening/checked2.png",
+              "value": "0",
+              "label": "มี"
+            },
+            {
+              "img": "../../../../../assets/img/health-screening/checked-CC.png",
+              "value": "0",
+              "label": "ไม่มี"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1.2",
+      "title": "ด้านการขาดสารอาหาร (MALNUTRITION)",
+      "question": [
+        {
+          "id": "1",
+          "title": "น้ำหนักลดมากกว่า 3 กิโลกรัมภายในช่วงเวลา 3 เดือนที่ผ่านมา (โดยไม่ได้ตั้งใจลดน้ำหนัก)",
+          "answer": [
+            {
+              "img": "../../../../../assets/img/health-screening/checked2.png",
+              "value": "0",
+              "label": "มี"
+            },
+            {
+              "img": "../../../../../assets/img/health-screening/checked-CC.png",
+              "value": "0",
+              "label": "ไม่มี"
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "title": "มีความอยากอาหารลดลงหรือไม่",
+          "answer": [
+            {
+              "img": "../../../../../assets/img/health-screening/checked2.png",
+              "value": "0",
+              "label": "มี"
+            },
+            {
+              "img": "../../../../../assets/img/health-screening/checked-CC.png",
+              "value": "0",
+              "label": "ไม่มี"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1.3",
+      "title": "ด้านการมองเห็น (VISUAL IMPAIRMENT)",
+      "question": [
+        {
+          "id": "1",
+          "title": "คุณมีปัญหาใดๆเกี่ยวกับดวงตาของคุณ เช่น การมองระยะไกล การอ่านหนังสือ",
+          "answer": [
+            {
+              "img": "../../../../../assets/img/health-screening/checked2.png",
+              "value": "0",
+              "label": "มี"
+            },
+            {
+              "img": "../../../../../assets/img/health-screening/checked-CC.png",
+              "value": "0",
+              "label": "ไม่มี"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1.4",
+      "title": "ด้านการได้ยิน (HEARING LOSS)",
+      "question": [
+        {
+          "id": "1",
+          "title": "ให้ถูนิ้วโป้งกับนิ้วชี้ห่างจากหูของผู้สูงอายุประมาณ 1 นิ้ว ทีละข้าง ทั้งหูขวาและ หูซ้าย (Finger rub test)",
+          "answer": [
+            {
+              "img": "../../../../../assets/img/health-screening/checked2.png",
+              "value": "0",
+              "label": "ไม่ได้ยินทั้ง2ข้าง"
+            },
+            {
+              "img": "../../../../../assets/img/health-screening/checked-CC.png",
+              "value": "0",
+              "label": "ไม่ได้ยินข้างเดียว"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1.5",
+      "title": "ด้านภาวะซึมเศร้า (DEPRESSIVE SYMPTOMS)",
+      "question": [
+        {
+          "id": "1",
+          "title": "ใน 2 สัปดาห์ที่ผ่านมารวมวันนี้ คุณรู้สึกหดหู เศร้า หรือท้อแท้ สิ้นหวัง หรือไม่",
+          "answer": [
+            {
+              "img": "../../../../../assets/img/health-screening/checked2.png",
+              "value": "0",
+              "label": "มี"
+            },
+            {
+              "img": "../../../../../assets/img/health-screening/checked-CC.png",
+              "value": "0",
+              "label": "ไม่มี"
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "title": "ใน 2 สัปดาห์ที่ผ่านมารวมวันนี้ คุณรู้สึก เบื่อ ทำอะไรก็ไม่เพลิดเพลิน หรือไม่",
+          "answer": [
+            {
+              "img": "../../../../../assets/img/health-screening/checked2.png",
+              "value": "0",
+              "label": "มี"
+            },
+            {
+              "img": "../../../../../assets/img/health-screening/checked-CC.png",
+              "value": "0",
+              "label": "ไม่มี"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1.6",
+      "title": "ด้านการกลั้นปัสสาวะ (URINARY INCONTINENCE)",
+      "question": [
+        {
+          "id": "1",
+          "title": "ผู้สูงอายุมีภาวะปัสสาวะเล็ดหรือปัสสาวะราด จนทำให้เกิดปัญหาในการใช้ ชีวิตประจำวัน ",
+          "answer": [
+            {
+              "img": "../../../../../assets/img/health-screening/checked2.png",
+              "value": "0",
+              "label": "มี"
+            },
+            {
+              "img": "../../../../../assets/img/health-screening/checked-CC.png",
+              "value": "0",
+              "label": "ไม่มี"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1.7",
+      "title": "ด้านการปฏิบัติกิจวัตรประจำวัน (ADL)",
+      "question": [
+        {
+          "id": "1",
+          "title": "ความสามารถในการช่วยเหลือตนเองของคุณในการทำกิจวัตรประจำวัน โดยไม่ต้องพึ่งคนอื่น ลดลงหรือไม่ (กินอาหาร ล้างหน้าแปรงฟันหวีผม ลุกนั่งจากที่ นอนหรือเตียง เข้าห้องน้ำ เคลื่อนที่ไปมาในบ้าน สวมใส่เสื้อผ้า ขึ้นลงบันได้ 1 ชั้น อาบน้ำ กลั้นอุจจาระ กลั้นปัสสาวะ)",
+          "answer": [
+            {
+              "img": "../../../../../assets/img/health-screening/checked2.png",
+              "value": "0",
+              "label": "ลดลง"
+            },
+            {
+              "img": "../../../../../assets/img/health-screening/checked-CC.png",
+              "value": "0",
+              "label": "ไม่ลดลง"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1.8",
+      "title": "ช่องปาก",
+      "question": [
+        {
+          "id": "1",
+          "title": "คุณมีความยากลำบากในการเคี้ยวอาหารแข็งหรือไม่",
+          "answer": [
+            {
+              "img": "../../../../../assets/img/health-screening/checked2.png",
+              "value": "0",
+              "label": "มี"
+            },
+            {
+              "img": "../../../../../assets/img/health-screening/checked-CC.png",
+              "value": "0",
+              "label": "ไม่มี"
+            }
+          ]
+        },
+        {
+          "id": "2",
+          "title": "คุณมีอาการเจ็บปวดในช่องปากหรือไม่",
+          "answer": [
+            {
+              "img": "../../../../../assets/img/health-screening/checked2.png",
+              "value": "0",
+              "label": "มี"
+            },
+            {
+              "img": "../../../../../assets/img/health-screening/checked-CC.png",
+              "value": "0",
+              "label": "ไม่มี"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "1.9",
+      "title": "ด้านความคิดความจำ (COGNITIVE DECLINE)",
+      "question": [
+        {
+          "id": "1",
+          "title": "ให้ทำแบบทดสอบด้านความคิดความจำ (Mini cog)",
+          "answer": [
+            {
+              "img": "../../../../../assets/img/health-screening/checked2.png",
+              "value": "0",
+              "label": "ปกติ"
+            },
+            {
+              "img": "../../../../../assets/img/health-screening/checked-CC.png",
+              "value": "0",
+              "label": "ผิดปกติ"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

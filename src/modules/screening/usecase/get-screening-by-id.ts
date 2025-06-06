@@ -1,12 +1,20 @@
 import { ScreeningRepository } from '../infra/screening.repository';
-import { GetScreeningByVisitIDDTO } from '../model/screening.model';
+import {
+  DecodedToken,
+  GetScreeningByVisitIDDTO,
+} from '../model/screening.model';
 import { Crypto } from '@/core/crypto';
 export async function getScreeningByVisitID(
-  visitID: string
-): Promise<GetScreeningByVisitIDDTO> {
-  const screening = await ScreeningRepository.findScreeningByVisitID(visitID);
+  visitID: string,
+  cookie: DecodedToken
+): Promise<GetScreeningByVisitIDDTO | null> {
+  const hosCode = cookie.hos_code;
+  const screening = await ScreeningRepository.findScreeningByVisitID(
+    visitID,
+    hosCode
+  );
   if (!screening) {
-    throw new Error('Screening not found');
+    return null;
   }
 
   const decryptedPersonFname = Crypto.decrypt(screening.person_fname || '');
@@ -15,7 +23,12 @@ export async function getScreeningByVisitID(
   const decryptedProviderLname = Crypto.decrypt(screening.provider_lname || '');
   const decryptedIDCard = Crypto.decrypt(screening.person_cid || '');
   const maskedIDCard = decryptedIDCard.replace(/.(?=.{4})/g, 'X');
-  const date = new Date(screening.visit_date.getTime() + 7 * 60 * 60 * 1000);
+  const decryptedAssignFname = screening.assign_fname
+    ? Crypto.decrypt(screening.assign_fname)
+    : '';
+  const decryptedAssignLname = screening.assign_lname
+    ? Crypto.decrypt(screening.assign_lname)
+    : '';
   const calulateAge = (birthDate: Date | null): string => {
     if (!birthDate) {
       return '0 ปี 0 เดือน 0 วัน';
@@ -53,11 +66,25 @@ export async function getScreeningByVisitID(
     screening.sex = 'หญิง';
   }
 
+  let typeAssign = '';
+
+  if (screening.is_self) {
+    typeAssign = 'is_self';
+  } else if (screening.is_assign_official) {
+    typeAssign = 'is_assign_official';
+  } else if (screening.is_assign_vhv) {
+    typeAssign = 'is_assign_vhv';
+  } else if (screening.is_assign_vhv_service_unit) {
+    typeAssign = 'is_assign_vhv_service_unit';
+  } else if (screening.is_assgin_official_service_unit) {
+    typeAssign = 'is_assgin_official_service_unit';
+  }
+
   const result: GetScreeningByVisitIDDTO = {
     visit_id: screening.visit_id,
     person_cid: maskedIDCard || '',
-    visit_date: date.toISOString().split('T')[0],
-    visit_time: date.toISOString().split('T')[1].split('.')[0],
+    visit_date: screening.visit_date.toISOString().split('T')[0],
+    visit_time: screening.visit_date.toISOString().split('T')[1].split('.')[0],
     pid: screening.person_id || '',
     person_name: `${screening.person_title} ${decryptedPersonFname} ${decryptedPersonLname}`,
     hn: screening.hn || '',
@@ -67,11 +94,8 @@ export async function getScreeningByVisitID(
     reason_edit: screening.reason_edit || '',
     appointment_reason: screening.appointment_reason,
     provider_name: `${screening.provider_title} ${decryptedProviderFname} ${decryptedProviderLname}`,
-    is_self: screening.is_self,
-    is_assign_official: screening.is_assign_official,
-    is_assign_vhv: screening.is_assign_vhv,
-    is_assign_vhv_service_unit: screening.is_assign_vhv_service_unit,
-    is_assgin_official_service_unit: screening.is_assgin_official_service_unit,
+    type_assign: typeAssign,
+    assign_name: `${decryptedAssignFname} ${decryptedAssignLname}`,
     screening_form_id: screening.screening_form_id,
   };
 

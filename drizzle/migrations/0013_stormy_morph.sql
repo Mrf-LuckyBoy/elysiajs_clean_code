@@ -1,0 +1,1 @@
+ALTER TABLE `screening_form` MODIFY COLUMN `elderly_sum` varchar(15);

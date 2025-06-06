@@ -5,6 +5,7 @@ import {
   PaginationResponse,
   ScreeningListResponseDTO,
   SqlScreeningResponse,
+  StatusCounts,
 } from '../model/screening.model';
 import { Crypto } from '@/core/crypto';
 
@@ -25,10 +26,13 @@ export async function getScreeningList(
           total: 0,
           page: query.page || 1,
           limit: query.limit || 10,
+          statusCounts: { waiting: 0, draft: 0, completed: 0 },
         },
         message: 'Data not found',
       };
     }
+
+    const statusCounts = calculateStatusCounts(rawScreeningList);
 
     let filteredRawData = applyFilters(rawScreeningList, query);
     let screeningList = filteredRawData.map(convertToDTO);
@@ -49,6 +53,7 @@ export async function getScreeningList(
         total,
         page,
         limit,
+        statusCounts,
       },
       message: 'Data fetched successfully',
     };
@@ -61,6 +66,7 @@ export async function getScreeningList(
         total: 0,
         page: query.page || 1,
         limit: query.limit || 10,
+        statusCounts: { waiting: 0, draft: 0, completed: 0 },
       },
       message: 'Failed to fetch screening list',
     };
@@ -68,8 +74,6 @@ export async function getScreeningList(
 }
 
 function convertToDTO(rawData: SqlScreeningResponse): ScreeningListResponseDTO {
-  const date = new Date(rawData.visit_date.getTime() + 7 * 60 * 60 * 1000);
-
   const decryptedPersonFname = Crypto.decrypt(rawData.person_fname || '');
   const decryptedPersonLname = Crypto.decrypt(rawData.person_lname || '');
   const decryptedProviderFname = Crypto.decrypt(rawData.provider_fname || '');
@@ -77,8 +81,8 @@ function convertToDTO(rawData: SqlScreeningResponse): ScreeningListResponseDTO {
 
   return {
     visit_id: rawData.visit_id,
-    visit_date: date.toISOString().split('T')[0],
-    visit_time: date.toISOString().split('T')[1].split('.')[0],
+    visit_date: rawData.visit_date.toISOString().split('T')[0],
+    visit_time: rawData.visit_date.toISOString().split('T')[1].split('.')[0],
     pid: rawData.person_id || '',
     person_fullname: `${rawData.person_title} ${decryptedPersonFname} ${decryptedPersonLname}`,
     inscl_name: rawData.inscl_name || '',
@@ -125,17 +129,32 @@ function applyFilters(
 
   if (query.date) {
     filteredData = filteredData.filter((item) => {
-      const itemDate = new Date(item.visit_date.getTime() + 7 * 60 * 60 * 1000);
-      const itemDateString = itemDate.toISOString().split('T')[0];
+      const itemDateString = item.visit_date.toISOString().split('T')[0];
       return itemDateString === query.date;
     });
   }
 
   filteredData.sort((a, b) => {
-    const dateA = new Date(a.visit_date.getTime() + 7 * 60 * 60 * 1000);
-    const dateB = new Date(b.visit_date.getTime() + 7 * 60 * 60 * 1000);
+    const dateA = new Date(a.visit_date.getTime());
+    const dateB = new Date(b.visit_date.getTime());
     return dateB.getTime() - dateA.getTime(); // เรียงจากใหม่ไปเก่า
   });
 
   return filteredData;
+}
+
+function calculateStatusCounts(
+  screeningList: SqlScreeningResponse[]
+): StatusCounts {
+  const counts: StatusCounts = { waiting: 0, draft: 0, completed: 0 };
+  screeningList.forEach((item) => {
+    if (item.status_screening === 'รอบันทึก') {
+      counts.waiting += 1;
+    } else if (item.status_screening === 'บันทึกร่าง') {
+      counts.draft += 1;
+    } else if (item.status_screening === 'เสร็จสิ้น') {
+      counts.completed += 1;
+    }
+  });
+  return counts;
 }
